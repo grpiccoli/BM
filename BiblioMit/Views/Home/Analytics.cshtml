@@ -1,0 +1,43 @@
+﻿@{
+    ViewData["Title"] = "Analytics";
+}
+
+<partial name="_Libs" model='new List<string> { "/chart.min" }' />
+
+<h1>Visitas totales por mes</h1>
+
+<div class="chartdiv w-100" style="height:500px;"></div>
+
+@this.Block(@<script>
+    var start = $("#start").val();
+    var end = $("#end").val();
+    //am4core.useTheme(am4themes_kelly);
+    var chart = am4core.create("chartdiv", am4charts.XYChart);
+    chart.language.locale = am4lang_es_ES;
+    var dataSource = chart.dataSource;
+    dataSource.url = "/home/getanalyticsdata?freq=month";
+    var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+    dateAxis.dataFields.category = "date";
+    dateAxis.dateFormats.setKey("year", "yy");
+    dateAxis.periodChangeDateFormats.setKey("month", "MMM yy");
+    dateAxis.tooltipDateFormat = "dd MMM, yyyy";
+    dateAxis.renderer.minGridDistance = 40;
+    var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+    var series = chart.series.push(new am4charts.LineSeries());
+    series.dataFields.valueY = "views";
+    series.dataFields.dateX = "date";
+    series.tooltipText = "Visitas totales: [bold]{valueY}[/]";
+    series.tooltip.pointerOrientation = "vertical";
+    chart.cursor = new am4charts.XYCursor();
+    chart.cursor.xAxis = dateAxis;
+    chart.scrollbarY = new am4core.Scrollbar();
+    chart.scrollbarX = new am4core.Scrollbar();
+    chart.exporting.menu = new am4core.ExportMenu();
+    </script>,"Scripts")
+
+@section ScripTop{
+    <script src="https://www.amcharts.com/lib/4/core.js"></script>
+    <script src="https://www.amcharts.com/lib/4/charts.js"></script>
+    <script src="https://www.amcharts.com/lib/4/themes/kelly.js"></script>
+    <script src="https://www.amcharts.com/lib/4/lang/es_ES.js"></script>
+}

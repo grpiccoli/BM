@@ -1,0 +1,241 @@
+@model IEnumerable<BiblioMit.Models.Centre>
+@using BiblioMit.Authorization;
+@using BiblioMit.Models;
+
+<h2>@ViewData["Main"]</h2>
+
+<partial name="_Libs" model='new List<string> { "bootstrap-select" }' />
+
+<form asp-action="Centres" method="get">
+    <div class="input-group col-12 col-lg-9 mb-3">
+        <select name="c" class="selectpicker form-control" multiple="" data-live-search="true" data-actions-box="true" tabindex="-98" value="@ViewData["c"]" title="Filtrar por región, provincia y/o comuna" data-selected-text-format="count > 3">
+            <optgroup label="Comunas">
+                @foreach (Comuna u in (IEnumerable<Comuna>)ViewData["comunas"])
+                {
+                    List<string> localidades = new List<string> { };
+                    if (!(bool)ViewData["r"])
+                    {
+                        foreach (Centre productor in u.Centres)
+                        {
+                            localidades.Add(productor.Address);
+                        }
+                    }
+                    <option data-tokens="@String.Join(" ",localidades)" disabled="@(u.Centres.Where(c => c.Name == null).Count() == 0)" selected="@(((string[])ViewData["c"]).Contains(Convert.ToString(u.Id)))" data-subtext="@StringManipulations.ToRomanNumeral(u.Provincia.Region.Id) @u.Provincia.Region.Name, @u.Provincia.Name" value="@u.Id">@u.Name</option>
+                }
+            </optgroup>
+        </select>
+        <select name="i" class="selectpicker form-control" multiple="" data-live-search="true" data-actions-box="true" tabindex="-98" value="@ViewData["i"]" title="Filtrar por compañía" data-selected-text-format="count">
+            <optgroup label="Compañías">
+                @foreach (var u in (IEnumerable<Company>)ViewData["company"])
+                {
+                    List<string> localidades = new List<string> { };
+                    if (u.Centres == null) { continue; }
+                    foreach (var productor in u.Centres)
+                    {
+                        if (productor.Address == null) { continue; }
+                        localidades.Add(productor.Address);
+                    }
+                    <option data-tokens="@u.BsnssName @String.Join(" ",localidades)" selected="@((ViewData["i"] as string[]).Contains(Convert.ToString(u.Id)))" data-subtext="@u.Id-@StringManipulations.GetDigit(u.Id)" value="@u.Id">
+                        @u.BsnssName.Substring(0, Math.Min(u.BsnssName.Length, 50))
+                        {<text>&hellip;</text>}
+                    </option>
+                }
+            </optgroup>
+        </select>
+        <div class="input-group-append">
+            <button type="submit" value="Buscar" class="btn btn-info"><i class="fas fa-filter fa-tw"></i>&emsp;Filtrar</button>
+        </div>
+    </div>
+</form>
+<br />
+<dd>
+    <div id="map" style="height: 450px;"></div>
+</dd>
+<br />
+
+@if (User.IsInRole("Administrator"))
+{
+    <p>
+        <a asp-action="Create">Ingresar nuevo centro de producción</a>
+    </p>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Company.BsnssName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Company.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Address)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Company.BsnssName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Company.Id)-@StringManipulations.GetDigit(item.CompanyId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Address)
+                    </td>
+                    <td>
+                        @if (User.IsInRole(Constants.ContactAdministratorsRole))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.Id">Editar</a><text> | </text>
+                        }
+                        <a asp-action="Details" asp-route-id="@item.Id">Detalles</a>
+                        @if (User.IsInRole(Constants.ContactAdministratorsRole))
+                        {
+                            <text> | </text>
+                            <a asp-action="Delete" asp-route-id="@item.Id">Eliminar</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+<partial name="_ValidationScriptsPartial" />
+
+@section Scripts {
+    <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
+    <script async defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkBD_nY7LaeVohfyIt-M2a2BuIhuy-51c&language=es&region=CL"></script>
+    <script type="text/javascript">
+        window.onload = function initMap() {
+            if (!google.maps.Polygon.prototype.getBounds) {
+                google.maps.Polygon.prototype.getBounds = function () {
+                    var bounds = new google.maps.LatLngBounds();
+                    var paths = this.getPaths();
+                    var path;
+                    for (var i = 0; i < paths.getLength(); i++) {
+                        path = paths.getAt(i);
+                        for (var ii = 0; ii < path.getLength(); ii++) {
+                            bounds.extend(path.getAt(ii));
+                        }
+                    }
+                    return bounds;
+                };
+            }
+            var infowindow = new google.maps.InfoWindow({
+                size: new google.maps.Size(150, 50)
+            });
+            var array = [];
+            var polygons = [];
+    @foreach (var centre in Model)
+        {
+            if (centre.Coordinates.Count > 0) {
+                @:polygons.push(@Html.Raw(Json.Serialize(centre.Coordinates.Select(m => new
+                {
+                    lat = m.Latitude,
+                    lng = m.Longitude
+                }))));
+                @:array.push([@Html.Raw(Json.Serialize(centre.Coordinates.Select(m => new
+                {
+                    lat = m.Latitude,
+                    lng = m.Longitude,
+                    vtx = m.Vertex
+                }))), @Html.Raw(Json.Serialize(centre.Id)), @Html.Raw(Json.Serialize(centre.CompanyId)), @Html.Raw(Json.Serialize(centre.Company.BsnssName)), @Html.Raw(Json.Serialize(centre.Address)) ]);
+                }
+        }
+            var bounds = new google.maps.LatLngBounds();
+            for (var k = 0; k < polygons.length; k++) {
+                for (var j = 0; j < polygons[k].length; j++) {
+                    bounds.extend(polygons[k][j]);
+                }
+            }
+            var map = new google.maps.Map(document.getElementById('map'), {
+                mapTypeId: 'terrain'
+            });
+            map.fitBounds(bounds);
+            map.setCenter(bounds.getCenter());
+            var locations = [];
+            var markers = [];
+            for (var i = 0; i < array.length; i++) {
+                array[i][0].sort(function (a, b) { return a.vtx > b.vtx ? 1 : b.vtx > a.vtx ? -1 : 0; });
+                for (var h = 0; h < array[i][0].length; h++) {
+                    delete array[i][0][h].vtx;
+                }
+                var consessionPolygon = new google.maps.Polygon({
+                    paths: array[i][0],
+                    strokeColor: '#FF0000',
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: '#FF0000',
+                    fillOpacity: 0.35
+                });
+                locations.push(consessionPolygon.getBounds().getCenter());
+                marker = new google.maps.Marker({
+                    position: consessionPolygon.getBounds().getCenter(),
+                    title: "Código de Concesión : " + String(array[i][1])
+                    //label: String(array[i][1])
+                });
+                google.maps.event.addListener(marker, 'click', (function (marker, i) {
+                    return function () {
+                        infowindow.setContent('<div id="content">' +
+                            '<div id="siteNotice">' +
+                            '</div>' +
+                            '<h2 id="firstHeading" class="firstHeading" style="margin-bottom:0px">' +
+                            //String(array[i][3]) + '</h2>' +
+                            //String(array[i][4]) +
+                            '<h4>Compa&ntilde&iacutea ' + String(array[i][3]) + '</h4>' +
+                            'RUT: ' + String(array[i][2]) +
+                            '<h4>Concesi&oacuten ' + String(array[i][1]) + '</h4>' +
+                            '<div id="bodyContent">' +
+                            '<p><b>Localidad : ' + String(array[i][4]) + '</b></p>' +
+                            '<p>&Aacute;rea: ' + parseFloat(Math.round(google.maps.geometry.spherical.computeArea(consessionPolygon.getPath().getArray()) / 100) / 100).toFixed(2) + ' Ha<p/>' +
+                            '<a href="/Centres/Details/' + String(array[i][1]) + '">Detalles</a>' +
+                            '<p align="right">Fuentes: <a target="_blank" href="http://www.sernapesca.cl"><img src="../images/ico/sernapesca.svg" width="100" /></a>' +
+                            '<text> | </text><a target="_blank" href="http://139.162.167.71:8081/"><img src="../images/ico/mejillondechile.svg" width="100" /></a>' +
+                            '<text> | </text><a target="_blank" href="http://www.subpesca.cl"><img src="../images/ico/subpesca.svg" width="100" /></a>.</p>' +
+                            '</div>' +
+                            '</div>');
+                        infowindow.open(map, marker);
+                        map.setCenter(marker.getPosition());
+                    };
+                })(marker, i));
+                markers.push(marker);
+                consessionPolygon.setMap(map);
+            }
+            var markerCluster = new MarkerClusterer(map, markers, { imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m' });
+        };
+function polygonCenter(poly) {
+    var lowx,
+        highx,
+        lowy,
+        highy,
+        lats = [],
+        lngs = [],
+        vertices = poly.getPath();
+
+    for (var i = 0; i < vertices.length; i++) {
+        lngs.push(vertices.getAt(i).lng());
+        lats.push(vertices.getAt(i).lat());
+    }
+
+    lats.sort();
+    lngs.sort();
+    lowx = lats[0];
+    highx = lats[vertices.length - 1];
+    lowy = lngs[0];
+    highy = lngs[vertices.length - 1];
+    center_x = lowx + (highx - lowx) / 2;
+    center_y = lowy + (highy - lowy) / 2;
+    return new google.maps.LatLng(center_x, center_y);
+}
+    </script>
+}

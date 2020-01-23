@@ -1,0 +1,194 @@
+﻿@inject UserManager<AppUser> UserManager
+
+@{
+    ViewData["Title"] = "BiblioMit";
+}
+@* "signalr", "/chat.min"*@
+<partial name="_Libs" model='new List<string> { "/home.min" }' />
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="first col-12">
+            <div class="jumbotron">
+                <div class="container">
+                    <div class="row justify-content-between">
+                        <div class="col-12 col-md">
+                            <a class="float-left" href="@Url.Action("Contact", "Home", null, null)" target="_blank">
+                                <img src="~/images/ico/bibliomit.svg" alt="BiblioMit" style="max-height:60px;" />
+                            </a>
+                            <h1 class="display-4">
+                                BiblioMit
+                            </h1>
+                        </div>
+                        <div class="col-7 col-md-2 p-0 m-0">
+                            <div class="row">
+                                <a class="col-6 p-0 m-0 pl-2" href="https://www.corfo.cl/" target="_blank">
+                                    <img src="~/images/ico/corfo.min.png" alt="corfo" class="logo-jumbo" />
+                                </a>
+                                <a class="col-6 p-0 m-0" href="https://www.gob.cl/" target="_blank">
+                                    <img src="~/images/ico/gob.cl.min.png" alt="gob.cl" class="logo-jumbo" />
+                                </a>
+                            </div>
+                        </div>
+                        <a class="col-5 col-md-2" href="http://www.mejillondechile.cl/" target="_blank">
+                            <img src="~/images/ico/mejillondechile.min.png" alt="mejillon de chile" class="logo-jumbo" />
+                        </a>
+                    </div>
+                    <div class="row">
+                        <h3 class="mt-0 text-justify">
+                            @Localizer["Electronic Library and Platform for Digital Management of <i>Mytilus chilensis</i> Resource."]
+                        </h3>
+                        <p class="text-justify small">
+                            @Localizer["A Tool of"] <strong><a target="_blank" href="http://www.amichile.com/">AmiChile</a></strong>,
+                            @Localizer["financed by"] <strong><a target="_blank" href="https://www.corfo.cl/">CORFO</a></strong>.
+                            @Localizer["as part of the regional strategic program of mussels"] <strong><a target="_blank" href="https://www.mejillondechile.cl/">PER</a></strong>
+                            @Localizer["for"] <strong><a target="_blank" href="http://www.intemit.cl/">INTEMIT</a></strong>
+                            @Localizer["and developed by"] <strong><a target="_blank" href="http://www.capia.cl">CAPIA</a></strong>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12 col-sm-2 p-0">
+                        <a class="col-6 col-lg-12 p-0" href="http://www.amichile.com/" target="_blank">
+                            <img src="~/images/ico/amichile.min.png" alt="AmiChile" class="logo-diapo" />
+                        </a>
+                        <a class="col-6 col-lg-12 p-0" href="http://www.intemit.cl/" target="_blank">
+                            <img src="~/images/ico/intemit.min.png" alt="Intemit" class="logo-diapo" />
+                        </a>
+                    </div>
+                    <div class="col-12 col-md-8 align-middle">
+                        <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
+                            <ol class="carousel-indicators" style="border-color:green">
+                                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                                <li data-target="#myCarousel" data-slide-to="1"></li>
+                                <li data-target="#myCarousel" data-slide-to="2"></li>
+                            </ol>
+                            <div class="carousel-inner" role="listbox">
+                                <div class="carousel-item active">
+                                    <div class="fill" style="background-image:url('/images/ribbons/chorito.min.jpg');"></div>
+                                    <div class="carousel-caption" role="option">
+                                        <a class="btn btn-primary" href="@Url.Action("Producers", "Centres", null, null)">
+                                            <h4> Publique su anuncio aquí </h4>
+                                        </a>
+                                        <p>
+                                            <strong style="color:darkgoldenrod">
+                                                Cientos de empresas relacionadas a la mitilicultura
+                                            </strong>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="fill" style="background-image:url('/images/ribbons/research.min.jpg');"></div>
+                                    <div class="carousel-caption" role="option">
+                                        <a class="btn btn-primary" href="@Url.Action("Research", "Centres", null, null)">
+                                            <h4> @Localizer["Researchers"] </h4>
+                                        </a>
+                                        <p>
+                                            <strong>
+                                                Bases de datos de grupos de investigación en <i>Mytilus chilensis</i>.
+                                            </strong>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="fill" style="background-image:url('/images/ribbons/library_banner_1140_1140x225.min.jpg');"></div>
+                                    <div class="carousel-caption" role="option">
+                                        <a class="btn btn-primary" href="@Url.Action("Index", "Publications", null, null)">
+                                            <h4> @Localizer["Library"] </h4>
+                                        </a>
+                                        <p>
+                                            <strong>
+                                                @Localizer["Publications and written resources databases of <i>Mytilus chilensis</i>."]
+                                            </strong>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-2 p-0 pt-2">
+                        <a class="col-6 col-md-12 p-0 m-0 logo-diapo" href="https://www.ust.cl/" target="_blank">
+                            <img src="~/images/ico/ust_logo_firma.min.png" alt="Icono UST" class="logo-diapo" />
+                        </a>
+                        <a class="col-6 col-md-12 p-0 m-0 logo-diapo" href="http://www.capia.cl/" target="_blank">
+                            <img src="~/images/ico/capia.min.png" alt="CAPIA" class="logo-diapo" />
+                        </a>
+                    </div>
+                </div>
+                @*<div class="row">
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                            <p><a class="btn btn-info btn-block" href="@Url.Action("Research", "Centres", null, null)" style="font-family:sans-serif;font-size:22px">Boletines &raquo;</a></p>
+                            <p style="text-align:justify">
+                                Boletín productivo <i>Mytilus chilensis</i>.
+                            </p>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                            <p><a class="btn btn-info btn-block" href="@Url.Action("Index", "Publications", null, null)" style="font-family:sans-serif;font-size:22px">Biblioteca &raquo;</a></p>
+                            <p style="text-align:justify">
+                                Archivos de BiblioMit una plataforma y base de datos dinámica
+                                de los actores del sector mitilicultor chileno.
+                            </p>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                            <p><a class="btn btn-info btn-block" href="@Url.Action("Producers", "Centres", null, null)" style="font-family:sans-serif;font-size:22px">Productores &raquo;</a></p>
+                            <p style="text-align:justify">
+                                Base de datos de Productores y concesiones de cultivo de la especie <i>Mytilus chilensis</i>.
+                            </p>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                            <p><a class="btn btn-info btn-block" href="@Url.Action("Research", "Centres", null, null)" style="font-family:sans-serif;font-size:22px">Investigadores &raquo;</a></p>
+                            <p style="text-align:justify">
+                                Base de datos de Laboratorios y Centros de Investigaci&oacute;n relativos a la especie <i>Mytilus chilensis</i>.
+                            </p>
+                        </div>
+                    </div>*@
+                @*<div class="row">
+                        <div class="col-4">
+                            <a href="http://www.amichile.com/" target="_blank">
+                                <img src="~/images/ico/amichile.svg" alt="AmiChile" class="img-fluid" />
+                            </a>
+                        </div>
+                        <div class="col-4">
+                            <a href="http://www.intemit.cl/" target="_blank">
+                                <img src="~/images/ico/intemit.svg" alt="Intemit" class="img-fluid" />
+                            </a>
+                        </div>
+                        <div class="col-4">
+                            <a href="http://www.capia.cl/" target="_blank">
+                                <img src="~/images/ico/capia.svg" alt="CAPIA" class="img-fluid" />
+                            </a>
+                        </div>
+                    </div>*@
+            </div>
+        </div>
+    </div>
+</div>
+<hr />
+<div style="margin-left:10px;">
+    <div class="row">
+        <a asp-controller="Home" asp-action="Analytics" style="color:black"><i class="fas fa-poll fa-fw"></i> @Localizer["Web Analytics"]</a><p class="m-0">&emsp;@Localizer["Total number of visits"]&emsp;<span id="counter"></span></p>
+    </div>
+    <div class="row">
+        <a target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLSdtgpabkbTL8eXZ1PJuyNzEkyAtX_eIdX7_84cO6aAMHxUKyQ/viewanalytics" style="color:black"><i class="fas fa-poll fa-fw"></i> @Localizer["Results"]</a>
+    </div>
+    <div class="row">
+        <a target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLSdtgpabkbTL8eXZ1PJuyNzEkyAtX_eIdX7_84cO6aAMHxUKyQ/viewform" style="color:orangered"><i class="fas fa-question fa-fw"></i> @Localizer["Tell us what you think!"]</a>
+    </div>
+</div>
+
+@this.Block(
+@<script>
+    $(document).ready(function () {
+        $("#counter").load("/home/getanalyticsdata?freq=all");
+    });
+</script>,"Scripts")

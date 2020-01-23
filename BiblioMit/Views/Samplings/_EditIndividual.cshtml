@@ -1,0 +1,46 @@
+﻿@model BiblioMit.Models.Individual
+@using BiblioMit.Models
+
+<form asp-action="EditIndividual" role="form">
+    <partial name="_ModalHeader" model='new ModalHeader
+{
+    Heading = Localizer["Subject"].Value
+    + ":  "
+    + Model.Id.ToString().Replace(Model.SamplingId.ToString(), "")
+    + " | "
+    + Localizer["Sample"].Value
+    + ":   " + Model.SamplingId
+}' />
+    <div class="form-horizontal modal-body">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="SamplingId" />
+        <div class="form-group">
+            <label asp-for="Length" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Length" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Sex" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="Sex" class="form-control" asp-items="ViewBag.Sex"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Maturity" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="Maturity" class="form-control" asp-items="ViewBag.Maturity"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Comment" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Comment" class="form-control" />
+            </div>
+        </div>
+    </div>
+    <partial name="_ModalFooter" model='new ModalFooter { }' />
+</form>
+
+    <partial name="_ValidationScriptsPartial" />

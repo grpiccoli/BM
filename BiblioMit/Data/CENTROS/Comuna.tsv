@@ -1,0 +1,346 @@
+0	0	0	Zona sin demarcar	0	0
+1101	11	0	Iquique	2	1
+1107	11	0	Alto Hospicio	2	1
+1401	11	0	Pozo Almonte	2	1
+1402	11	0	Camiña	2	1
+1403	11	0	Colchane	2	1
+1404	11	0	Huara	2	1
+1405	11	0	Pica	2	1
+2101	21	0	Antofagasta	4	2
+2102	21	0	Mejillones	4	2
+2103	21	0	Sierra Gorda	4	2
+2104	21	0	Taltal	4	2
+2201	22	0	Calama	3	2
+2202	22	0	Ollagüe	3	2
+2203	22	0	San Pedro de Atacama	3	2
+2301	23	0	Tocopilla	3	2
+2302	23	0	María Elena	3	2
+3101	31	0	Copiapó	5	3
+3102	31	0	Caldera	6	3
+3103	31	0	Tierra Amarilla	6	3
+3201	32	0	Chañaral	5	3
+3202	32	0	Diego de Almagro	5	3
+3301	33	0	Vallenar	6	3
+3302	33	0	Alto del Carmen	6	3
+3303	33	0	Freirina	6	3
+3304	33	0	Huasco	6	3
+4101	41	0	La Serena	7	4
+4102	41	0	Coquimbo	8	4
+4103	41	0	Andacollo	7	4
+4104	41	0	La Higuera	7	4
+4105	41	0	Paiguano	7	4
+4106	41	0	Vicuña	7	4
+4201	42	0	Illapel	9	4
+4202	42	0	Canela	9	4
+4203	42	0	Los Vilos	9	4
+4204	42	0	Salamanca	9	4
+4301	43	0	Ovalle	8	4
+4302	43	0	Combarbalá	9	4
+4303	43	0	Monte Patria	9	4
+4304	43	0	Punitaqui	9	4
+4305	43	0	Río Hurtado	8	4
+5101	51	0	Valparaíso	13	6
+5102	51	0	Casablanca	15	6
+5103	51	0	Concón	14	6
+5104	51	0	Juan Fernández	13	6
+5105	51	0	Puchuncaví	10	5
+5107	51	0	Quintero	10	5
+5109	51	0	Viña del Mar	14	6
+5201	52	0	Isla de Pascua	13	6
+5301	53	0	Los Andes	11	5
+5302	53	0	Calle Larga	11	5
+5303	53	0	Rinconada	11	5
+5304	53	0	San Esteban	11	5
+5401	54	0	La Ligua	10	5
+5402	54	0	Cabildo	10	5
+5403	54	0	Papudo	10	5
+5404	54	0	Petorca	10	5
+5405	54	0	Zapallar	10	5
+5501	55	0	Quillota	10	5
+5502	55	0	Calera	10	5
+5503	55	0	Hijuelas	10	5
+5504	55	0	La Cruz	10	5
+5506	55	0	Nogales	10	5
+5601	56	0	San Antonio	15	6
+5602	56	0	Algarrobo	15	6
+5603	56	0	Cartagena	15	6
+5604	56	0	El Quisco	15	6
+5605	56	0	El Tabo	15	6
+5606	56	0	Santo Domingo	15	6
+5701	57	0	San Felipe	11	5
+5702	57	0	Catemu	11	5
+5703	57	0	Llaillay	11	5
+5704	57	0	Panquehue	11	5
+5705	57	0	Putaendo	11	5
+5706	57	0	Santa María	11	5
+5801	51	0	Quilpué	12	5
+5802	55	0	Limache	12	5
+5803	55	0	Olmué	12	5
+5804	51	0	Villa Alemana	12	5
+6101	61	0	Rancagua	32	9
+6102	61	0	Codegua	33	9
+6103	61	0	Coinco	33	9
+6104	61	0	Coltauco	33	9
+6105	61	0	Doñihue	33	9
+6106	61	0	Graneros	33	9
+6107	61	0	Las Cabras	34	9
+6108	61	0	Machalí	33	9
+6109	61	0	Malloa	33	9
+6110	61	0	Mostazal	33	9
+6111	61	0	Olivar	33	9
+6112	61	0	Peumo	34	9
+6113	61	0	Pichidegua	34	9
+6114	61	0	Quinta de Tilcoco	33	9
+6115	61	0	Rengo	33	9
+6116	61	0	Requínoa	33	9
+6117	61	0	San Vicente	34	9
+6201	62	0	Pichilemu	35	9
+6202	62	0	La Estrella	35	9
+6203	62	0	Litueche	35	9
+6204	62	0	Marchihue	35	9
+6205	62	0	Navidad	35	9
+6206	62	0	Paredones	35	9
+6301	63	0	San Fernando	34	9
+6302	63	0	Chépica	35	9
+6303	63	0	Chimbarongo	34	9
+6304	63	0	Lolol	35	9
+6305	63	0	Nancagua	35	9
+6306	63	0	Palmilla	35	9
+6307	63	0	Peralillo	35	9
+6308	63	0	Placilla	35	9
+6309	63	0	Pumanque	35	9
+6310	63	0	Santa Cruz	35	9
+7101	71	0	Talca	37	10
+7102	71	0	Constitución	38	10
+7103	71	0	Curepto	38	10
+7104	71	0	Empedrado	38	10
+7105	71	0	Maule	38	10
+7106	71	0	Pelarco	38	10
+7107	71	0	Pencahue	38	10
+7108	71	0	Río Claro	38	10
+7109	71	0	San Clemente	38	10
+7110	71	0	San Rafael	38	10
+7201	72	0	Cauquenes	40	11
+7202	72	0	Chanco	40	11
+7203	72	0	Pelluhue	40	11
+7301	73	0	Curicó	36	10
+7302	73	0	Hualañé	36	10
+7303	73	0	Licantén	36	10
+7304	73	0	Molina	36	10
+7305	73	0	Rauco	36	10
+7306	73	0	Romeral	36	10
+7307	73	0	Sagrada Familia	36	10
+7308	73	0	Teno	36	10
+7309	73	0	Vichuquén	36	10
+7401	74	0	Linares	39	11
+7402	74	0	Colbún	39	11
+7403	74	0	Longaví	40	11
+7404	74	0	Parral	40	11
+7405	74	0	Retiro	40	11
+7406	74	0	San Javier	39	11
+7407	74	0	Villa Alegre	39	11
+7408	74	0	Yerbas Buenas	39	11
+8101	81	0	Concepción	44	12
+8102	81	0	Coronel	45	12
+8103	81	0	Chiguayante	44	12
+8104	81	0	Florida	45	12
+8105	81	0	Hualqui	45	12
+8106	81	0	Lota	46	13
+8107	81	0	Penco	45	12
+8108	81	0	San Pedro de la Paz	44	12
+8109	81	0	Santa Juana	45	12
+8110	81	0	Talcahuano	43	12
+8111	81	0	Tomé	45	12
+8112	81	0	Hualpén	43	12
+8201	82	0	Lebu	46	13
+8202	82	0	Arauco	46	13
+8203	82	0	Cañete	46	13
+8204	82	0	Contulmo	46	13
+8205	82	0	Curanilahue	46	13
+8206	82	0	Los Álamos	46	13
+8207	82	0	Tirúa	46	13
+8301	83	0	Los Ángeles	47	13
+8302	83	0	Antuco	47	13
+8303	83	0	Cabrero	42	12
+8304	83	0	Laja	47	13
+8305	83	0	Mulchén	47	13
+8306	83	0	Nacimiento	47	13
+8307	83	0	Negrete	47	13
+8308	83	0	Quilaco	47	13
+8309	83	0	Quilleco	47	13
+8310	83	0	San Rosendo	47	13
+8311	83	0	Santa Bárbara	47	13
+8312	83	0	Tucapel	47	13
+8313	83	0	Yumbel	42	12
+8314	83	0	Alto Biobío	47	13
+8401	84	0	Chillán	41	13
+8402	84	0	Bulnes	42	12
+8403	84	0	Cobquecura	42	12
+8404	84	0	Coelemu	42	12
+8405	84	0	Coihueco	41	13
+8406	84	0	Chillán Viejo	41	13
+8407	84	0	El Carmen	41	13
+8408	84	0	Ninhue	42	12
+8409	84	0	Ñiquén	42	12
+8410	84	0	Pemuco	41	13
+8411	84	0	Pinto	41	13
+8412	84	0	Portezuelo	42	12
+8413	84	0	Quillón	42	12
+8414	84	0	Quirihue	42	12
+8415	84	0	Ránquil	42	12
+8416	84	0	San Carlos	42	12
+8417	84	0	San Fabián	42	12
+8418	84	0	San Ignacio	41	13
+8419	84	0	San Nicolás	42	12
+8420	84	0	Treguaco	42	12
+8421	84	0	Yungay	41	13
+9101	91	0	Temuco	50	15
+9102	91	0	Carahue	51	15
+9103	91	0	Cunco	52	15
+9104	91	0	Curarrehue	52	15
+9105	91	0	Freire	51	15
+9106	91	0	Galvarino	49	14
+9107	91	0	Gorbea	52	15
+9108	91	0	Lautaro	49	14
+9109	91	0	Loncoche	52	15
+9110	91	0	Melipeuco	49	14
+9111	91	0	Nueva Imperial	51	15
+9112	91	0	Padre Las Casas	50	15
+9113	91	0	Perquenco	49	14
+9114	91	0	Pitrufquén	51	15
+9115	91	0	Pucón	52	15
+9116	91	0	Saavedra	51	15
+9117	91	0	Teodoro Schmidt	51	15
+9118	91	0	Toltén	52	15
+9119	91	0	Vilcún	49	14
+9120	91	0	Villarrica	52	15
+9121	91	0	Cholchol	51	15
+9201	92	0	Angol	48	14
+9202	92	0	Collipulli	48	14
+9203	92	0	Curacautín	49	14
+9204	92	0	Ercilla	48	14
+9205	92	0	Lonquimay	49	14
+9206	92	0	Los Sauces	48	14
+9207	92	0	Lumaco	48	14
+9208	92	0	Purén	48	14
+9209	92	0	Renaico	48	14
+9210	92	0	Traiguén	48	14
+9211	92	0	Victoria	49	14
+10101	101	1	Puerto Montt	57	17
+10102	101	1	Calbuco	57	17
+10103	101	0	Cochamó	57	17
+10104	101	0	Fresia	56	17
+10105	101	0	Frutillar	56	17
+10106	101	0	Los Muermos	56	17
+10107	101	0	Llanquihue	56	17
+10108	101	0	Maullín	57	17
+10109	101	0	Puerto Varas	56	17
+10201	102	3	Castro	58	17
+10202	102	1	Ancud	58	17
+10203	102	3	Chonchi	58	17
+10204	102	3	Curaco de Vélez	58	17
+10205	102	3	Dalcahue	58	17
+10206	102	3	Puqueldón	58	17
+10207	102	3	Queilén	58	17
+10208	102	2	Quellón	58	17
+10209	102	1	Quemchi	58	17
+10210	102	3	Quinchao	58	17
+10301	103	0	Osorno	55	16
+10302	103	0	Puerto Octay	56	17
+10303	103	0	Purranque	56	17
+10304	103	0	Puyehue	56	17
+10305	103	0	Río Negro	56	17
+10306	103	0	San Juan de la Costa	55	16
+10307	103	0	San Pablo	55	16
+10401	104	0	Chaitén	58	17
+10402	104	0	Futaleufú	58	17
+10403	104	1	Hualaihué	58	17
+10404	104	0	Palena	58	17
+11101	111	0	Coyhaique	59	18
+11102	111	0	Lago Verde	59	18
+11201	112	0	Aysén	59	18
+11202	112	0	Cisnes	59	18
+11203	112	0	Guaitecas	59	18
+11301	113	0	Cochrane	59	18
+11302	113	0	O'Higgins	59	18
+11303	113	0	Tortel	59	18
+11401	114	0	Chile Chico	59	18
+11402	114	0	Río Ibáñez	59	18
+12101	121	0	Punta Arenas	60	19
+12102	121	0	Laguna Blanca	60	19
+12103	121	0	Río Verde	60	19
+12104	121	0	San Gregorio	60	19
+12201	122	0	Cabo de Hornos	60	19
+12301	123	0	Porvenir	60	19
+12302	123	0	Primavera	60	19
+12303	123	0	Timaukel	60	19
+12401	124	0	Natales	60	19
+12402	124	0	Torres del Paine	60	19
+13101	131	0	Santiago	22	7
+13102	131	0	Cerrillos	20	7
+13103	131	0	Cerro Navia	18	7
+13104	131	0	Conchalí	17	7
+13105	131	0	El Bosque	27	8
+13106	131	0	Estación Central	20	7
+13107	131	0	Huechuraba	17	7
+13108	131	0	Independencia	19	7
+13109	131	0	La Cisterna	27	8
+13110	131	0	La Florida	26	8
+13111	131	0	La Granja	25	8
+13112	131	0	La Pintana	29	8
+13113	131	0	La Reina	24	8
+13114	131	0	Las Condes	23	8
+13115	131	0	Lo Barnechea	23	8
+13116	131	0	Lo Espejo	28	8
+13117	131	0	Lo Prado	18	7
+13118	131	0	Macul	25	8
+13119	131	0	Maipú	20	7
+13120	131	0	Ñuñoa	21	8
+13121	131	0	Pedro Aguirre Cerda	28	8
+13122	131	0	Peñalolén	24	8
+13123	131	0	Providencia	21	8
+13124	131	0	Pudahuel	16	7
+13125	131	0	Quilicura	16	7
+13126	131	0	Quinta Normal	18	7
+13127	131	0	Recoleta	19	7
+13128	131	0	Renca	17	7
+13129	131	0	San Joaquín	25	8
+13130	131	0	San Miguel	28	8
+13131	131	0	San Ramón	27	8
+13132	131	0	Vitacura	23	8
+13201	132	0	Puente Alto	29	8
+13202	132	0	Pirque	29	8
+13203	132	0	San José de Maipo	29	8
+13301	133	0	Colina	16	7
+13302	133	0	Lampa	16	7
+13303	133	0	Tiltil	16	7
+13401	134	0	San Bernardo	30	7
+13402	134	0	Buin	30	7
+13403	134	0	Calera de Tango	30	7
+13404	134	0	Paine	30	7
+13501	135	0	Melipilla	31	7
+13502	135	0	Alhué	31	7
+13503	135	0	Curacaví	31	7
+13504	135	0	María Pinto	31	7
+13505	135	0	San Pedro	31	7
+13601	136	0	Talagante	31	7
+13602	136	0	El Monte	31	7
+13603	136	0	Isla de Maipo	31	7
+13604	136	0	Padre Hurtado	31	7
+13605	136	0	Peñaflor	31	7
+14101	141	0	Valdivia	53	16
+14102	141	0	Corral	53	16
+14103	141	0	Lanco	53	16
+14104	141	0	Los Lagos	54	16
+14105	141	0	Máfil	53	16
+14106	141	0	Mariquina	53	16
+14107	142	0	Paillaco	54	16
+14108	141	0	Panguipulli	54	16
+14201	142	0	La Unión	54	16
+14202	142	0	Futrono	54	16
+14203	142	0	Lago Ranco	54	16
+14204	142	0	Río Bueno	54	16
+15101	151	0	Arica	1	1
+15102	151	0	Camarones	1	1
+15201	152	0	Putre	1	1
+15202	152	0	General Lagos	1	1

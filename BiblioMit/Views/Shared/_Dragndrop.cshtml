@@ -1,0 +1,11 @@
+﻿
+<partial name="_Libs" model='new List<string> { "/dragndrop.min" }' />
+
+@if (ViewData["Error"] != null)
+{
+    @this.Block(@<script>
+            $(document).ready(function () {
+                alert('ERROR: @ViewData["Error"] Por favor verifique el formato del archivo y vuelva a intentarlo');
+             })
+    </script>, "Scripts")
+}

@@ -1,0 +1,17 @@
+﻿@using BiblioMit.Views.Manage
+@inject SignInManager<AppUser> SignInManager
+@{
+    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+}
+
+<ul class="nav nav-pills flex-column">
+    <li class="nav-item @ManageNavPages.IndexNavClass(ViewContext)"><a class="nav-link" asp-action="Index">Perfil</a></li>
+    <li class="nav-item"><a class="nav-link" asp-controller="Profiles" asp-action="Details" asp-route-id="@UserManager.GetUserId(User)">Perfil P&uacute;blico</a></li>
+    <li class="nav-item @ManageNavPages.ChangePasswordNavClass(ViewContext)"><a class="nav-link" asp-action="ChangePassword">Contrase&ntilde;a</a></li>
+    @if (hasExternalLogins)
+    {
+        <li class="nav-item @ManageNavPages.ExternalLoginsNavClass(ViewContext)"><a class="nav-link" asp-action="ExternalLogins">Inicios de sesi&oacute;n externos</a></li>
+    }
+    <li class="nav-item @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)"><a class="nav-link" asp-action="TwoFactorAuthentication">Verificaci&oacute;n en dos pasos</a></li>
+</ul>
+

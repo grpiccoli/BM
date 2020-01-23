@@ -1,0 +1,14 @@
+{
+  "version": "1.0.0",
+  "name": "bibliomit",
+  "private": true,
+  "description": "",
+  "repository": {
+    "private": true
+  },
+  "devDependencies": {},
+  "dependencies": {
+    "cldr-data-downloader": "^0.3.5",
+    "google-translate-api": "^2.3.0"
+  }
+}

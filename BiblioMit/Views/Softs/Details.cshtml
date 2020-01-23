@@ -1,0 +1,36 @@
+@model BiblioMit.Models.Soft
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Soft</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.IndividualId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IndividualId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SoftType)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SoftType)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Tissue)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Tissue)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

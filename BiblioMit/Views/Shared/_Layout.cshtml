@@ -1,0 +1,149 @@
+﻿<!DOCTYPE html>
+<html lang="@Localizer["en"]">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+    <title>@ViewData["Title"] - BiblioMit</title>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-46146363-2');
+    </script>
+    <script>
+        window['GoogleAnalyticsObject'] = 'ga';
+        window['ga'] = window['ga'] || function () {
+            (window['ga'].q = window['ga'].q || []).push(arguments)
+        };
+    </script>
+    <meta name="author" content="Epic Solutions" />
+    <open-graph-website site-name="BiblioMit"
+                        title="@ViewData["Title"]"
+                        main-image="@(new OpenGraphImage(
+        new Uri($"{Context.Request.Scheme}://{Context.Request.Host}/android-chrome-512x512.png"),
+        "image/png",
+        1200,
+        630))"
+                        determiner="@OpenGraphDeterminer.Blank" />
+    <script type="application/ld+json">
+        @{
+            var website = new WebSite()
+            {
+                AlternateName = "Biblioteca y repositorio digital de Mytilus chilensis",
+                Name = "BiblioMit - " + (string)ViewData["Title"],
+                Url = new Uri($"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}{Context.Request.QueryString}")
+            };
+            var jsonLd = website.ToString();
+        }
+        @Html.Raw(jsonLd)
+    </script>
+    @Html.Raw(new TwitterCardSummaryLargeImage
+{
+    Title = "BiblioMit",
+    Description = "Biblioteca y repositorio digital de Mytilus chilensis",
+    CreatorUsername = "@guille_arp",
+    SiteUsername = "@guille_arp"
+})
+    <!-- Google Tag Manager -->
+    @*<script src="~/js/google-ads.js"></script>*@
+    <environment exclude="Development">
+        <script>
+            (function (w, d, s, l, i) {
+                w[l] = w[l] || []; w[l].push({
+                    'gtm.start':
+                        new Date().getTime(), event: 'gtm.js'
+                }); var f = d.getElementsByTagName(s)[0],
+                    j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                        'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+            })(window, document, 'script', 'dataLayer', 'GTM-W7K9PRH');</script>
+        <!-- End Google Tag Manager -->
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-46146363-2"></script>
+        @*<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>*@
+        @*<script src="~/js/google-ads.min.js" asp-append-version="true"></script>*@
+        <meta name="google-site-verification" content="g-pGvrm_POLRtvTDGYJTTkKtecLY11qo0zOeNVMY2Eg" />
+    </environment>
+    <partial name="_Favicons" />
+    <partial name="_Libs" model='new List<string> { "TOP", "jquery", "bootstrap", "@fortawesome/fontawesome-free", "/site.min", "/modal-action.min" }' />
+    @this.WriteBlocks("TOP_Styles")
+    @this.WriteBlocks("Styles")
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W7K9PRH"
+                height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <header>
+        <div class="fixed-top">
+            <partial name="_Nav" />
+            @RenderSection("NavBar", required: false)
+        </div>
+    </header>
+    <main role="main">
+        <div class="body-content container-fluid">
+            <partial name="_CookieConsentPartial" />
+            <!-- Load Facebook SDK for JavaScript -->
+            <div id="fb-root"></div>
+            <script>
+                window.fbAsyncInit = function () {
+                    FB.init({
+                        xfbml: true,
+                        version: 'v3.2'
+                    });
+                };
+
+                (function (d, s, id) {
+                    var js, fjs = d.getElementsByTagName(s)[0];
+                    if (d.getElementById(id)) return;
+                    js = d.createElement(s); js.id = id;
+                    js.src = 'https://connect.facebook.net/es_LA/sdk/xfbml.customerchat.js';
+                    fjs.parentNode.insertBefore(js, fjs);
+                }(document, 'script', 'facebook-jssdk'));</script>
+
+            <!-- Your customer chat code -->
+            <div class="fb-customerchat"
+                 attribution=setup_tool
+                 page_id="1350128371792150"
+                 theme_color="#6699cc"
+                 logged_in_greeting="¡Hola! ¿Cómo puedo ayudarte?"
+                 logged_out_greeting="¡Hola! ¿Cómo puedo ayudarte?">
+            </div>
+            @RenderBody()
+            <partial name="_Modal" model='new BootstrapModel { Id = "modal-action", AreaLabeledId = "modal-action-label", Size = ModalSize.Medium }' />
+        </div>
+    </main>
+    <footer class="container-fluid">
+        <div class="row justify-content-between">
+            <div class="col-md-3">
+                <p>
+                    <a asp-controller="Home" asp-action="Manual">
+                        <i class="fas fa-info-circle fa-tw"></i> @Localizer["User Manual"]
+                    </a>
+                </p>
+            </div>
+            <div class="col-md-4 align-self-end">
+                <div class="row">
+                    <div class="col">
+                        <a target="_blank" href="https://www.epicsolutions.cl">
+                            <img src="~/epic_light_hor.svg" alt="epic solutions" class="img-responsive" height="20" />
+                        </a>
+                    </div>
+                    <div class="col">
+                        <p class="text-right">
+                            &copy; @DateTime.Now.Year - BiblioMit
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    @this.WriteBlocks("TOP_Scripts")
+    @RenderSection("ScripTop", required: false)
+    @this.WriteBlocks("Scripts")
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

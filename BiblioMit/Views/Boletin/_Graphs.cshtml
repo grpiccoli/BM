@@ -1,0 +1,241 @@
+﻿@model BiblioMit.Models.ViewModels.GraphVM
+
+@if (Model.Version == 4)
+{
+    @*<script>
+        var chart = am4core.create("provinciasSemilla", am4charts.PieChart);
+
+        // Add data
+        chart.data = [@Html.Raw(String.Join(",", Reportes.Semilla.ToString()))];
+
+        // Add and configure Series
+        var pieSeries = chart.series.push(new am4charts.PieSeries());
+        pieSeries.dataFields.value = "Toneladas";
+        pieSeries.dataFields.category = "Provincia";
+        </script>*@
+}
+else if (Model.Version == 3)
+{
+    @foreach (var i in Model.Reportes)
+    {
+        <script>
+            var chart = AmCharts.makeChart("provincias@(i)", {
+                "type": "pie",
+                "language": "es",
+                "labelText": "[[title]]\n[[percents]]%",
+                "export": {
+                    "enabled": true,
+                    "menu": []
+                },
+                "legend": {
+                    "position": "bottom",
+                    "align": "center",
+                    "valueText": "[[value]] Ton.",
+                    "right": -4,
+                    "valueWidth": 80,
+                    "marginRight": 21
+                },
+                "dataProvider": [ @Html.Raw(String.Join(",", Model.Graphs["provincias"][i])) ],
+                "valueField": "Ton.",
+                "titleField": "Provincia",
+                "balloon":{
+                    "fixedPosition":true
+                }
+            });
+            chart.autoMargins = false;
+            chart.marginTop = 20;
+            chart.marginBottom = 20;
+            chart.marginLeft = 0;
+            chart.marginRight = 0;
+            chart.pullOutRadius = 0;
+        </script>
+        <script>
+            var chart = AmCharts.makeChart("comunas@(i)", {
+                "type": "serial",
+                "language": "es",
+                "labelText": "[[title]]\n[[percents]]%",
+                "export": {
+                    "enabled": true,
+                    "menu": []
+                },
+                "legend": {
+                    "position":"bottom"
+                },
+                "categoryField": "Comuna",
+                "categoryAxis": {
+                    "minPeriod": "mm",
+                    "autoGridCount": false,
+                    "equalSpacing": true,
+                    "gridCount": 1000,
+                    "labelRotation": 90, //recommended if you have a lot of labels
+                    "axisHeight": 50  //recommended to avoid overlap with the scrollbar
+                },
+                "graphs": [
+                    {
+                        "balloonText": "@Model.Start-@Model.End @Model.Year [[category]]:[[value]]T",
+                        "fillAlphas": 0.8,
+                        "id": "AmGraph-1",
+                        "lineAlpha": 0.2,
+                        "title": "@Model.Start-@Model.End @Model.Year",
+                        "type": "column",
+                        "valueField": "@Model.Year"
+                    },
+                    {
+                        "balloonText": "@Model.Start-@Model.End @(Model.Year - 1) [[category]]:[[value]]T",
+                        "fillAlphas": 0.8,
+                        "id": "AmGraph-2",
+                        "lineAlpha": 0.2,
+                        "title": "@Model.Start-@Model.End @(Model.Year - 1)",
+                        "type": "column",
+                        "valueField": "@(Model.Year - 1)"
+                    }
+                ],
+                "dataProvider": [ @Html.Raw(String.Join(",", Model.Graphs["comunas"][i])) ]
+            });
+        </script>
+        <script>
+            var chart = AmCharts.makeChart("meses@(i)", {
+                "type": "serial",
+                "dataDateFormat": "YYYY-M",
+                "valueAxes": [{
+                    "position": "left"
+                }],
+                "export": {
+                    "enabled": true,
+                    "menu": []
+                },
+                "categoryField": "date",
+                "graphs": [{
+                    "title": "@(i)",
+                    "color": "#ff731c",
+                    "bullet": "round",
+                    "bulletBorderAlpha": 0,
+                    "lineThickness": 2,
+                    "valueField": "value",
+                    "balloonText": "<span style='font-size:18px;'>BLA [[category]]: [[value]] Ton.</span>"
+                }],
+                "categoryAxis": {
+                    "gridThickness": 0,
+                    "parseDates": true,
+                    "minPeriod": "MM",
+                    "dateFormats": [
+                        { period: 'MM', format: 'MMM' },
+                        { period: 'YYYY', format: 'MMM' }
+                    ]
+                },
+                "legend": {
+                    "position": "bottom",
+                    "align": "center",
+                    "valueText": "[[value]] Ton.",
+                    "right": -4,
+                    "marginRight": 21,
+                    "equalWidths": false,
+                    "useGraphSettings": true,
+                    "valueAlign": "left",
+                    "valueWidth": 120
+                },
+                "chartCursor": {
+                    "categoryBalloonDateFormat": 'MMM YYYY'
+                },
+                "dataProvider": [ @Html.Raw(String.Join(",", Model.Graphs["meses"][i])) ]
+            });
+            AmCharts.shortMonthNames = ['Ene', 'Feb', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+        </script>
+    }
+
+<script>
+    function exportReport() {
+
+        // So that we know export was started
+        console.log("Starting export...");
+
+        // Define IDs of the charts we want to include in the report
+        var ids = ["provinciasSemilla", "provinciasCosecha", "mesesSemilla", "mesesCosecha"];
+
+        // Collect actual chart objects out of the AmCharts.charts array
+        var charts = {};
+        var charts_remaining = ids.length;
+        for (var i = 0; i < ids.length; i++) {
+            for (var x = 0; x < AmCharts.charts.length; x++) {
+                if (AmCharts.charts[x].div.id === ids[i])
+                    charts[ids[i]] = AmCharts.charts[x];
+            }
+        }
+
+        // Trigger export of each chart
+        for (var y in charts) {
+            if (charts.hasOwnProperty(y)) {
+                var chart = charts[y];
+                chart["export"].capture({}, function () {
+                    this.toPNG({}, function (data) {
+
+                        // Save chart data into chart object itself
+                        this.setup.chart.exportedImage = data;
+
+                        // Reduce the remaining counter
+                        charts_remaining--;
+
+                        // Check if we got all of the charts
+                        if (charts_remaining === 0) {
+                            // Yup, we got all of them
+                            // Let's proceed to putting PDF together
+                            generatePDF();
+                        }
+
+                    });
+                });
+            }
+        }
+        function generatePDF() {
+            // Log
+            var layout = {
+                "content": []
+            };
+            // Let's add a custom title
+            layout.content.push({
+                "text": "Lorem ipsum dolor sit amet, consectetur adipiscing",
+                "fontSize": 15
+            });
+
+            // Now let's grab actual content from our intro tag
+            layout.content.push({ "text": $("#intro").html() });
+
+            layout.content.push({
+                "image": charts["provinciasSemilla"].exportedImage,
+                "fit": [523, 300]
+            });
+
+            layout.content.push({
+                "table": {
+                    // headers are automatically repeated if the table spans over multiple pages
+                    // you can declare how many rows should be treated as headers
+                    "headerRows": 1,
+                    "widths": ["16%", "16%", "16%", "16%", "16%", "*"],
+                    "body": [
+                        ["USA", "UK", "Canada", "Japan", "France", "Brazil"],
+                        ["5000", "4500", "5100", "1500", "9600", "2500"],
+                        ["5000", "4500", "5100", "1500", "9600", "2500"],
+                        ["5000", "4500", "5100", "1500", "9600", "2500"]
+                    ]
+                }
+            });
+
+            layout.content.push({
+                "columns": [{
+                    "width": "25%",
+                    "image": charts["provinciasCosecha"].exportedImage,
+                    "fit": [125, 300]
+                }, {
+                    "width": "*",
+                    "stack": [
+                        $("#note1").innerHTML,
+                        "nn",
+                        $("#note2").innerHTML
+                    ]
+                }],
+                "columnGap": 10
+            });
+        }
+    }
+</script>
+}

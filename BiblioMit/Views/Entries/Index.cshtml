@@ -1,0 +1,180 @@
+﻿@model IEnumerable<BiblioMit.Models.ProdEntry>
+@using BiblioMit.Models.ViewModels
+
+@{
+    ViewData["Title"] = "Archivos";
+    var id = (string)ViewContext.RouteData.Values["id"];
+    ViewData["controller"] = this.ViewContext.RouteData.Values["controller"].ToString();
+    ViewData["action"] = this.ViewContext.RouteData.Values["action"].ToString();
+    var processing = id != null;
+    var _id = Convert.ToInt32(id);
+    var entry = processing ? Model.Single(e => e.Id == _id) : null;
+    var success = processing ? entry.Success : false;
+    var error = entry != null && !String.IsNullOrWhiteSpace(entry.OutPut) && !entry.Success;
+}
+
+<partial name="_Libs" model='new List<string> { "/dinamicTable.min", "signalr", "/entry.min" }' />
+
+<div class="row">
+    <div class="col-6">
+        <h1 class="titulo">Planillas Cargadas</h1>
+    </div>
+    <div class="col-6">
+        <img class="logo" align="right" height="65"
+             src="~/images/ico/mejillondechile.svg" />
+    </div>
+</div>
+
+@if (processing)
+{
+    <div class="progress" style="height:20px;">
+        <div id="progressHub" class='progress-bar progress-bar-striped active@(error ? " bg-danger" : "")@(success ? " bg-success" : "")'
+             role='progressbar' aria-valuenow='0.1' aria-valuemin='0' aria-valuemax='100' style="width:@(error || success ? "100": "0.1")%;">
+            @(error || success ? "" : "0.1%")
+        </div>
+    </div>
+    <div id="log" class="log col-12" style="max-height:1.5em;background-color:#343a40;color:azure;">
+        @*<button class="btn" data-clipboard-snippet="">
+                <img class="clippy" width="13" src="~/images/clippy.svg" alt="Copy to clipboard">
+            </button>*@
+        <p>@(error || success ? entry.OutPut : "Processing...")</p>
+    </div>
+}
+<div class="d-flex">
+    <div class="clear btn btn-sm">
+        <partial name="_ClearFilters" model="@Url.RouteUrl(this.ViewContext.RouteData.Values)" />
+    </div>
+    <div class="btn btn-sm">
+        <a class="btn btn-block btn-danger" title="Limpiar Filtros" asp-action="Create">
+            <i class="fas fa-plus fa-fw"></i><span class="d-none d-sm-inline">&nbsp;Añadir Datos</span>
+        </a>
+    </div>
+</div>
+<div class="paging">
+    <partial name="_Paging" view-data="@ViewData" />
+</div>
+<div id="constrainer2">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    <partial name="_TableFilter" view-data="@ViewData" model='new TableFilterVM
+                    {
+                        Id = "Date",
+                        Name = Html.DisplayNameFor(model => model.Date),
+                        Type = FilterType.date
+                    }' />
+                </th>
+                <th>
+                    <partial name="_TableFilter" view-data="@ViewData" model='new TableFilterVM
+                    {
+                        Id = "Reportes",
+                        Name = Html.DisplayNameFor(model => model.Reportes),
+                        Type = FilterType.select
+                    }' />
+                </th>
+                <th>
+                    <partial name="_TableFilter" view-data="@ViewData" model='new TableFilterVM
+                    {
+                        Id = "FileName",
+                        Name = Html.DisplayNameFor(model => model.FileName),
+                        Type = FilterType.select
+                    }' />
+                </th>
+                <th>
+                    <partial name="_TableFilter" view-data="@ViewData" model='new TableFilterVM
+                    {
+                        Id = "Agregadas",
+                        Name = Html.DisplayNameFor(model => model.Agregadas),
+                        Type = FilterType.select
+                    }' />
+                </th>
+                <th>
+                    <partial name="_TableFilter" view-data="@ViewData" model='new TableFilterVM
+                    {
+                        Id = "Actualizadas",
+                        Name = Html.DisplayNameFor(model => model.Actualizadas),
+                        Type = FilterType.select
+                    }' />
+                </th>
+                <th>
+                    <partial name="_TableFilter" view-data="@ViewData" model='new TableFilterVM
+                    {
+                        Id = "Min",
+                        Name = Html.DisplayNameFor(model => model.Min),
+                        Type = FilterType.select
+                    }' />
+                </th>
+                <th>
+                    <partial name="_TableFilter" view-data="@ViewData" model='new TableFilterVM
+                   {
+                       Id = "AppUserId",
+                       Val = (string)ViewData["srt"] == "AppUserId" ? (string)ViewData["val"] : "",
+                       Name = Html.DisplayNameFor(model => model.AppUserId),
+                       MaxOptions = 10,
+                       LiveSearch = true,
+                       Type = FilterType.select
+                   }' />
+                </th>
+                <th>
+                    <partial name="_TableFilter" view-data="@ViewData" model='new TableFilterVM
+                    {
+                        Id = "IP",
+                        Name = Html.DisplayNameFor(model => model.IP)
+                    }' />
+                </th>
+                <th>
+                    <partial name="_TableFilter" view-data="@ViewData" model='new TableFilterVM
+                    {
+                        Id = "OutPut",
+                        Name = Html.DisplayNameFor(model => model.OutPut)
+                    }' />
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Date)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Reportes)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FileName)
+                    </td>
+                    <td class="@(item.Id == _id ? "agregadas": "")">
+                        @Html.DisplayFor(modelItem => item.Agregadas)
+                    </td>
+                    <td class="@(item.Id == _id ? "actualizadas": "")">
+                        @Html.DisplayFor(modelItem => item.Actualizadas)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Min) - @Html.DisplayFor(modelItem => item.Max)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AppUser.UserName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IP)
+                    </td>
+                    <td>
+                        <a id="outputModal"
+                           data-toggle="modal"
+                           asp-action="Output"
+                           asp-route-id="@item.Id"
+                           data-target="#modal-action"
+                           class="btn">
+                            <i class="fas fa-eye fa-fw"></i>View
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<partial name="_Modal" model='new BootstrapModel { Id = "modal-action", AreaLabeledId = "modal-action-label", Size = ModalSize.Medium }' />
+<partial name="_Filter" view-data="@ViewData" />

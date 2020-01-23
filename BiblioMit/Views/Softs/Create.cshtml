@@ -1,0 +1,42 @@
+@model BiblioMit.Models.Soft
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create</h2>
+
+<form asp-action="Create">
+    <div class="form-horizontal">
+        <h4>Soft</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="IndividualId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="IndividualId" class="form-control" asp-items="ViewBag.SamplingId"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="SoftType" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="SoftType" class="form-control" />
+                <span asp-validation-for="SoftType" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Tissue" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Tissue" class="form-control" />
+                <span asp-validation-for="Tissue" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+    <partial name="_ValidationScriptsPartial" />
+

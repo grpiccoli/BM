@@ -1,0 +1,74 @@
+﻿@model IEnumerable<UserListViewModel>
+@using BiblioMit.Models
+
+<div class="top-buffer"></div>
+<div class="container body-content">
+    <div class="row sectionHeader">
+        <div class="sectionHeading">Usuarios</div>
+    </div>
+    <div class="panel-body">
+        <div class="btn-group">
+            <a id="createEditUserModal" data-toggle="modal" asp-action="AddUser" data-target="#modal-action" class="btn btn-primary">
+                <i class="glyphicon glyphicon-plus"></i>  A&ntilde;adir Usuario
+            </a>
+        </div>
+        <div class="top-buffer"></div>
+        <table class="table table-bordered table-striped table-condensed">
+            <thead>
+                <tr>
+                    <th>Imagen</th>
+                    <th>Correo</th>
+                    <th>Ingreso</th>
+                    <th>Calificaci&oacute;n</th>
+                    <th>Rol</th>
+                    <th>Acci&oacute;n</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <div class="userProfilePic" style="background-image:url(@item.ProfileImageUrl)"></div>
+                        </td>
+                        <td>@item.Email</td>
+                        <td>
+                            @String.Format("{0:dd/MM/yy}", item.MemberSince)
+                        </td>
+                        <td>
+                            @item.UserRating
+                            <div class="stars">
+                                <span class="star @(item.UserRating >= 2 ? "on" : item.UserRating == 1 ? "half": "")"></span>
+                                <span class="star @(item.UserRating >= 4 ? "on" : item.UserRating == 3 ? "half": "")"></span>
+                                <span class="star @(item.UserRating >= 6 ? "on" : item.UserRating == 5 ? "half": "")"></span>
+                                <span class="star @(item.UserRating >= 8 ? "on" : item.UserRating == 7 ? "half": "")"></span>
+                                <span class="star @(item.UserRating >= 10 ? "on" : item.UserRating == 9 ? "half": "")"></span>
+                            </div>
+                        </td>
+                        <td>@item.RoleName</td>
+                        <td>
+                            @if (item.Email != "adminmit@bibliomit.cl")
+                            {
+                                @if (User.IsInRole("Administrador") || User.IsInRole("Editor"))
+                                {
+                                    <a id="editUserModal" data-toggle="modal" asp-action="EditUser" asp-route-id="@item.Id" data-target="#modal-action"
+                                       class="btn btn-info">
+                                        <i class="glyphicon glyphicon-pencil"></i>  Editar
+                                    </a>
+                                    if (User.IsInRole("Administrador"))
+                                    {
+                                        <a id="deleteUserModal" data-toggle="modal" asp-action="DeleteUser" asp-route-id="@item.Id" data-target="#modal-action" class="btn btn-danger">
+                                            <i class="glyphicon glyphicon-trash"></i>  Eliminar
+                                        </a>
+                                    }
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<partial name="_Modal" model='new BootstrapModel { Id = "modal-action", AreaLabeledId = "modal-action-label", Size = ModalSize.Medium }' />

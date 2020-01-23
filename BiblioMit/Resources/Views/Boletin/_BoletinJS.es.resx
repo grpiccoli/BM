@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Average" xml:space="preserve">
+    <value>Promedios</value>
+  </data>
+  <data name="en-GB" xml:space="preserve">
+    <value>es-CL</value>
+  </data>
+  <data name="It is one of the objectives of the National Fisheries and Aquaculture Service to promote public access to information regarding the scope of its competences. In the context of the implementation of the &quot;Mitílidos Regional Strategic Program&quot;, supported by CORFO, the line of action is &quot;to generate productive bulletins to facilitate access to the industry, to the information currently in the field of public sector&quot;. In this sense it is necessary to point out the following:&lt;br/&gt;&lt;strong&gt;a)&lt;/strong&gt; The Productive Bulletin contains information of a general nature that does not address specific circumstances related to specific persons or bodies.&lt;br/&gt;&lt;strong&gt;b)&lt;/strong&gt; The Productive Bulletin is supported by the information provided by the owners of the centers of crops and processing plants, therefore, this information is of a declarative nature, and does not compromise any responsibility of the service for its content and dissemination.&lt;br/&gt;&lt;strong&gt;c)&lt;/strong&gt; The Production Bulletin contains information of a preliminary nature, therefore, it may be modified as long as its publication in the official yearbook is pending.&lt;br/&gt;&lt;strong&gt;d)&lt;/strong&gt; Additionally, Sernapesca is not responsible for the problems caused by technical errors, nor can it guarantee that this report is issued free of errors." xml:space="preserve">
+    <value>Constituye uno de los objetivos del Servicio Nacional de Pesca y Acuicultura, fomentar el acceso público a la información relativa al ámbito de sus competencias. En el contexto de la ejecución del "Programa Estratégico Regional de Mitílidos", apoyado por CORFO, se encuentra como línea de acción la de "generar boletines productivos para facilitar el acceso a la industria, a la información que actualmente se encuentra en el ámbito del sector público". En este sentido es preciso señalar lo siguiente:
+&lt;br/&gt;
+&lt;strong&gt;a)&lt;/strong&gt; El Boletín Productivo contiene información de carácter general y que no aborda circunstancias específicas relativas a personas u organismos concretos.
+&lt;br/&gt;
+&lt;strong&gt;b)&lt;/strong&gt; El Boletín Productivo se sostiene con la información que aportan los titulares de los centros de cultivos y de plantas elaboradoras, por tanto, está información es de carácter declarativa, y no compromete responsabilidad alguna del servicio por su contenido y difusión.
+&lt;br/&gt;
+&lt;strong&gt;c)&lt;/strong&gt; El Boletín Productivo contiene información de carácter preliminar, por lo tanto, puede sufrir modificaciones en tanto se encuentre pendiente su publicación en el anuario oficial.
+&lt;br/&gt;
+&lt;strong&gt;d)&lt;/strong&gt; Adicionalmente, Sernapesca no es responsable de los problemas ocasionados por errores de carácter técnico, ni puede garantizar que el presente informe se emita libre de errores.</value>
+  </data>
+  <data name="Provinces" xml:space="preserve">
+    <value>Provincias</value>
+  </data>
+  <data name="The mission of Intemit is to increase the competitiveness of Chilean mussel farming, strengthening its value chain from the supply, generating synergies of multidisciplinary-scientific-technological cooperation, through applied research, products and services, with emphasis on the development of solutions, to the main environmental and productive problems of the mitilicultor sector, to provide relevant information that allows making public-private decisions. In this sense it is necessary to point out the following:&lt;br /&gt;&lt;strong&gt; a) &lt;/strong&gt; The environmental data correspond to a segment of the biooceanographic data that Intemit manages according to the agreements for the use of the information signed by the holders of the area and intemit for the use and administration of the data associated with the bivalve mollusk program.&lt;br /&gt;&lt;strong&gt; b) &lt;/strong&gt; The environmental data is shown as reported without modification.&lt;br /&gt;&lt;strong&gt; c) &lt;/strong&gt; Additionally, Intemit is not responsible for problems caused by technical errors, nor can it guarantee that this report is issued free of errors." xml:space="preserve">
+    <value>La misión de Intemit es aumentar la competitividad de la mitilicultura chilena, fortaleciendo su cadena de valor desde el abastecimiento, generando sinergias de cooperación multidisciplinarias-científico-tecnológicas, a través de investigación aplicada, productos y servicios, con énfasis en el desarrollo de soluciones, a los principales problemas ambientales y productivos del sector mitilicultor, para proveer información relevante que permita tomar decisiones público-privadas. En este sentido es preciso señalar lo siguiente:
+&lt;br/&gt;
+&lt;strong&gt;a)&lt;/strong&gt; Los datos ambientales corresponden a un segmento de los datos biooceanográficos que administra Intemit de acuerdo a los convenios de uso de la información firmados por los titulares del área e intemit para uso y administración de los datos asociados al programa de moluscos bivalvos.
+&lt;br/&gt;
+&lt;strong&gt;b)&lt;/strong&gt; Los datos ambientales se muestran como fueron informados sin modificaciones.
+&lt;br/&gt;
+&lt;strong&gt;c)&lt;/strong&gt; Adicionalmente, Intemit no es responsable de los problemas ocasionados por errores de carácter técnico, ni puede garantizar que el presente informe se emita libre de errores.</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>Total acumulado</value>
+  </data>
+  <data name="en" xml:space="preserve">
+    <value>es</value>
+  </data>
+</root>

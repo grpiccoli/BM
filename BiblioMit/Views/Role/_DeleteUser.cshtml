@@ -1,0 +1,11 @@
+﻿@model string
+@using BiblioMit.Models
+
+<form asp-action="DeleteAppRole" role="form">
+    <partial name="_ModalHeader" model='new ModalHeader { Heading = "Eliminar Rol" }' />
+
+    <div class="modal-body form-horizontal">
+        ¿Est&aacute;s seguro que quieres eliminar el rol de @Model?
+    </div>
+    <partial name="_ModalFooter" model='new ModalFooter { SubmitButtonText = "Eliminar" }' />
+</form>

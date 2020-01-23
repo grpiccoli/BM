@@ -1,0 +1,26 @@
+﻿@model AppRoleViewModel
+@using BiblioMit.Models
+
+<form asp-action="AddEditAppRole" role="form">
+    <partial name="_ModalHeader" model='new ModalHeader { Heading = $"{(String.IsNullOrEmpty(Model.Id) ? "Añadir" : "Editar")} Rol" }' />
+
+    <div class="modal-body form-horizontal">
+        <div class="row">
+            <div class="form-group">
+                <label asp-for="RoleName" class="col-lg-3 col-sm-3 control-label"></label>
+                <div class="col-lg-6">
+                    <input asp-for="RoleName" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="col-lg-3 col-sm-3 control-label"></label>
+                <div class="col-lg-6">
+                    <input asp-for="Description" class="form-control" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <partial name="_ModalFooter" model='new ModalFooter { }' />
+</form>
+
+<partial name="_ValidationScriptsPartial" />

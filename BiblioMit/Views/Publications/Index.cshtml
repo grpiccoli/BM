@@ -1,0 +1,300 @@
+@model IEnumerable<BiblioMit.Models.VM.PublicationVM>
+@using System.Text.RegularExpressions
+
+@{
+    ViewData["Title"] = "Buscador BiblioMit";
+    ViewData["lang"] = Localizer["en"];
+}
+
+<partial name="_Libs" model='new List<string> { "bootstrap-select",
+    "/bibico/style.min", "/bibliomit.min" }' />
+
+<div class="row">
+    <div class="col-12 col-lg-9">
+        <h3>
+            Búsqueda de
+            <i class="fas fa-book fa-fw"></i> Artículos,
+            <i class="fas fa-graduation-cap fa-fw"></i> Tesis,
+            <i class="fas fa-chart-bar fa-fw"></i> Proyectos y <i class="fas fa-registered fa-fw"></i> Patentes:
+        </h3>
+    </div>
+    @if ((bool)ViewData["any"])
+    {
+        <div class="col-12 col-lg-3">
+            <partial name="_Clock" view-data="ViewData" />
+        </div>
+    }
+</div>
+
+<hr class="section-heading-spacer">
+<form id="search" asp-action="Index" method="get" class="form-inline">
+    <div class="col-12 col-md-4">
+        <select name="src"
+                placeholder="Seleccione a lo menos 1 repositorio para la búsqueda"
+                class="selectpicker form-control w-100" multiple data-live-search="true"
+                data-actions-box="true" data-size="5"
+                title="Seleccione uno o más repositorios …" data-selected-text-format="count > 3">
+            <optgroup label="Tesis y Artículos de Universidades y Centros de Investigación">
+                @foreach (var u in (Dictionary<string, string>)ViewData["ues"])
+                {
+                    <option data-tokens="universidad tesis @u.Key" selected="@(((string[])ViewData["src"]).Contains(u.Key))" data-icon="bib-@u.Key-mono" data-subtext="(@u.Key)" value="@u.Key">@u.Value</option>
+                }
+            </optgroup>
+            <optgroup label="Proyectos:">
+                @foreach (var u in (Dictionary<string, string>)ViewData["proj"])
+                {
+                    <option data-tokens="proyectos @u.Key" selected="@(((string[])ViewData["src"]).Contains(u.Key))" data-icon="bib-@u.Key.ToLower()-mono" data-subtext="(@u.Value)" value="@u.Key">@u.Key</option>
+                }
+            </optgroup>
+            <optgroup label="Artículos Indexados">
+                @foreach (var u in (Dictionary<string, string>)ViewData["gs"])
+                {
+                    <option data-tokens="artículos @u.Key" selected="@(((string[])ViewData["src"]).Contains(u.Key))" data-icon="bib-@u.Key-mono" data-subtext="(@u.Key)" value="@u.Key">@u.Value</option>
+                }
+            </optgroup>
+            <optgroup label="Patentes">
+                @foreach (var u in (Dictionary<string, string>)ViewData["gp"])
+                {
+                    <option data-tokens="patentes @u.Key" selected="@(((string[])ViewData["src"]).Contains(u.Key))" data-icon="bib-@u.Key-mono" data-subtext="(@u.Key)" value="@u.Key">@u.Value</option>
+                }
+            </optgroup>
+        </select>
+    </div>
+    <div class="input-group col-12 col-md-8">
+        <div class="input-group-btn">
+            <div class="dropdown">
+                <button class="btn btn-secondary" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-sliders-h"></i>
+                </button>
+                <div class="dropdown-menu bloc">
+                    <h6 class="dropdown-header">Criterio:</h6>
+                    <select size="3" class="form-control" name="srt">
+                        <option value="score" selected="@(((string)ViewData["srt"]).Contains("score"))">Relevancia</option>
+                        <option value="title" selected="@(((string)ViewData["srt"]).Contains("title"))">Título</option>
+                        <option value="date" selected="@(((string)ViewData["srt"]).Contains("date"))">Fecha</option>
+                    </select>
+                    <h6 class="dropdown-header">Orden:</h6>
+                    <select size="2" class="form-control" name="asc">
+                        <option value="false" selected="@(!(bool)(ViewData["asc"]))">Descendente</option>
+                        <option value="true" selected="@((bool)(ViewData["asc"]))">Ascendente</option>
+                    </select>
+                    <h6 class="dropdown-header">Resultados por página:</h6>
+                    <select size="5" class="form-control" name="trpp">
+                        <option value="5" selected="@((int)ViewData["trpp"]==5)">5</option>
+                        <option value="10" selected="@((int)ViewData["trpp"]==10)">10</option>
+                        <option value="20" selected="@((int)ViewData["trpp"]==20)">20</option>
+                        <option value="50" selected="@((int)ViewData["trpp"]==50)">50</option>
+                        <option value="100" selected="@((int)ViewData["trpp"]==100)">100</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <input id="q" class="form-control" type="text" name="q" placeholder="Término(s) a buscar e.g. Mytilus" value="@ViewData["q"]" />
+        <span class="input-group-btn">
+            <button class="btn btn-primary" type="submit" value="Buscar"><i class="fas fa-search fa-fw"></i>&nbsp;Buscar</button>
+        </span>
+    </div>
+</form>
+
+@if ((bool)ViewData["any"])
+{
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <div class="col-6 col-md-3 btn-group-vertical">
+                @if ((bool)ViewData["multiple"])
+                {
+                    <button type="button" onclick="selectData(0);" class="stat btn btn-block btn-sm btn-outline-secondary">
+                        <i class="fas fa-globe-americas fa-fw"></i>
+                        <span><strong>@ViewData["all"]</strong> Resultados en <strong>@ViewData["tot"]</strong> Reps.</span>
+                    </button>
+                }
+                @if ((bool)ViewData["articles"])
+                {
+                    <button type="button" onclick="selectData(1);" class="stat btn btn-block btn-sm btn-outline-warning">
+                        <i class="fas fa-book fa-fw"></i>
+                        <span><strong>@ViewData["artscnt"]</strong> Artículos (@ViewData["%arts"]%)</span>
+                    </button>
+                }
+                @if ((bool)ViewData["tesis"])
+                {
+                    <button type="button" onclick="selectData(2);" class="stat btn btn-block btn-sm btn-outline-success">
+                        <i class="fas fa-graduation-cap fa-fw"></i>
+                        <span><strong>@ViewData["tesiscnt"]</strong> Tesis (@ViewData["%tesis"]%)</span>
+                    </button>
+                }
+                @if ((bool)ViewData["projects"])
+                {
+                    <button type="button" onclick="selectData(3);" class="stat btn btn-block btn-sm btn-outline-danger">
+                        <i class="fas fa-chart-bar fa-fw"></i>
+                        <span><strong>@ViewData["projcnt"]</strong> Proyectos (@ViewData["%proj"]%)</span>
+                    </button>
+                }
+                @if ((bool)ViewData["patents"])
+                {
+                    <button type="button" onclick="selectData(4);" class="stat btn btn-block btn-sm btn-outline-info">
+                        <i class="fas fa-registered fa-fw"></i>
+                        <span><strong>@ViewData["patscnt"]</strong> Patentes (@ViewData["%pats"]%)</span>
+                    </button>
+                }
+            </div>
+            @if ((bool)ViewData["couple"])
+            {
+                <div class="col-6 col-md-3">
+                    <div class="chartdiv chart" id="chartdiv"></div>
+                </div>
+                <div class="col-12 col-md-6" id="legenddiv"></div>
+                <partial name="_StatsGraph" view-data="ViewData" />
+            }
+        </div>
+    </div>
+    <br />
+    <partial name="_PagingPub" view-data="ViewData" />
+    <div class="table-responsive">
+        <table class="table table-hover table-sm">
+            <thead>
+                <tr>
+                    <th class="d-none d-sm-table-cell"></th>
+                    <th class="d-none d-sm-table-cell">
+                        @Html.DisplayNameFor(model => model.Source)
+                    </th>
+                    <th class="d-none d-sm-table-cell">
+                        @Html.DisplayNameFor(model => model.Typep)
+                    </th>
+                    <th>
+                        <a asp-action="Index" asp-route-src="@ViewData["srcs"]" asp-route-q="@ViewData["q"]"
+                           asp-route-srt="title" asp-route-asc="@(!(bool)ViewData["asc"])">
+                            @Html.DisplayNameFor(model => model.Title)
+                            @if ((string)ViewData["srt"] == "title")
+                            {
+                                <text>@Html.Raw(ViewData["arrow"])</text>
+                            }
+                        </a>  / @Html.DisplayNameFor(model => model.Authors) / @Html.DisplayNameFor(model => model.Journal) / @Html.DisplayNameFor(model => model.DOI)
+                    </th>
+                    <th>
+                        <a asp-action="Index" asp-route-src="@ViewData["srcs"]" asp-route-q="@ViewData["q"]"
+                           asp-route-srt="date" asp-route-asc="@(!(bool)ViewData["asc"])">
+                            @Html.DisplayNameFor(model => model.Date)
+                            @if ((string)ViewData["srt"] == "date")
+                            {
+                                <text>@Html.Raw(ViewData["arrow"])</text>
+                            }
+                        </a>
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="d-none d-sm-table-cell">
+                            @*@{ var acr = string.IsNullOrWhiteSpace(item.Company.Acronym) ? "bibliomit" : item.Company.Acronym; }
+                                <img src="~/images/ico/@(acr).svg" style="height:50px;"/>*@
+                            <span class="display-4 bib-@item.Company.Acronym">
+                                <span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span>
+                            </span>
+                        </td>
+                        <td class="d-none d-sm-table-cell">
+                            <strong>@Html.DisplayFor(modelItem => item.Company.BsnssName)</strong>
+                            <p>
+                                <a style="font-size:small" asp-controller="Companies" asp-action="Details" asp-route-id="@item.Company.Id">Detalles</a>
+                            </p>
+                        </td>
+                        <td class="d-none d-sm-table-cell">
+                            @Html.DisplayFor(modelItem => item.Typep)
+                        </td>
+                        <td>
+                            <div class="d-block d-sm-none">
+                                <div>
+                                    <div class="img-with-text">
+                                        <a style="font-size:small" asp-controller="Companies" asp-action="Details" asp-route-id="@item.Company.Id">
+                                            <span style="font-size:48px;" class="bib-@item.Company.Acronym">
+                                                <span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span>
+                                            </span>
+                                            <p style="font-size:smaller">
+                                                @item.Company.Acronym
+                                            </p>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3>
+                                        @Html.DisplayFor(modelItem => item.Typep)
+                                    </h3>
+                                </div>
+                            </div>
+                            <div>
+                                <p>
+                                    <a id="@Regex.Replace(item.Title, "[^A-Za-z]", "")"
+                                       class="title"
+                                       href="@(item.Uri == null ? "#" : item.Uri.ToString())"
+                                       data-toggle="tooltip"
+                                       data-placement="top"
+                                       data-trigger="hover">
+                                        <strong>@Html.DisplayFor(modelItem => item.Title)</strong>
+                                    </a>
+                                </p>
+                                @if (item.Authors != null && item.Authors.Any())
+                                {
+                                    <p>
+                                        @for (var i = 0; i < item.Authors.Count(); i++)
+                                        {
+                                            var sep = i + 1 == item.Authors.Count() ? "." : ";";
+                                            string aut = $"{item.Authors.ElementAt(i).Last}, {item.Authors.ElementAt(i).Name}{sep} ";
+                                            <a asp-action="Index" asp-route-src="@ViewData["srcs"]"
+                                               asp-route-q="@item.Authors.ElementAt(i).Last, @item.Authors.ElementAt(i).Name"
+                                               asp-route-srt="@ViewData["srt"]" asp-route-asc="@ViewData["asc"]"
+                                               asp-route-trpp="@ViewData["trpp"]">@aut</a>
+                                        }
+                                    </p>
+                                }
+                                @if (!String.IsNullOrEmpty(item.Journal))
+                                {
+                                    <p>
+                                        @Html.DisplayFor(modelItem => item.Journal)
+                                    </p>
+                                }
+                                <p>
+                                    <a target="_blank" href="@Html.DisplayFor(modelItem => item.DOI)">@Html.DisplayFor(modelItem => item.DOI)</a>
+                                </p>
+                            </div>
+                        </td>
+                        <td>
+                            @if (item.Date == DateTime.MinValue)
+                            {
+                                <text>&mdash;</text>
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(modelItem => item.Date)
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <partial name="_PagingPub" view-data="ViewData" />
+}
+
+@this.Block(@<script>
+    $(function () {
+        $('.title').tooltip({
+            title: translate
+        });
+        function translate() {
+            var e = $(this);
+            var localData = "error";
+            $.ajax({
+                url: "/home/translate",
+                type: 'post',
+                async: false,
+                data: {text: e.children(":first").html().replace(/[\n\r]+/g, " ").replace(/&nbsp;/g, " "), to: "@ViewData["lang"]"},
+                success: function (d) { localData = d; }
+            });
+            return localData;
+        }
+    });
+    </script>,"Scripts")
+
+<partial name="_ValidationScriptsPartial" />

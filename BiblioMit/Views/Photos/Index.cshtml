@@ -1,0 +1,110 @@
+@model IEnumerable<IGrouping<int, BiblioMit.Models.ViewModels.UploadPhotoViewModel>>
+
+@{
+    ViewData["Title"] = Localizer["Histopathological Image Gallery"];
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<p>
+    <a asp-action="Create">@Localizer["Upload New Image"]</a>
+</p>
+
+@Localizer["Search"]: <input id="ngy2search" type="text">
+<button type="button" id="btnsearch2">@Localizer["Search"]</button>
+<hr />
+
+<div id="my_nanogallery2"></div>
+@{
+    var galleryList = new List<string> { };
+
+    foreach (var sample in Model)
+    {
+        galleryList.Add("{ src: '" + sample.First().Url + "', srct: '" + sample.First().Thumb + "', title: '" + sample.Key + "', Id: '" + sample.Key + "', kind: 'album' }");
+        foreach (var album in sample.GroupBy(x => x.IndividualId))
+        {
+            galleryList.Add("{ src: '" + album.First().Url + "', srct: '" + album.First().Thumb + "', title: '" + album.Key + "', Id: '" + album.Key + "', albumId: '" + sample.Key + "', kind: 'album' }");
+            foreach (var photo in album)
+            {
+                galleryList.Add("{ src: '" + photo.Url + "', srct: '" + photo.Thumb + "', title: '" + photo.Comment + "', Id: '" + album.Key + photo.PhId + "', albumId: '" + album.Key + "' }");
+            }
+        }
+    }
+}
+
+<partial name="_Libs" model='new List<string> { "nanogallery2" }' />
+
+@section Scripts{
+    <script>
+        jQuery(document).ready(function () {
+            jQuery("#my_nanogallery2").nanogallery2({
+                items: [@Html.Raw(String.Join(",",galleryList))],
+                thumbnailWidth: 'auto',
+                thumbnailHeight: 170,
+                locationHash: false,
+                thumbnailL1GutterWidth: 40,
+                thumbnailL1GutterHeight: 40,
+                thumbnailStacks: 4,
+                thumbnailStacksTranslateZ: 0.3,
+                thumbnailStacksRotateX: 0.9,
+                galleryBuildInit2: 'perspective_900px|perspective-origin_50% 50%',
+                thumbnailL1HoverEffect2: 'thumbnail_translateZ_0px_10px_easeOutQuad_400 | thumbnail_rotateX_0deg_10deg_easeOutBack_200 | thumbnail_rotateX_10deg_0deg_delay250_keyframe_hoverin_easeOutBack_400',
+                thumbnailHoverEffect2: 'label_font-size_1em_1.5em|title_color_#000_#fff|image_scale_1.00_1.10_5000|image_rotateZ_0deg_4deg_5000',
+                viewerTools: {
+                    topLeft: 'label',
+                    topRight: 'custom1,fullscreenButton,closeButton'
+                },
+                icons: { viewerCustomTool1: '' },
+                fnImgToolbarCustDisplay: myImgToolbarCustDisplay,
+                viewerToolbar: {
+                    standard: 'minimizeButton, label, fullscreenButton, downloadButton, infoButton'
+                }
+            });
+        });
+        jQuery('#btnsearch2').on('click', function () {
+            jQuery("#my_nanogallery2").nanogallery2('search2', jQuery('#ngy2search').val(), jQuery('#ngy2search2').val());
+            alert('found: ' + jQuery("#my_nanogallery2").nanogallery2('search2Execute'));
+        });
+
+        function myImgToolbarCustDisplay($customToolbarElements, item) {
+            if (item.customData.myCounter == undefined) {
+                item.customData.myCounter = 1;
+            }
+            var s = '<div style="color:#f00;">photo Id: ' + item.GetId();
+            s += ' views: ' + item.customData.myCounter++ + '</div>';
+            $customToolbarElements.html(s);
+        }
+
+        //function myTnTool(action, item) {
+        //    console.dir(item);
+
+        //    switch (action) {
+        //        case 'info':
+        //            alert('Photo title: ' + item.title);
+
+        //            break;
+        //        case 'custom1':
+        //            // switch favorite status
+        //            item.customData.favorite = !item.customData.favorite;
+        //            TnSetFavorite(item);
+        //            break;
+        //    }
+        //}
+
+        //// Add custom elements after one thumbnail is build
+        //function myTnInit($e, item, GOMidx) {
+        //    var st = 'position:absolute;top:50%;left:50%;padding:10px;'
+        //    $e.find('.nGY2GThumbnailSub').append('<button style="' + st + '" type="button" class="ngy2info" data-ngy2action="info">photo info</button>');
+        //    TnSetFavorite(item);
+        //}
+
+        //// Set the favorite status
+        //function TnSetFavorite(item) {
+        //    var c = '#880';
+        //    if (item.customData.favorite) {
+        //        c = '#ff0';
+        //    }
+        //    item.$elt.find('[data-ngy2action="custom1"]').css('color', c);
+        //}
+    </script>
+}

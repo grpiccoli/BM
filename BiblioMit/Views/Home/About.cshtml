@@ -1,0 +1,111 @@
+﻿@{
+    ViewData["Title"] = "About";
+    ViewData["Message"] = "Plataforma de Gestión Tecnológica para el Sector Mitilicultor";
+}
+
+<partial name="_Libs" model='new List<string> { "nanogallery2" }' />
+
+<div class="row">
+    <div class="col-12 col-sm-6 align-middle">
+        <a class="float-left col-3" href="@Url.Action("Contact", "Home", null, null)" target="_blank">
+            <img src="~/images/ico/bibliomit.svg" alt="BiblioMit" class="img-fluid mh-10" />
+        </a>
+        <h1 class="float-right align-middle col-9">
+            BiblioMit
+        </h1>
+    </div>
+    <a class="float-left w-33 col-6 col-sm-3" href="https://www.corfo.cl/" target="_blank">
+        <img src="~/images/ico/corfo.svg" alt="corfo" class="img-fluid" />
+    </a>
+    <a class="float-left w-33 col-6 col-sm-3" href="http://www.mejillondechile.cl/" target="_blank">
+        <img src="~/images/ico/mejillondechile.min.png" alt="mejillon de chile" class="img-fluid" />
+    </a>
+</div>
+<h3>@ViewData["Message"]</h3>
+<p class="text-justify">
+    Un proyecto de la Asociación de Mitilicultores de Chile (<strong><a target="_blank" href="http://www.amichile.com/">AmiChile</a></strong>),
+    financiado por La Corporación de Fomento de la Producción (<strong><a target="_blank" href="https://www.corfo.cl/">CORFO</a></strong>),
+    enmarcado en el proyecto Código 16 NODO 70434 "Nodo Ciencia y Tecnología para la Industria Mitilicultora"
+    para el Instituto Tecnológico de Mitilicultura (<strong><a target="_blank" href="http://www.intemit.cl/">INTEMIT</a></strong>) y
+    desarrollado por el Centro Acuícola Pesquero de Investigación Aplicada (<strong><a target="_blank" href="http://www.capia.cl">CAPIA</a></strong>)
+    de la Universidad Santo Tomás (<strong><a target="_blank" href="http://www.ust.cl">UST</a></strong>).
+    <br />
+</p>
+<div class="row">
+    <div class="col-md-6">
+        <iframe src="https://www.youtube.com/embed/Xx-qk-a4-fA" frameborder="0" allow="encrypted-media; autoplay" allowfullscreen style="width:100%;height:auto;min-height:300px"></iframe>
+    </div>
+    <div class="col-md-6">
+        <h3>Objetivo:</h3>
+        <p class="text-justify"><strong>BiblioMit</strong> es una herramienta de gestión y portal de conexión entre la industria, academia, centros tecnológicos e institutos que tienen un rol escencial en Investigación y Desarrollo en Ciencia aplicada en el mundo Mitilicultor.</p>
+        <p><strong>BiblioMit</strong> Consta de:</p>
+        <ol class="text-justify">
+            <li>
+                Una Biblioteca electrónica en línea con documentos recopilados desde múltiples fuentes para el sector Mitilicultor a nivel nacional (descargable en formato digital), incluyendo:
+                <ul>
+                    <li>
+                        Número de actores del sector y su identificación.
+                    </li>
+                    <li>
+                        Número de tesis académicas publicadas especializadas del sector mitilicultor.
+                    </li>
+                    <li>
+                        Número de publicaciones especializadas del sector mitilicultor.
+                    </li>
+                    <li>
+                        Número de proyectos de Investigación y Desarrollo en el sector Mitilicultor categorizados por fuente de financiamiento.
+                        <br>
+                        <br>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                Una plataforma en línea que permite entregar información como:
+                <ul>
+                    <li>
+                        Agenda de Ciencia y Tecnología del sector priorizada en el corto, mediano y largo plazo.
+                    </li>
+                    <li>
+                        Mapa de grupos de investigación disponible para relacionarse con contactos de las empresas e instituciones de investigación dentro del rubro.
+                    </li>
+                    <li>
+                        Foro de discusión y ayuda comunitario interactivo.
+                    </li>
+                </ul>
+            </li>
+        </ol>
+    </div>
+</div>
+<div>
+    <a asp-controller="Home" asp-action="Privacy">@Localizer["Read our Privacy Policy"]</a>
+</div>
+<div class="row justify-content-center">
+    <div class="col-8" id="nanogallery2" data-nanogallery2='{
+     "galleryResizeAnimation": true,
+    "thumbnailHeight":          210,
+    "thumbnailWidth":           "auto",
+    "thumbnailL1GutterWidth":   90,
+    "thumbnailL1GutterHeight":  90,
+    "thumbnailBorderVertical":  0,
+    "thumbnailBorderHorizontal":0,
+    "itemsBaseURL":             "@Html.Raw(ViewData["Url"] as string)",
+    "thumbnailStacks":          4,
+    "thumbnailStacksRotateZ":   0.4,
+     "thumbnailLabel": {
+        "position":   "overImageOnMiddle",
+          "titleMultiLine": true,
+     "hideIcons": true,
+     "align": "left"
+        },
+    "thumbnailBuildInit2":      "thumbnail_transform-origin_50% 150%",
+    "thumbnailHoverEffect2":    "thumbnail_rotateX_0deg_10deg_easeOutBack_200 | thumbnail_rotateX_10deg_0deg_delay250_keyframe_hoverin_easeOutBack_400 | thumbnail_rotateY_0deg_20deg_easeOutQuad_150_hoverin|thumbnail_rotateY_20deg_-20deg_delay160_keyframe_hoverin_easeOutQuad_200|thumbnail_rotateY_-20deg_0deg_delay320_keyframe_hoverin_easeOutQuad_150|title_translateX_0px_20px_easeOutQuad_150_hoverin|title_translateX_20px_-20px_delay160_keyframe_hoverin_easeOutQuad_200|title_translateX_-20px_0px_delay320_keyframe_hoverin_easeOutQuad_150|description_translateX_0px_12px_easeOutQuad_150_hoverin|description_translateX_12px_-12px_delay160_keyframe_hoverin_easeOutQuad_200|description_translateX_-12px_0px_delay320_keyframe_hoverin_easeOutQuad_150 | toolsAppear | labelSlideUpTop",
+     "album":                   "none",
+     "thumbnailToolbarImage":{
+     "topLeft":"share", "topRight":"download"
+     }
+}'>
+        <a href="~/images/index-gallery/objetivo-ami-chile.jpg" data-ngThumb="/images/index-gallery/objetivo-ami-chile.jpg">@Localizer["Objective"]</a>
+        <a href="~/images/index-gallery/Agenda.jpg" data-ngThumb="/images/index-gallery/Agenda.jpg">@Localizer["Science and Technology Agenda"]</a>
+        <a href="~/images/index-gallery/Actores.jpg" data-ngThumb="/images/index-gallery/Actores.jpg">@Localizer["Map of stakeholders"]</a>
+    </div>
+</div>

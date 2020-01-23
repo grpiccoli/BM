@@ -1,0 +1,48 @@
+@model TwoFactorAuthenticationViewModel
+@{
+    ViewData["Title"] = "Verificación en dos pasos";
+    ViewData.AddActivePage(ManageNavPages.TwoFactorAuthentication);
+}
+
+<h4>@ViewData["Title"]</h4>
+@if (Model.Is2faEnabled)
+{
+    if (Model.RecoveryCodesLeft == 0)
+    {
+        <div class="alert alert-danger">
+            <strong>Ya no tienes c&oacute;digos de recuperaci&oacute;n disponibles.</strong>
+            <p>Debe <a asp-action="GenerateRecoveryCodes">generar un nuevo conjunto de c&oacute;digos de recuperaci&oacute;n</a> antes de que pueda iniciar sesi&oacute;n con un c&oacute;digo de recuperaci&oacute;n.</p>
+        </div>
+    }
+    else if (Model.RecoveryCodesLeft == 1)
+    {
+        <div class="alert alert-danger">
+            <strong>Te queda solo 1 c&oacute;digo de recuperaci&oacute;n disponible.</strong>
+            <p>Puedes <a asp-action="GenerateRecoveryCodes">generar un nuevo conjunto de c&oacute;digos de recuperaci&oacute;n</a>.</p>
+        </div>
+    }
+    else if (Model.RecoveryCodesLeft <= 3)
+    {
+        <div class="alert alert-warning">
+            <strong>Te quedan @Model.RecoveryCodesLeft c&oacute;digo de recuperaci&oacute;n disponibles.</strong>
+            <p>Deberías <a asp-action="GenerateRecoveryCodes">generar un nuevo conjunto de c&oacute;digos de recuperaci&oacute;n</a>.</p>
+        </div>
+    }
+
+    <a asp-action="Disable2faWarning" class="btn btn-default">Deshabilitar la verificaci&oacute;n en dos pasos</a>
+    <a asp-action="GenerateRecoveryCodes" class="btn btn-default">Generar nuevo conjunto de c&oacute;digos de recuperaci&oacute;n</a>
+}
+
+<h5>Aplicaci&oacute;n de Autenticaci&oacute;n</h5>
+@if (!Model.HasAuthenticator)
+{
+    <a asp-action="EnableAuthenticator" class="btn btn-default">A&ntilde;adir una Aplicaci&oacute;n de Autenticaci&oacute;n</a>
+}
+else
+{
+    <a asp-action="EnableAuthenticator" class="btn btn-default">Configurar Aplicaci&oacute;n de Autenticaci&oacute;n</a>
+    <a asp-action="ResetAuthenticatorWarning" class="btn btn-default">Restablecer la clave del autenticador</a>
+}
+
+    <partial name="_ValidationScriptsPartial" />
+

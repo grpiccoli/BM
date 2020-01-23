@@ -1,0 +1,91 @@
+﻿@model BiblioMit.Models.HomeViewModels.SearchResultModel
+
+<partial name="_Libs" model='new List<string> { "/background.min" }' />
+
+@{
+    ViewData["Title"] = Model.SearchQuery;
+}
+
+<div class="container body-content">
+    <div class="row sectionHeader">
+        <div class="sectionHeading">
+            <span>Resultados de b&uacute;squeda para: @Model.SearchQuery</span>
+            <form asp-controller="Home" asp-action="Search" method="post">
+                <div class="searchForm">
+                    <input asp-for="SearchQuery" type="text" placeholder="Buscar&hellip;" class="searchBar" onfocus="this.value = '';" />
+                    <button type="submit" class="btn btn-forumSearch">
+                        <i class="material-icons">search</i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row forumIndexContent">
+        @if (!Model.EmptySearchResults)
+        {
+            <table class="table table-hover table-boredered" id="forumIndexTable">
+                <tbody>
+                    @foreach (var post in Model.Posts)
+                    {
+                        <tr>
+                            <td>
+                                <a asp-controller="Fora" asp-action="Topic" asp-route-id="@post.Forum.Id">
+                                    <div class="forumLogo" style="background-image:url(@post.Forum.ImageUrl)"></div>
+                                </a>
+                                <div class="postData">
+                                    <div class="postTitle">
+                                        <a asp-controller="Posts" asp-action="Index" asp-route-id="@post.Id">
+                                            @post.Title
+                                        </a>
+                                    </div>
+                                    <div class="forumSubTitle">
+                                        <div>
+                                            Publicado por:
+                                            <span class="postAuthor">
+                                                <a asp-controller="Profile" asp-action="Detail" asp-route-id="@post.AuthorId">
+                                                    @post.AuthorName
+                                                </a>
+                                                <div class="stars">
+                                                    <span class="star @(post.AuthorRating > 2 ? "on" : post.AuthorRating == 1 ? "half": "")"></span>
+                                                    <span class="star @(post.AuthorRating > 4 ? "on" : post.AuthorRating == 3 ? "half": "")"></span>
+                                                    <span class="star @(post.AuthorRating > 6 ? "on" : post.AuthorRating == 5 ? "half": "")"></span>
+                                                    <span class="star @(post.AuthorRating > 8 ? "on" : post.AuthorRating == 7 ? "half": "")"></span>
+                                                    <span class="star @(post.AuthorRating > 10 ? "on" : post.AuthorRating == 9 ? "half": "")"></span>
+                                                </div>
+                                            </span>
+                                            En:
+                                            <span class="postForum">
+                                                <a asp-controller="Profile" asp-action="Detail" asp-route-id="@post.AuthorId">
+                                                    @post.Forum.Name
+                                                </a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="forumPostCount">
+                                    Respuestas: @post.RepliesCount
+                                </div>
+                            </td>
+                            <td>
+                                <div class="postDate">
+                                    @post.DatePosted
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="noPosts">
+                <i class="mateial-icons md-72">question_answer</i>
+                <h3>
+                    La b&uacute;squeda @Model.SearchQuery no arroj&oacute; resultados. <br />
+                </h3>
+            </div>
+        }
+    </div>
+</div>

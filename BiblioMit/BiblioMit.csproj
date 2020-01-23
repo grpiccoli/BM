@@ -1,0 +1,119 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <UserSecretsId>aspnet-BiblioMit-3E10FA62-82AF-4FA8-91A7-71A1040A7646</UserSecretsId>
+    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="BuildBundlerMinifier" Version="3.2.435" />
+    <PackageReference Include="AngleSharp" Version="0.13.0" />
+    <PackageReference Include="AspNetCore.IServiceCollection.AddIUrlHelper" Version="1.1.0" />
+    <PackageReference Include="Boxed.AspNetCore.TagHelpers" Version="3.2.0" />
+    <PackageReference Include="CoreCLR-NCalc" Version="2.2.70" />
+    <PackageReference Include="EPPlus" Version="4.5.3.2" />
+    <PackageReference Include="Google.Apis.AnalyticsReporting.v4" Version="1.43.0.1831" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.17" />
+    <PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.250" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.NodeServices" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.6">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.4" />
+    <PackageReference Include="Pluralize.NET.Core" Version="1.0.0" />
+    <PackageReference Include="Schema.NET" Version="7.0.1" />
+    <!--<PackageReference Include="PaulMiami.AspNetCore.Mvc.Recaptcha" Version="1.2.1" />-->
+    <PackageReference Include="Sendgrid" Version="9.12.5" />
+    <PackageReference Include="System.CodeDom" Version="4.7.0" />
+    <PackageReference Include="WebMarkupMin.AspNetCore2" Version="2.7.0" />
+    <PackageReference Include="Z.EntityFramework.Extensions.EFCore" Version="2.7.38" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="BundlerMinifier.Core" Version="2.9.406" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Content Include="DB\**" CopyToPublishDirectory="PreserveNewest" LinkBase="DB" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Remove="Controllers\bakupPub.cs" />
+    <Compile Remove="Migrations\20190110022315_Initial.cs" />
+    <Compile Remove="Migrations\20190110022315_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20190111134939_Initial.cs" />
+    <Compile Remove="Migrations\20190111134939_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20190128041346_Initial.cs" />
+    <Compile Remove="Migrations\20190128041346_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20190128045027_Initial.cs" />
+    <Compile Remove="Migrations\20190128045027_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20190128045643_Initial.cs" />
+    <Compile Remove="Migrations\20190128045643_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20190128050120_Initial.cs" />
+    <Compile Remove="Migrations\20190128050120_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20190128051152_Initial.cs" />
+    <Compile Remove="Migrations\20190128051152_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20190207163209_Initial.cs" />
+    <Compile Remove="Migrations\20190207163209_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20190219165310_Initial2.cs" />
+    <Compile Remove="Migrations\20190219165310_Initial2.Designer.cs" />
+    <Compile Remove="Migrations\20190223001757_Initial3.cs" />
+    <Compile Remove="Migrations\20190223001757_Initial3.Designer.cs" />
+    <Compile Remove="Migrations\20190223002521_Initial.cs" />
+    <Compile Remove="Migrations\20190223002521_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20190223230234_Initial.cs" />
+    <Compile Remove="Migrations\20190223230234_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20190509165606_Initial.cs" />
+    <Compile Remove="Migrations\20190509165606_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20190509202908_Initial.cs" />
+    <Compile Remove="Migrations\20190509202908_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20190510233054_Initial.cs" />
+    <Compile Remove="Migrations\20190510233054_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20190511002826_Initial.cs" />
+    <Compile Remove="Migrations\20190511002826_Initial.Designer.cs" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Include="Controllers\bakupPub.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\EnumResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>EnumResources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="BiblioMit-cb7f4de3a209.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="client_secret.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\EnumResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>EnumResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
+  
+</Project>

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid" viewBox="0 0 153 153.1">
+  <defs>
+    <filter id="b" width="2" height="2" x="-.5" y="-.5" filterUnits="objectBoundingBox">
+      <feOffset dy="2" in="SourceAlpha" result="shadowOffsetOuter1"/>
+      <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="1"/>
+      <feColorMatrix in="shadowBlurOuter1" result="shadowMatrixOuter1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.168 0"/>
+      <feOffset in="SourceAlpha" result="shadowOffsetOuter2"/>
+      <feGaussianBlur in="shadowOffsetOuter2" result="shadowBlurOuter2" stdDeviation="1"/>
+      <feColorMatrix in="shadowBlurOuter2" result="shadowMatrixOuter2" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.084 0"/>
+      <feMerge>
+        <feMergeNode in="shadowMatrixOuter1"/>
+        <feMergeNode in="shadowMatrixOuter2"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <clipPath id="a">
+      <path stroke-width=".1" d="M47 48.7h153.1v153.1H47z"/>
+    </clipPath>
+  </defs>
+  <g fill="none" clip-path="url(#a)" transform="translate(-47 -48.7)">
+    <rect width="252" height="252" fill="#dc4e41" filter="url(#b)" rx="7"/>
+    <path fill="#fff" d="M100.8 119.7v15.1h25c-1 6.5-7.5 19-25 19-15 0-27.3-12.4-27.3-27.8a27.6 27.6 0 0 1 27.3-27.8c8.6 0 14.3 3.6 17.6 6.8l12-11.6a44 44 0 1 0-29.5 76.7c25.4 0 42.2-17.9 42.2-43 0-3-.3-5.2-.7-7.4z"/>
+    <path fill="#fff" d="M100.8 120.5h41.6c.5 2 .7 4.2.7 6.9v-.5c0-2.9-.3-5-.7-7.3h-41.6zm0-37.8a42 42 0 0 1 29 11.1l.5-.4A44 44 0 0 0 56.7 126v.4c.3-24.2 20-43.7 44.1-43.7zm0 71.9c17.5 0 24-12.5 25-19h-.2c-1.4 6.7-8 18.2-24.8 18.2-15 0-27-12.3-27.3-27.4v.4a27.6 27.6 0 0 0 27.3 27.8z" opacity=".4"/>
+    <path fill="#3e2723" d="M100.8 98.2c-15 0-27.3 12.4-27.3 27.8v.4A27.5 27.5 0 0 1 100.8 99c8.6 0 14.3 3.6 17.6 6.8l12-11.6c-.2 0-.4-.2-.5-.3L118.4 105c-3.3-3.1-9-6.8-17.6-6.8zm0 36.6v.8h24.8l.2-.8z" opacity=".1"/>
+    <path fill="#3e2723" d="M100.8 170.1a44.2 44.2 0 0 1-44.1-43.7v.4a44 44 0 0 0 44.1 44c25.5 0 42.3-17.8 42.3-43v-.4c-.2 25-17 42.7-42.3 42.7z" opacity=".1"/>
+    <path fill="#fff" d="M195.3 119.7h-12.6v-12.6h-12.6v12.6h-12.6v12.6h12.6v12.6h12.6v-12.6h12.6"/>
+    <path fill="#fff" d="M182.7 119.7h12.6v.8h-12.6zm-12.6-12.6h12.6v.8h-12.6zm-12.6 12.6h12.6v.8h-12.6z" opacity=".4"/>
+    <path fill="#3e2723" d="M157.5 132.3h12.6v.8h-12.6zm25.2 0h12.6v.8h-12.6zm-12.6 12.6h12.6v.8h-12.6z" opacity=".1"/>
+    <path d="M25.2 25.2h201.6v201.6H25.2z"/>
+  </g>
+</svg>

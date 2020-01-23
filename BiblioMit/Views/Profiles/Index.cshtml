@@ -1,0 +1,43 @@
+﻿@model BiblioMit.Models.ProfileViewModels.ProfileListModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="container body-content">
+    <div class="row sectionHeader">
+        <div class="sectionHeading">Usuarios</div>
+    </div>
+    <div class="row" id="forumIndexContent">
+        <table class="unselectable table-hover" id="userIndexTable">
+            <thead>
+                <tr>
+                    <th>Imagen</th>
+                    <th>Correo</th>
+                    <th>Fecha de ingreso</th>
+                    <th>Calificaci&oacute;n</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var profile in Model.Profiles)
+                {
+                    <tr class="userRow">
+                        <td>
+                            <div class="userProfilePic" style="background-image:url(@profile.ProfileImageUrl)"></div>
+                        </td>
+                        <td>
+                            @profile.Email
+                        </td>
+                        <td>
+                            @profile.MemberSince
+                        </td>
+                        <td>
+                            @profile.UserRating
+                        </td>
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

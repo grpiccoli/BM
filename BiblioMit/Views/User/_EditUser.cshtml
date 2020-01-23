@@ -1,0 +1,42 @@
+﻿@model EditUserViewModel
+@using BiblioMit.Models
+
+<form asp-action="EditUser" role="form">
+    <partial name="_ModalHeader" model='new ModalHeader { Heading = "Editar Usuario" }' />
+    <div class="modal-body form-horizontal">
+        <div class="row">
+            <div class="form-group">
+                <label asp-for="Email" class="col-lg-3 col-sm-3 control-label"></label>
+                <div class="col-lg-6">
+                    <input asp-for="Email" class="form-control" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="UserClaims" class="col-lg-3 col-sm-3 control-label"></label>
+                <div class="col-lg-9">
+                    @for (int i = 0; i < Model.UserClaims.Count; i++)
+                    {
+                        <div class="col-lg-4">
+                            <input type="checkbox" asp-for="@Model.UserClaims[i].Selected" />
+                            <label asp-for="@Model.UserClaims[i].Selected">@Model.UserClaims[i].Text</label>
+                            <input type="hidden" asp-for="@Model.UserClaims[i].Value" />
+                            <input type="hidden" asp-for="@Model.UserClaims[i].Text" />
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="AppRoleId" class="col-lg-3 col-sm-3 control-label"></label>
+                <div class="col-lg-6">
+                    <select asp-for="AppRoleId" asp-items="@Model.AppRoles" class="form-control">
+                        <option>Please select</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <partial name="_ModalFooter" model='new ModalFooter { }' />
+</form>
+
+<partial name="_ValidationScriptsPartial" />

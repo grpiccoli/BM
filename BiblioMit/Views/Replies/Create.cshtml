@@ -1,0 +1,50 @@
+﻿@model BiblioMit.Models.ReplyViewModels.PostReplyModel
+
+<div class="container body-content">
+    <div class="row sectionHeader">
+        <div class="sectionHeading">
+            Responder | @Model.PostTitle
+        </div>
+        <div class="forumLogo" style="background-image:url(@Model.ForumImageUrl)"></div>
+        <span id="headingBtn">
+            <a asp-controller="Post"
+               asp-action="Index"
+               asp-route-id="@Model.PostId"
+               class="btn btn-back">
+                Volver a la publicaci&oacute;n
+            </a>
+        </span>
+    </div>
+    <div class="row">
+        <div id="originalPost">
+            <h3>
+                @Model.PostTitle
+            </h3>
+            <p>
+                @Model.PostContent
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div id="createPostSection">
+            <div class="authorBlock">
+                Est&aacute;s respondiendo como @Model.AuthorName
+            </div>
+            <form asp-action="AddReply" method="post" id="addPostForm">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="ReplyContent">Responder: </label>
+                    <textarea asp-for="ReplyContent"
+                              rows="20"
+                              class="form-control" 
+                              placeholder="Tu respuesta&hellip;"></textarea>
+                    <span asp-validation-for="ReplyContent" class="text-danger"></span>
+                </div>
+                <button type="submit" id="submitReplyBtn" class="btn btn-submitPost">Enviar Respuesta</button>
+                <input asp-for="AuthorId" type="hidden" />
+                <input asp-for="PostId" type="hidden" />
+                <input asp-for="ForumId" type="hidden" />
+            </form>
+        </div>
+    </div>
+</div>

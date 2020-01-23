@@ -1,0 +1,94 @@
+
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1,user-scalable=0,maximum-scale=1,width=device-width" />
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible" />
+    <meta name="format-detection" content="telephone=no"/>
+    <meta property="og:title" content="" />
+    <meta property="og:url" content="" />
+    <meta property="og:image" content="docs/MANUAL_DE_USO_BIBLIOMIT.pdf_1_thumb.jpg" />    
+    <meta property="og:image:width" content="119" /> 
+    <meta property="og:image:height" content="168" /> 
+    
+    <style type="text/css" media="screen">
+        html, body	{ height:100%; }
+        body { margin:0; padding:0; overflow:auto; }
+        #flashContent { display:none; }
+    </style>
+    <link rel="stylesheet" type="text/css" href="css/flowpaper.css" />
+    
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jquery.extensions.min.js"></script>
+    <!--[if gte IE 10 | !IE ]><!-->
+    <script type="text/javascript" src="js/three.min.js"></script>
+    <!--<![endif]-->
+    <script type="text/javascript" src="js/flowpaper.js"></script>
+    <script type="text/javascript" src="js/flowpaper_handlers.js"></script>
+    <title></title>
+</head>
+<body>
+<div id="documentViewer" class="flowpaper_viewer" style="position:absolute;;width:100%;height:100%;background-color:#222222;;"></div>
+<script type="text/javascript">
+    $('#documentViewer').FlowPaperViewer(
+            { config : {
+                PDFFile                 : 'docs/MANUAL_DE_USO_BIBLIOMIT.pdf?reload=1512490982155',
+                IMGFiles                : 'docs/MANUAL_DE_USO_BIBLIOMIT.pdf_{page}.jpg?reload=1512490982155',
+                HighResIMGFiles         : '',
+                JSONFile                : 'docs/MANUAL_DE_USO_BIBLIOMIT.pdf_{page}.js?reload=1512490982155',
+                ThumbIMGFiles           : 'docs/MANUAL_DE_USO_BIBLIOMIT.pdf_{page}_thumb.jpg?reload=1512490982155',
+                SWFFile                 : '',
+                FontsToLoad             : ["g_font_1","g_font_2","g_font_3","g_font_4","g_font_5","g_font_6","g_font_7","g_font_8"],
+
+                Scale                   : 0.1,
+                ZoomTransition          : 'easeOut',
+                ZoomTime                : 0.4,
+                ZoomInterval            : 0.1,
+                FitPageOnLoad           : true,
+                FitWidthOnLoad          : false,
+                AutoAdjustPrintSize     : true,
+                PrintPaperAsBitmap      : false,
+                AutoDetectLinks         : true,
+                ImprovedAccessibility   : false,
+                FullScreenAsMaxWindow   : false,
+                ProgressiveLoading      : false,
+                MinZoomSize             : 0.1,
+                MaxZoomSize             : 10,
+                SearchMatchAll          : true,
+                InitViewMode            : 'Zine',
+                RenderingOrder          : 'html,html',
+                StartAtPage             : 1,
+                EnableWebGL             : true,
+                PreviewMode             : '',
+                PublicationTitle        : '',
+                MixedMode               : true,
+                ViewModeToolsVisible    : true,
+                ZoomToolsVisible        : true,
+                NavToolsVisible         : true,
+                CursorToolsVisible      : true,
+                SearchToolsVisible      : true,
+
+                UIConfig                : 'MANUAL_DE_USO_BIBLIOMIT.xml?reload=1512490982155',
+                BrandingLogo            : '',
+                BrandingUrl             : '',
+
+                WMode                   : 'transparent',
+
+                key                     : '#V2ZzcGBFXVpeTBhxAklCXlVZaw',
+                TrackingNumber          : '',
+                localeDirectory         : 'locale/',
+                localeChain             : 'en_US'
+            }}
+    );
+
+    var url = window.location.href.toString();
+    if(location.length==0){
+        url = document.URL.toString();
+    }
+    if(url.indexOf("file:")>=0){
+        jQuery('#documentViewer');
+    }
+</script>
+</body>
+</html>

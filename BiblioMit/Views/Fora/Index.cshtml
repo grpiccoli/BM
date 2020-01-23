@@ -1,0 +1,61 @@
+﻿@model BiblioMit.Models.ForumViewModels.ForumIndexModel
+
+<partial name="_Libs" model='new List<string> { "/background.min" }' />
+
+@{
+    ViewData["Title"] = "Foros";
+}
+
+<div class="container body-content">
+    <div class="row sectionHeader">
+        <div class="sectionHeading">Foros</div>
+        <div class="sectionDescription">
+            <p>Bienvenido a <strong>Foros BiblioMit</strong>. Las publicaciones han sido ampliamente categorizadas por &aacute;rea de inter&eacute;s.</p>
+            <p>
+                Por favor lea las reglas del foro antes de crear una nueva publicaci&oacute;n.
+                @if (!User.Identity.IsAuthenticated)
+                {
+                    <span>Debes ser <a asp-controller="Account" asp-action="Register">Miembro registrado</a> para crear una nueva publicaci&oacute;n.</span>
+                }
+            </p>
+        </div>
+    </div>
+    <div class="row" id="forumIndexContent">
+        <table class="table table-hover" id="forumIndexTable">
+            <tbody>
+                @foreach (var forum in Model.ForumListing)
+                {
+                    <tr>
+                        <td>
+                            <div class="forumLogo" style="background-image:url(@forum.ImageUrl);background-size:100%"></div>
+                            <div class="forumData">
+                                <div class="forumTitle">
+                                    <a asp-controller="Fora" asp-action="Topic" asp-route-id="@forum.Id">@forum.Name</a>
+                                </div>
+                                <div class="forumSubTitle">
+                                    @if (forum.HasRecentPost)
+                                    {
+                                        <div class="hasRecentPost"><i class="fa fa-fire" aria-hidden="true" style="color:white"></i>Hot</div>
+                                    }
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="forumPostCount">
+                                @forum.NumberOfPosts Publicaciones
+                            </div>
+                            <div class="forumMemberCount">
+                                @forum.NumberOfUsers Usuarios
+                            </div>
+                        </td>
+                        <td>
+                            <div class="forumDescription">
+                                @Html.Raw(forum.Description)
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

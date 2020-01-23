@@ -1,0 +1,56 @@
+@model BiblioMit.Models.Valve
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create</h2>
+
+<form asp-action="Create">
+    <div class="form-horizontal">
+        <h4>Valve</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Id" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Id" class="form-control" />
+                <span asp-validation-for="Id" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="IndividualId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="IndividualId" class="form-control" asp-items="ViewBag.SamplingId"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="ValveType" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="ValveType" class="form-control" />
+                <span asp-validation-for="ValveType" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Species" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Species" class="form-control" />
+                <span asp-validation-for="Species" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Comment" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Comment" class="form-control" />
+                <span asp-validation-for="Comment" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+    <partial name="_ValidationScriptsPartial" />
+

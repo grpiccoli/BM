@@ -1,0 +1,23 @@
+﻿<partial name="_Libs" model='new List<string> { "angular", "angular-flip-clock" }' />
+
+<environment include="Development">
+    @this.Block(@<script>
+            angular
+                .module('myApp', ['dyFlipClock'])
+                .run(function ($rootScope, $interval) {
+                    $rootScope.time = 0;
+                    $interval(function () {
+                        $rootScope.time += @((int)ViewData["interval"]);
+                    }, 1, 500);
+                });
+    </script>,"Scripts")
+</environment>
+<environment exclude="Development">
+    @this.Block(@<script>angular.module('myApp', ['dyFlipClock']).run(function ($rootScope, $interval) {$rootScope.time = 0;$interval(function () {$rootScope.time += @((int)ViewData["interval"]);}, 1, 500);});</script>, "Scripts")
+</environment>
+
+<div class="myApp" ng-app="myApp">
+    <div class="m-auto">
+        <dy-flip-clock time="{{time}}"></dy-flip-clock>
+    </div>
+</div>

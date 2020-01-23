@@ -1,0 +1,46 @@
+@model BiblioMit.Models.CompanyViewModel
+
+@{
+    ViewData["Title"] = "Crear";
+}
+<h2>Crear</h2>
+
+<form asp-action="Create">
+    <div class="form-horizontal">
+        <h4>Compa&ntilde;&iacute;a o Instituci&oacute;n</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="RUT" class="col-md-2 control-label"></label>
+            <div class="col-md-7">
+                <input asp-for="RUT" class="form-control" />
+                <span asp-validation-for="RUT" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="BsnssName" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="BsnssName" class="form-control" />
+                <span asp-validation-for="BsnssName" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Acronym" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Acronym" class="form-control" />
+                <span asp-validation-for="Acronym" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Guardar" class="btn btn-default" onclick="empty()" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Volver al listado de Compa&ntilde;&iacute;as e Instituci&oacute;nes</a>
+</div>
+
+<partial name="_ValidationScriptsPartial" />

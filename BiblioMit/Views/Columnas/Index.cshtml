@@ -1,0 +1,105 @@
+﻿@model IEnumerable<BiblioMit.Models.Columna>
+@using BiblioMit.Models.ViewModels
+@using BiblioMit.Services
+@{
+    ViewData["Title"] = "Sernapesca";
+    ViewData["controller"] = this.ViewContext.RouteData.Values["controller"].ToString();
+    ViewData["action"] = this.ViewContext.RouteData.Values["action"].ToString();
+}
+
+<partial name="_Libs" model='new List<string> { "/columnas.min" }' />
+
+<div class="grid">
+    <h1 class="titulo">Columnas de datos</h1>
+    <img height="100" class="logo" align="right"
+         src="~/images/ico/mejillondechile.svg" />
+    <div class="clear">
+        <partial name="_ClearFilters" model="@Url.RouteUrl(this.ViewContext.RouteData.Values)" />
+    </div>
+    <div id="constrainer2">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        <partial name="_TableFilter" view-data="@ViewData" model='new TableFilterVM
+                   {
+                       Id = "ExcelId",
+                       Name = Html.DisplayNameFor(model => model.ExcelId),
+                       Type = FilterType.select
+                   }' />
+                    </th>
+                    <th>
+                        <partial name="_TableFilter" view-data="@ViewData" model='new TableFilterVM
+                   {
+                       Id = "Name",
+                       Name = Html.DisplayNameFor(model => model.Name)
+                   }' />
+                    </th>
+                    <th>
+                        <partial name="_TableFilter" view-data="@ViewData" model='new TableFilterVM
+                   {
+                       Id = "Description",
+                       Name = Html.DisplayNameFor(model => model.Description),
+                       Type = FilterType.select
+                   }' />
+                    </th>
+                    <th>
+                        <partial name="_TableFilter" view-data="@ViewData" model='new TableFilterVM
+                   {
+                       Id = "Operation",
+                       Name = Html.DisplayNameFor(model => model.Operation)
+                   }' />
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Excel.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td contenteditable="true">
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td contenteditable="true">
+                            @Html.DisplayFor(modelItem => item.Operation)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<partial name="_ValidationScriptsPartial" />
+<partial name="_Filter" view-data="@ViewData" />
+@section Scripts {
+    <script>
+        $('td[contenteditable=true]').focus(function () {
+            $(this).data("initialText", $(this).html());
+        }).blur(function () {
+            if ($(this).data("initialText") !== $(this).html()) {
+                var $cell = $(this).parent();
+                var values = [];
+                $cell.children('td').each(function () {
+                    values.push($(this).html().replace(/^\s*/, '').replace(/\s*$/, ''));
+                });
+                var url = '@Html.Raw(Url.Action("Editar",(string)ViewData["controller"],
+                          new {
+                              planilla = "P0",
+                              atributo = "A1",
+                              columna = "C2",
+                              conversion = "C3"
+                          }))';
+                url = url.replace("P0", values[0]).replace("A1", values[1]).replace("C2", values[2]).replace("C3", values[3]);
+                alert(url);
+                $.post(url, {}, function (r) {
+                    alert('cambios guardados en la base de datos. Presione Ctrl+Z para deshacer');
+                });
+            }
+        });
+    </script>
+}

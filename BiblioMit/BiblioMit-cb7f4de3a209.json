@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "bibliomit-172021",
+  "private_key_id": "cb7f4de3a20923c7d458780fa45975e7c85eaed6",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDS/h+pSsb0TTPk\nb4gsqAJnE+aIyJ1pHAJEqlJGhp8N6y5hS9Sg+X6/M/ccq/4C4nLrp0te/Fwmoo/9\ntvkzjaAT4KQqESwLGAy0tnA7sOk26mWkIhw1k2Cgp9hvocpFsrKwLJYE78x1e2Pz\nitmhrcORc6Ey1FsgtILYSu6Nm+IErUzMJcdDm0EwOQfKN+o/omCL6VWlaFNZ6p2M\nXR9Lr4GIkcQWX8nRT6aaLOEFaemHyk0pNddZCMNXM4ix2Vq7vjpI8z6DbSQUuf9r\nRQofFELVW37TOFgqgXwX6Sa8jjBnlj4A3aB0mk5sHNacf2wli/pyYlNhFcpmxDx2\n6z5dF9XDAgMBAAECggEAGx+yIEhNpVBbcG1qGxuKG4gyZbksizufiwY+R3S888Qd\nFULzVbJdOeVLSjNOFz7XOTYreU2F5y2UxzADfz4gqw2A7SuB9vcjgwPFD9dhU770\nTBJagASvMlgBefBZmXYshHtm2cGeDihLpB5gdelpr8Qmn+suv9iUzYtseWXlu2X0\nBmjIos0WAPaX4pPyv1jJx9OYWQVMGSwC9f2le5pDwIH8Qm0CHwvs1/q+Bt6A0aZn\nY1VAnq+Um/LKKFhmuZ1FGv95x09qOEtEi1dE+Y/LHb9UR8jqLD50MX1wKBFAFI74\nyaNiD2rslnGWyhflaeTkoxVZCAFGTAJLNmh/F/TawQKBgQD5j68+rLmm6efKvHY4\njtAZjAuQubaaxvzMuNyJN0QkmEt6bwmo4A9bOYTCNyOzILgb7twIXA/acDceYgZv\n++0RHU120aaRXAFnTSExqUOSpP1+faW6V+TxPoMp4tRDqYTx8bQJOjZb/O/rtEYB\nKYAnVo07ayHl4d9VwHcy2o4AowKBgQDYb7L/9Q4fqqnRTPbMa9RW9rVxKKiplFqP\n89g8GZe3KSooVp+tDKhednS1GwM4rUkospFa6pz74JfGQUhTTmMctEZQlrn6MaQ9\nnEbmr5XmzlwORyIww24Ru7kDJ8Zg4fOZhj0y3reRhd5FrdUZX/H7CUwsAS+m+rZQ\nKQv9J3GIYQKBgBDBRNLAZfZ+3cEOxiEl9XLBpEUjMs9RbMeR4byUqU6LqwWdTti3\nslA9nFwtt4ffOn0lnEAzbh0MS6cOjcAW+eOcRAcmLDi2JKH626+p3Y+K5DoJ1Yad\nQBGyULwPLpEcYICd6ah08BFc+f6pK8oIL0J03SaQGsaEU6o+McKISeBhAoGAY5qD\n9ecAqPIRVJDmwwycm6jNt1XOyLvNMZI2YPImL9Rx4j57HVhF47L/4pib0ulsUZ5b\n5ksyE3g4YLSKZEwesIcGFPBIhityOihBOMh1Y9Jz6t4xjd9iOCb77cfQM6XIRU7R\nuydjs0S4Fbj56MOOyMhulZG2LFIUtK8vJUGRrgECgYASXS4lWt2OgWtfzE5slckG\n1cTBtI8tzaIiPUNV+e2u9zCW+P0fbTKyFyFk1nMMrmKwVnxrMzi7KemyaSC0ILWw\nyVXN/RU931UzVocEW36LqneOpG6k+J0S9SrvU9Sv5lBW1xZQiLjMhThaCRLFNjxA\nZG+EKM2UDDGAPTIBTPayRg==\n-----END PRIVATE KEY-----\n",
+  "client_email": "epicsolutions@bibliomit-172021.iam.gserviceaccount.com",
+  "client_id": "101371843740680109684",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/epicsolutions%40bibliomit-172021.iam.gserviceaccount.com"
+}

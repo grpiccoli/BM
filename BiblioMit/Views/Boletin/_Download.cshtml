@@ -1,0 +1,26 @@
+﻿@model Dictionary<int, List<string>>
+@using BiblioMit.Models
+
+<form asp-action="Download" role="form">
+    <partial name="_ModalHeader" model='new ModalHeader { Heading = Localizer["Download Publications"].Value }' />
+    <div class="form-horizontal modal-body">
+        <div class="form-group">
+            <select name="src"
+                    class="form-control"
+                    title="Seleccione uno o más repositorios …">
+                @foreach (var yr in Model)
+                {
+                    <optgroup label="Boletines @yr.Key">
+                        @foreach (var u in yr.Value)
+                        {
+                            <option data-tokens="@yr.Key @u" data-icon="fas fa-map fa-tw" data-subtext="(@Localizer["Descargar"])" value="@u-@yr.Key">Boletín del período @u del año @yr.Key</option>
+                        }
+                    </optgroup>
+                }
+            </select>
+        </div>
+        </div>
+        <partial name="_ModalFooter" model='new ModalFooter { SubmitButtonText = Localizer["Download"].Value }' />
+</form>
+
+<partial name="_ValidationScriptsPartial" />

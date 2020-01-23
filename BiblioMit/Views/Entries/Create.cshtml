@@ -1,0 +1,128 @@
+﻿@model BiblioMit.Models.ProdEntry
+@{
+    ViewData["Title"] = "Create";
+}
+
+<partial name="_Libs" model='new List<string> { "bootstrap-select",
+    "/dragndrop.min", "smartwizard" }' />
+
+<form id="formCreate" asp-action="Create" class="form-horizontal" method="post" enctype="multipart/form-data">
+    <div id="smartwizard">
+        <ul>
+            <li>
+                <a href="#step-1">Paso 1:<br /><small>Subir Archivo</small></a>
+            </li>
+            <li>
+                <a href="#step-2">Paso 2:<br /><small>Tipo de reporte</small></a>
+            </li>
+        </ul>
+        <div class="sw-container tab-content">
+            <div id="step-1" class="tab-pane step-content" style="display:block;">
+                <h2>Paso 1: Subir archivo</h2>
+                <div id="form-step-0" role="form" data-toggle="validator">
+                    <div class="form-group">
+                        <div class="wrapper">
+                            <div class="drop">
+                                <div class="cont">
+                                    <div class="tit">
+                                        <span id="iconos" class="fas fa-cloud-upload-alt">
+                                            <span class="path1"></span>
+                                        </span>
+                                        <br />
+                                        <span id="name">Arrastra y Suelta</span>
+                                    </div>
+                                    <div class="desc">
+                                        <i class="far fa-file-excel fa-fw"></i><span style="font-size:xx-large;">un archivo Excel</span>
+                                    </div>
+                                    <div class="browse" style="font-size:x-large;">
+                                        o Buscar en PC
+                                    </div>
+                                </div>
+                                <output id="list"></output><input id="files" asp-for="Excel" multiple class="form-control" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel, application/vnd.ms-excel.sheet.macroEnabled.12, application/vnd.ms-excel.sheet.binary.macroEnabled.12" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="step-2" class="tab-pane step-content">
+                <h2>Paso 2: Procesar archivo de reporte <u><span id="tipo"></span></u> <span id="filename"></span></h2>
+                <div id="form-step-1" role="form" data-toggle="validator">
+                    <div class="form-group">
+                        <label asp-for="Reportes"></label>
+                        <select asp-for="Reportes"
+                                asp-items="ViewBag.Tipo"
+                                title="Elija tipo de reporte"
+                                class="form-control selectpicker" onchange="$('#tipo').html(this.value); $('.btnSubir').removeClass('d-none');"></select>
+                        <span asp-validation-for="Reportes" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@this.Block(@<script>
+        $(document).ready(function () {
+
+            // Step show event
+            $("#smartwizard").on("showStep", function (_e, _anchorObject, _stepNumber, _stepDirection, stepPosition) {
+                //alert("You are on step "+stepNumber+" now");
+                if (stepPosition === 'first') {
+                    $("#prev-btn").addClass('disabled');
+                } else if (stepPosition === 'final') {
+                    $("#next-btn").addClass('disabled');
+                } else {
+                    $("#prev-btn").removeClass('disabled');
+                    $("#next-btn").removeClass('disabled');
+                }
+            });
+
+            // Toolbar extra buttons
+            var btnFinish = $('<button></button>').text('Subir')
+                .addClass('btn btn-info d-none btnSubir')
+                .on('click', function () { $('#formCreate').submit(); });
+
+            // Smart Wizard
+            $('#smartwizard').smartWizard({
+                selected: 0,
+                theme: 'default',
+                transitionEffect: 'fade',
+                showStepURLhash: false,
+                lang: {
+                    next: 'Siguiente',
+                    previous: 'Anterior'
+                },
+                toolbarSettings: {
+                    toolbarPosition: 'both',
+                    toolbarButtonPosition: 'end',
+                    toolbarExtraButtons: [btnFinish]
+                }
+            });
+
+            // External Button Events
+            $("#reset-btn").on("click", function () {
+                // Reset wizard
+                $('#smartwizard').smartWizard("reset");
+                return true;
+            });
+
+            $("#prev-btn").on("click", function () {
+                // Navigate previous
+                $('#smartwizard').smartWizard("prev");
+                return true;
+            });
+
+            $("#next-btn").on("click", function () {
+                // Navigate next
+                $('#smartwizard').smartWizard("next");
+                return true;
+            });
+
+            // Set selected theme on page refresh
+            $("#theme_selector").change();
+        });
+
+        @if (!String.IsNullOrWhiteSpace((string)ViewData["Error"])) {
+            @:$(window).load(function () {alert("@Html.Raw(ViewData["Error"])");});
+        }
+</script>,"Scripts")

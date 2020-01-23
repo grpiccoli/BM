@@ -1,0 +1,50 @@
+﻿@model BiblioMit.Models.ProfileViewModels.ProfileModel
+
+@{
+    ViewData["Title"] = "Detalles";
+}
+
+<div class="ngy2_container body-content">
+    <div class="icon-arrows-cw sectionHeader">
+        <div class="sectionHeading">
+            User Profile
+        </div>
+        @if (User.IsInRole("Administrador"))
+        {
+            //<button>Deactivate User</button>
+        }
+    </div>
+    <div class="row userProfile">
+        <div class="col-md-4">
+            <div id="userProfileImage" style="background-image:url(@Model.ProfileImageUrl)"></div>
+            @if(User.Identity.Name == Model.UserName)
+            {
+                <form method="post" enctype="multipart/form-data" asp-controller="Profiles" asp-action="UploadProfileImage">
+                    <div id="upload" >
+                        <label class="btn btn-default btn-file">
+                            Buscar <input type="file" name="file" accept="image/*" style="display:none"/>
+                        </label>
+                    </div>
+                    <button type="submit" id="btn-profile" class="btn btn-default">Subir</button>
+                </form>
+            }
+        </div>
+        <div class="col-md-8">
+            <span id="userName">@Model.UserName</span>
+            @if (User.IsInRole("Administrador"))
+            {
+                <span class="isAdmin">Administrador</span>
+            }
+            <span id="userRating">Puntuaci&oacute;n Actual: @Model.UserRating</span>
+            <div class="stars">
+                <span class="star @(Model.UserRating >= 2 ? "on" : Model.UserRating == 1 ? "half": "")"></span>
+                <span class="star @(Model.UserRating >= 4 ? "on" : Model.UserRating == 3 ? "half": "")"></span>
+                <span class="star @(Model.UserRating >= 6 ? "on" : Model.UserRating == 5 ? "half": "")"></span>
+                <span class="star @(Model.UserRating >= 8 ? "on" : Model.UserRating == 7 ? "half": "")"></span>
+                <span class="star @(Model.UserRating >= 10 ? "on" : Model.UserRating == 9 ? "half": "")"></span>
+            </div>
+            <span id="userEmailLabel">Email: @Model.Email</span>
+            <span id="userCreatedLabel">Miembro desde: @Model.MemberSince</span>
+        </div>
+    </div>
+</div>

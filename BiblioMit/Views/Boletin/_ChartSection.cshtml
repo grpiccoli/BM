@@ -1,0 +1,20 @@
+﻿@model string
+
+@{string title = Model;}
+
+<div id="@title" class="tab-pane h-100 p-0 m-0" role="tabpanel">
+    <div class="h-100">
+        <div id="pane-@title" class="w-100 h-80 h-xs-100">
+            <h1 class="category text-center">@Model.ToUpper() - <span class="tt-calc"></span> entre <span class="tt-range"></span> del <span class="tt-year"></span></h1>
+            <h6 class="text-center">(<span class="tt-unit"></span>)</h6>
+            <div class="row h-100">
+                <div class="col-12 col-md-4 p-0 m-0">
+                    <div class="legend" id="legend-@Model.ToLower()"></div>
+                </div>
+                <div class="col-12 col-md-8 div-chart">
+                    <div class="chart" id="chart-@Model.ToLower()"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

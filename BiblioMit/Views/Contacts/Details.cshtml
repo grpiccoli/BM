@@ -1,0 +1,106 @@
+@model BiblioMit.Models.Contact
+@using BiblioMit.Authorization;
+
+@{
+    ViewData["Title"] = "Detalles";
+}
+<h2>Detalles</h2>
+
+<div>
+    <h4>Contacto</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Centre.Company.BsnssName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Centre.Company.BsnssName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Centre.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Centre.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Position)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Position)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Last)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Last)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.OpenHr)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OpenHr) - @Html.DisplayFor(model => model.CloseHr)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Phone)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Phone)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Centre.Address)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Centre.Address)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Status)
+        </dd>
+    </dl>
+</div>
+@if (Model.Status != ContactStatus.Aprobado)
+{
+    @if (AuthorizationService.AuthorizeAsync(User, Model, ContactOperations.Approve).IsCompletedSuccessfully)
+    {
+        <form asp-action="SetStatus" asp-controller="Contacts" style="display:inline;">
+            <input type="hidden" name="id" value="@Model.ContactId" />
+            <input type="hidden" name="status" value="@ContactStatus.Aprobado" />
+            <button type="submit" class="btn btn-xs btn-success">Aprobar</button>
+        </form>
+    }  
+}
+@if (Model.Status != ContactStatus.Rechazado)
+{
+    @if (AuthorizationService.AuthorizeAsync(User, Model, ContactOperations.Reject).IsCompletedSuccessfully)
+    {
+        <form asp-action="SetStatus" asp-controller="Contacts" style="display:inline;">
+            <input type="hidden" name="id" value="@Model.ContactId" />
+            <input type="hidden" name="status" value="@ContactStatus.Rechazado" />
+            <button type="submit" class="btn btn-xs btn-danger">Rechazar</button>
+        </form>
+    }
+}
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.ContactId">Editar</a> |
+    <a asp-action="Index">Volver al listado de contactos</a>
+</div>

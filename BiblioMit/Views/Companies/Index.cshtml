@@ -1,0 +1,48 @@
+﻿@model IEnumerable<BiblioMit.Models.Company>
+
+@{
+    ViewData["Title"] = "Compañías e Instituciones";
+}
+<h2 id="maintitle">Listado de Compa&ntilde;&iacute;as e Instituciones</h2>
+
+<p>
+    <a asp-action="Create">Nueva entrada</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.BsnssName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                Centros
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+{
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BsnssName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)-@StringManipulations.GetDigit(item.Id)
+                </td>
+                <td>
+                    <a href="@Url.Action("Index", "Centres", null, null)">@Html.DisplayFor(modelItem => item.Centres.Count)</a>
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Detalles</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

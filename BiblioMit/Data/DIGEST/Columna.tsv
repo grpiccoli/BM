@@ -1,0 +1,58 @@
+1	Declaracion	4	N° Declaracion	
+2	Fecha	4	Fecha Declaracion	
+3	Year	4	Año	
+4	Month	4	Mes	
+5	Peso	4	Toneladas	
+6	CentreId	4	Codigo Planta	+1000000000
+7	CompanyName	4	Planta	
+8	NombreComuna	4	Puerto	
+9	Declaracion	3	N° Declaración	
+10	Fecha	3		
+11	Year	3	Año	
+12	Month	3	Mes	
+13	Peso	3	Kilos	/1000
+14	CentreId	3	Centro Origen	
+15	NombreComuna	3	Comuna	
+16	CompanyName	3	Rut Titular	
+17	Declaracion	2	N° Declaración	
+18	Fecha	2		
+19	CentreId	2	Codigo Centro	
+20	NombreComuna	2	Comuna	
+21	CompanyName	2	Propietario	
+22	Year	2	Año	
+23	Month	2	Mes	
+24	Origen	2	Nombre Origen	
+25	OrigenId	2	Cod. Origen	
+26	Peso	2	Kilos	/1000
+27	Declaracion	5	N° Documento	
+28	TipoProduccion	5	Especie/Producto	
+29	Fecha	5		
+30	Dato	5	MateriaPrima-Produccion	
+31	Year	5	año	
+32	Month	5	mes	
+33	CentreId	5	Código Planta	+1000000000
+34	NombreComuna	5	Puerto	
+35	CompanyName	5	Planta	
+36	Peso	5	Toneladas	
+37	TipoItemProduccion	5	Tipo Item	
+38	Estacion	1	B10	
+39	EntidadMuestreadora	1	B11	
+40	FechaMuestreo	1	B12	
+41	InicioAnalisis	1	B13	
+42	Email	1	D8	
+43	Id	1	D7	
+44	Recepcion	1	D12	
+45	FinAnalisis	1	D13	
+46	Laboratorio	1	F7	
+47	Telefono	1	F8	
+48	CentreId	1	F9	
+49	PSMBId	1	F10	
+50	Muestras	1	F11	
+51	FechaEnvio	1	F13	
+52	Analista	1	F14	
+53	Temperatura	1	B14	
+54	Oxigeno	1	B15	
+55	Ph	1	D14	
+56	Salinidad	1	D15	
+57	CELDA INICIO RESULTADOS DE MUESTRAS DE AGUA	1	A16	
+58	TEXTO FIN RESULTADOS DE MUESTRAS DE AGUA	1	Observaciones:	

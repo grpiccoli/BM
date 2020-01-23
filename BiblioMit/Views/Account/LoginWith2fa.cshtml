@@ -1,0 +1,38 @@
+﻿@model LoginWith2faViewModel
+@{
+    ViewData["Title"] = "Two-factor authentication";
+}
+
+<h2>@ViewData["Title"]</h2>
+<hr />
+<p>Su inicio de sesi&oacute;n est&aacute; protegido con una aplicaci&oacute;n de autenticaci&oacute;n. Ingrese su c&oacute;digo de autenticador a continuaci&oacute;n.</p>
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" asp-route-returnUrl="@ViewData["ReturnUrl"]">
+            <input asp-for="RememberMe" type="hidden" />
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="TwoFactorCode"></label>
+                <input asp-for="TwoFactorCode" class="form-control" autocomplete="off" />
+                <span asp-validation-for="TwoFactorCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label asp-for="RememberMachine">
+                        <input asp-for="RememberMachine" />
+                        @Html.DisplayNameFor(m => m.RememberMachine)
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-default">Iniciar sesi&oacute;n</button>
+            </div>
+        </form>
+    </div>
+</div>
+<p>
+    ¿No tienes acceso a tu dispositivo autenticador? Puedes
+    <a asp-action="LoginWithRecoveryCode" asp-route-returnUrl="@ViewData["ReturnUrl"]">iniciar sesi&oacute;n con tu c&oacute;digo de recuperaci&oacute;n</a>.
+</p>
+
+<partial name="_ValidationScriptsPartial" />

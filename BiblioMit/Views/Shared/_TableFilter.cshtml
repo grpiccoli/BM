@@ -1,0 +1,103 @@
+﻿@model TableFilterVM
+@using BiblioMit.Models.ViewModels
+
+@{
+    Model.Srt = (string)ViewData["srt"];
+    Model.Asc = (bool)ViewData["asc"];
+    Model.Val = ((IDictionary<string, List<string>>)ViewData["Filters"]).ContainsKey("FechaIngreso") ?
+        ((IDictionary<string, List<string>>)ViewData["Filters"])["FechaIngreso"].First() :
+        "Fecha";
+}
+
+<partial name="_Libs" model='new List<string> { "bootstrap-select" }' />
+
+@switch (Model.Type)
+{
+    case FilterType.date:
+    case FilterType.select:
+        <div class="row">
+            <div class="col-10">
+                @if (Model.Type == FilterType.date)
+                {
+                    <div class="input-group date">
+                        <div class="input-group-prepend">
+                            <span id="btn@(Model.Id)" class="input-group-text" onclick="$('#@Model.Id').datepicker('show')"><i class="far fa-calendar-alt"></i></span>
+                        </div>
+                        <input type="text"
+                               id="@Model.Id"
+                               name="@Model.Name"
+                               value="@Model.Val"
+                               class="form-control"
+                               style="width:110px"
+                               onchange="filter(this)"
+                               aria-describedby="btn@(Model.Id)" />
+                    </div>
+                    @this.Block(
+                        @<script>
+                            $(function () {
+                                var availableDate = [@Html.Raw((string)ViewData[Model.Id])];
+
+                                $('#@Model.Id').datepicker({
+                                    format: "dd-mm-yy",
+                                    endDate: "today",
+                                    todayBtn: "linked",
+                                    clearBtn: true,
+                                    language: "es",
+                                    daysOfWeekHighlighted: "0,6",
+                                    todayHighlight: true,
+                                    beforeShowDay: function (date) {
+                                        ymd = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+                                        if ($.inArray(ymd, availableDate) !== -1) {
+                                            return "green";
+                                        } else {
+                                            return false;
+                                        }
+                                    }
+                                });
+                            });
+                        </script>, "Scripts")
+                }
+                else
+                {
+                    Model.List = ViewData[Model.Id] as MultiSelectList;
+                    <select id="@Model.Id"
+                            title="@Model.Name"
+                            class="selectpicker form-control show-tick"
+                            data-width="150px"
+                            data-size="4"
+                            multiple
+                            data-max-options="@Model.MaxOptions"
+                            onchange="filter(this)"
+                            data-live-search="@Model.LiveSearch"
+                            asp-items="Model.List"></select>
+                }
+            </div>
+            <div id="@Model.Id"
+                 class="col-1 sorting@(Model.Srt == Model.Id ? Model.Asc ? "_asc" : "_desc" : "")"
+                 onclick="filter(this)"
+                 onmouseover="">
+                &emsp;
+            </div>
+        </div>
+        break;
+    case FilterType.checkbox:
+        <label class="checkbox-inline">
+            <input onchange="filter(this)"
+                   id="@Model.Name"
+                   type="checkbox"
+                   data-toggle="toggle"
+                   data-on="@Model.Name - On"
+                   data-off="@Model.Name - Off"
+                   @(true ? "checked" : "")>
+        </label>
+        break;
+    case FilterType.sort:
+    default:
+        <div class="filter-sort sorting@(Model.Srt == Model.Id ? Model.Asc ? "_asc" : "_desc" : "")"
+             id="@Model.Id"
+             onclick="filter(this)"
+             onmouseover="">
+            @Model.Name
+        </div>
+        break;
+}

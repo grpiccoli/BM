@@ -1,0 +1,7 @@
+﻿@model BiblioMit.Models.VM.OptionVM;
+@if (string.IsNullOrWhiteSpace(Model.Text)){ Model.Text = Model.Value; }
+
+<option data-tokens="@Model.Token @Model.Value @Model.Text" selected="@(((string[])ViewData["src"]).Contains(Model.Value))"
+        data-icon="@Model.Icon" value="@Model.Value" data-subtext="@Model.Subtxt">
+    @Model.Text
+</option>

@@ -1,0 +1,14 @@
+﻿@model Entry
+
+<partial name="_ModalHeader" model='new ModalHeader
+{
+    Heading = "Entry: " + Model.Id
+}' />
+<div class="modal-body">
+    <pre>
+        <code>
+            @Model.OutPut
+        </code>
+    </pre>
+</div>
+<partial name="_ModalFooter" model='new ModalFooter { OnlyCancelButton = true }' />

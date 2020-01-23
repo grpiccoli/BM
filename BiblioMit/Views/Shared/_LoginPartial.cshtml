@@ -1,0 +1,87 @@
+﻿@model LoginViewModel
+
+@{
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+    var cultureItems = LocOptions.Value.SupportedUICultures
+        .Select(c => new SelectListItem { Value = c.Name, Text = c.DisplayName })
+        .ToList();
+}
+<li class="nav-item dropdown">
+    <button class="nav-link dropdown-toggle btn btn-dark" id="lang" role="button" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">
+        <figure class="text-center">
+            <img class="flag-icon" src="~/images/ico/@(Localizer["gb"]).svg"/>
+            <figcaption class="light-caption">@Localizer["English"]</figcaption>
+        </figure>
+    </button>
+    <div class="dropdown-menu" aria-labelledby="Index">
+        <a class="dropdown-item" asp-controller="Home" asp-action="SetLanguage"
+           asp-route-returnUrl="@Context.Request.Path" method="post" role="form"
+           asp-route-culture="@Localizer["es"].Value">
+            <img class="flag-icon" src="~/images/ico/@(Localizer["cl"]).svg" /> @Localizer["Español"]
+        </a>
+    </div>
+</li>
+<li class="nav-item dropdown">
+    <button class="nav-link dropdown-toggle btn btn-dark" role="button" id="login" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <figure class="text-center">
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <i class="fas fa-user fa-tw logo user"></i>
+                <figcaption class="light-caption">@Localizer["Account"]</figcaption>
+            }
+            else
+            {
+                <i class="fas fa-plus fa-tw logo plus"></i>
+                <figcaption class="light-caption">@Localizer["Login"]</figcaption>
+            }
+        </figure>
+    </button>
+    <div class="dropdown-menu dropdown-menu-right">
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <form class="navbar-form nav navbar-nav" asp-area="Identity"
+                  asp-page="/Account/Logout"
+                  asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })"
+                  method="post" id="logoutForm">
+                <a class="btn btn-link navbar-btn navbar-link dropdown-item" asp-controller="Manage"
+                   asp-action="Index" title="Manage">
+                    <figure class="text-center">
+                        <i class="fas fa-cog fa-tw logo cog"></i>
+                        <figcaption class="dark-caption">@Localizer["Manage"]</figcaption>
+                    </figure>
+                </a>
+                <button type="submit" class="btn btn-link navbar-btn navbar-link dropdown-item">
+                    <figure class="text-center">
+                        <i class="fas fa-times fa-tw logo times"></i>
+                        <figcaption class="dark-caption">@Localizer["Logout"]</figcaption>
+                    </figure>
+                </button>
+            </form>
+        }
+        else
+        {
+            <form class="px-4 py-3" asp-controller="Account"
+                  asp-action="Login" asp-route-returnUrl="@Context.Request.Path"
+                  asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+                <div class="form-group">
+                    <label asp-for="Email">@Localizer["Email"]</label>
+                    <input asp-for="Email" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password">@Localizer["Password"]</label>
+                    <input asp-for="Password" class="form-control">
+                </div>
+                <div class="form-check">
+                    <input asp-for="RememberMe" class="form-check-input">
+                    <label class="form-check-label" asp-for="RememberMe">
+                        @Localizer["Remember me"]
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary">@Localizer["Sign in"]</button>
+                <div class="dropdown-divider"></div>
+                <a asp-controller="Account" asp-action="ForgotPassword" class="dropdown-item">@Localizer["Forgot password?"]</a>
+            </form>
+        }
+    </div>
+</li>

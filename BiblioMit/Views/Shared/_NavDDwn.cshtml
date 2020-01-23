@@ -1,0 +1,35 @@
+﻿@model BiblioMit.Models.VM.NavVM.NavDDwnVM
+@{ var first = true; }
+@*asp-controller="@Model.Controller" asp-action="@Model.Action"*@
+@*data-toggle="@item[4]" data-target="@item[5]"*@
+<li class="nav-item dropdown">
+    <button class="nav-link dropdown-toggle btn btn-dark"
+            id="@Model.Action" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+        <figure class="text-center">
+            <i class="fas fa-@Model.Logo fa-tw logo @Model.Logo"></i>
+            <figcaption class="light-caption">@Model.Title</figcaption>
+        </figure>
+    </button>
+    <div class="dropdown-menu" aria-labelledby="@Model.Action">
+        @foreach (var section in Model.Sections)
+        {
+            <div class="dropdown-header">@Localizer[section.Key]:</div>
+            @foreach (var item in section.Value)
+            {
+                <a class="dropdown-item"
+                   asp-controller="@item[0]" asp-action="@item[1]">
+                    <i class="@item[3] fa-tw"></i>&emsp;@item[2]
+                </a>
+            }
+            if (!first)
+            {
+                <div class="dropdown-divider"></div>
+            }
+            else
+            {
+                first = false;
+            }
+        }
+    </div>
+</li>

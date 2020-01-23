@@ -1,0 +1,188 @@
+{
+  "version": "1.0",
+  "defaultProvider": "unpkg",
+  "libraries": [
+    {
+      "library": "@aspnet/signalr@1.1.4",
+      "destination": "wwwroot/lib/@aspnet/signalr/",
+      "files": [ "dist/browser/signalr.min.js" ]
+    },
+    {
+      "library": "@fortawesome/fontawesome-free@5.12.0",
+      "destination": "wwwroot/lib/@fortawesome/fontawesome-free/",
+      "files": [
+        "css/all.min.css",
+        "webfonts/fa-solid-900.woff2",
+        "webfonts/fa-solid-900.woff",
+        "webfonts/fa-solid-900.ttf",
+        "webfonts/fa-regular-400.woff2",
+        "webfonts/fa-regular-400.woff",
+        "webfonts/fa-regular-400.ttf"
+      ]
+    },
+    {
+      "library": "alasql@0.5.4",
+      "destination": "wwwroot/lib/alasql/",
+      "files": [ "dist/alasql.min.js" ]
+    },
+    {
+      "library": "angular@1.7.9",
+      "destination": "wwwroot/lib/angular/",
+      "files": [ "angular.min.js" ]
+    },
+    {
+      "library": "angular-flip-clock@0.4.0",
+      "destination": "wwwroot/",
+      "files": [
+        "dist/angular-flip-clock.min.css",
+        "dist/angular-flip-clock.min.js",
+        "src/js/angular-flip-clock-directive/angular-flip-clock-directive.html",
+        "src/js/angular-flip-clock-label-directive/angular-flip-clock-label-directive.html",
+        "src/js/angular-flip-clock-number-directive/angular-flip-clock-number-directive.html"
+      ]
+    },
+    {
+      "library": "bootstrap@4.4.1",
+      "destination": "wwwroot/lib/bootstrap/",
+      "files": [
+        "dist/css/bootstrap.min.css",
+        "dist/js/bootstrap.bundle.min.js"
+      ]
+    },
+    {
+      "library": "bootstrap-datepicker@1.9.0",
+      "destination": "wwwroot/lib/bootstrap-datepicker/",
+      "files": [
+        "dist/css/bootstrap-datepicker.min.css",
+        "dist/js/bootstrap-datepicker.min.js",
+        "dist/locales/bootstrap-datepicker.es.min.js"
+      ]
+    },
+    {
+      "library": "bootstrap-select@1.13.12",
+      "destination": "wwwroot/lib/bootstrap-select/",
+      "files": [
+        "dist/css/bootstrap-select.min.css",
+        "dist/js/bootstrap-select.min.js",
+        "dist/js/i18n/defaults-es_CL.min.js"
+      ]
+    },
+    {
+      "library": "choices.js@9.0.1",
+      "destination": "wwwroot/lib/choices.js/",
+      "files": [
+        "public/assets/styles/choices.min.css",
+        "public/assets/scripts/choices.min.js"
+      ]
+    },
+    {
+      "library": "cldr-data@36.0.0",
+      "destination": "wwwroot/lib/cldr-data/"
+    },
+    {
+      "library": "cldrjs@0.5.1",
+      "destination": "wwwroot/lib/cldrjs/",
+      "files": [
+        "dist/cldr.js",
+        "dist/cldr/event.js",
+        "dist/cldr/supplemental.js"
+      ]
+    },
+    {
+      "library": "fine-uploader@5.16.2",
+      "destination": "wwwroot/lib/fine-uploader/",
+      "files": [
+        "fine-uploader/fine-uploader-new.min.css",
+        "fine-uploader/fine-uploader.min.js",
+        "fine-uploader/placeholders/waiting-generic.png",
+        "fine-uploader/placeholders/not_available-generic.png",
+        "fine-uploader/continue.gif",
+        "fine-uploader/edit.gif",
+        "fine-uploader/loading.gif",
+        "fine-uploader/retry.gif",
+        "fine-uploader/pause.gif",
+        "fine-uploader/processing.gif",
+        "fine-uploader/trash.gif"
+      ]
+    },
+    {
+      "library": "flatpickr@4.6.3",
+      "destination": "wwwroot/lib/flatpickr",
+      "files": [ "dist/flatpickr.min.css", "dist/flatpickr.min.js", "dist/l10n/es.js" ]
+    },
+    {
+      "library": "globalize@1.4.2",
+      "destination": "wwwroot/lib/globalize/",
+      "files": [
+        "dist/globalize.js",
+        "dist/globalize/number.js",
+        "dist/globalize/date.js"
+      ]
+    },
+    {
+      "library": "jquery@3.4.1",
+      "destination": "wwwroot/lib/jquery/",
+      "files": [ "dist/jquery.min.js" ]
+    },
+    {
+      "provider": "cdnjs",
+      "library": "jqueryui@1.12.1",
+      "destination": "wwwroot/lib/jqueryui/",
+      "files": [ "jquery-ui.min.js", "themes/base/jquery-ui.min.css" ]
+    },
+    {
+      "library": "jquery-validation@1.19.1",
+      "destination": "wwwroot/lib/jquery-validation/",
+      "files": [
+        "dist/jquery.validate.min.js",
+        "dist/localization/messages_es_PE.min.js"
+      ]
+    },
+    {
+      "library": "jquery-validation-unobtrusive@3.2.11",
+      "destination": "wwwroot/lib/jquery-validation-unobtrusive/",
+      "files": [ "dist/jquery.validate.unobtrusive.min.js" ]
+    },
+    {
+      "library": "jquery-validation-unobtrusive-extensions@1.0.4",
+      "destination": "wwwroot/lib/jquery-validation-unobtrusive-extensions/",
+      "files": [ "jquery.validate.unobtrusive.globalize.min.js" ]
+    },
+    {
+      "library": "nanogallery2@2.4.2",
+      "destination": "wwwroot/lib/nanogallery2/",
+      "files": [
+        "dist/css/nanogallery2.min.css",
+        "dist/jquery.nanogallery2.min.js"
+      ]
+    },
+    {
+      "library": "popper.js@1.16.1",
+      "destination": "wwwroot/lib/popper.js/",
+      "files": [ "dist/umd/popper.min.js" ]
+    },
+    {
+      "library": "qrcodejs@1.0.0",
+      "destination": "wwwroot/lib/qrcodejs/",
+      "files": [ "qrcode.min.js" ]
+    },
+    {
+      "library": "smartwizard@4.3.1",
+      "destination": "wwwroot/lib/smartwizard/",
+      "files": [
+        "dist/css/smart_wizard.min.css",
+        "dist/js/jquery.smartWizard.js"
+      ]
+    },
+    {
+      "library": "tooltip.js@1.3.3",
+      "destination": "wwwroot/lib/tooltip.js/",
+      "files": [ "dist/umd/tooltip.min.js" ]
+    },
+    {
+      "library": "xlsx@0.15.4",
+      "destination": "wwwroot/lib/xlsx/",
+      "files": [ "dist/xlsx.core.min.js" ]
+    }
+  ]
+}

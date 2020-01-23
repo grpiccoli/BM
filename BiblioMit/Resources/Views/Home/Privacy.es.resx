@@ -1,0 +1,253 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="&lt;h1&gt;Privacy Policy&lt;/h1&gt;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&lt;p&gt;Effective date: November 05, 2018&lt;/p&gt;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&lt;p&gt;Empresas Piccoli Ltda y Universidad Santo Tomás (&quot;us&quot;, &quot;we&quot;, or &quot;our&quot;) operates the https://www.bibliomit.cl website (the &quot;Service&quot;).&lt;/p&gt;&#xD;&#xA;&lt;p&gt;This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use our Service and the choices you have associated with that data. Our Privacy Policy  for Empresas Piccoli Ltda y Universidad Santo Tomás is managed through &lt;a href=&quot;https://www.freeprivacypolicy.com/free-privacy-policy-generator.php&quot;&gt;Free Privacy Policy&lt;/a&gt;.&lt;/p&gt;&#xD;&#xA;&#xD;&#xA;&lt;p&gt;We use your data to provide and improve the Service. By using the Service, you agree to the collection and use of information in accordance with this policy. Unless otherwise defined in this Privacy Policy, terms used in this Privacy Policy have the same meanings as in our Terms and Conditions, accessible from https://www.bibliomit.cl&lt;/p&gt;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&lt;h2&gt;Information Collection And Use&lt;/h2&gt;&#xD;&#xA;&#xD;&#xA;&lt;p&gt;We collect several different types of information for various purposes to provide and improve our Service to you.&lt;/p&gt;&#xD;&#xA;&#xD;&#xA;&lt;h3&gt;Types of Data Collected&lt;/h3&gt;&#xD;&#xA;&#xD;&#xA;&lt;h4&gt;Personal Data&lt;/h4&gt;&#xD;&#xA;&#xD;&#xA;&lt;p&gt;While using our Service, we may ask you to provide us with certain personally identifiable information that can be used to contact or identify you (&quot;Personal Data&quot;). Personally identifiable information may include, but is not limited to:&lt;/p&gt;&#xD;&#xA;&#xD;&#xA;&lt;ul&gt;&#xD;&#xA;    &lt;li&gt;Email address&lt;/li&gt;&#xD;&#xA;    &lt;li&gt;First name and last name&lt;/li&gt;&#xD;&#xA;    &lt;li&gt;Cookies and Usage Data&lt;/li&gt;&#xD;&#xA;&lt;/ul&gt;&#xD;&#xA;&#xD;&#xA;&lt;h4&gt;Usage Data&lt;/h4&gt;&#xD;&#xA;&#xD;&#xA;&lt;p&gt;We may also collect information how the Service is accessed and used (&quot;Usage Data&quot;). This Usage Data may include information such as your computer's Internet Protocol address (e.g. IP address), browser type, browser version, the pages of our Service that you visit, the time and date of your visit, the time spent on those pages, unique device identifiers and other diagnostic data.&lt;/p&gt;&#xD;&#xA;&#xD;&#xA;&lt;h4&gt;Tracking &amp; Cookies Data&lt;/h4&gt;&#xD;&#xA;&lt;p&gt;We use cookies and similar tracking technologies to track the activity on our Service and hold certain information.&lt;/p&gt;&#xD;&#xA;&lt;p&gt;Cookies are files with small amount of data which may include an anonymous unique identifier. Cookies are sent to your browser from a website and stored on your device. Tracking technologies also used are beacons, tags, and scripts to collect and track information and to improve and analyze our Service.&lt;/p&gt;&#xD;&#xA;&lt;p&gt;You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent. However, if you do not accept cookies, you may not be able to use some portions of our Service.&lt;/p&gt;&#xD;&#xA;&lt;p&gt;Examples of Cookies we use:&lt;/p&gt;&#xD;&#xA;&lt;ul&gt;&#xD;&#xA;    &lt;li&gt;&lt;strong&gt;Session Cookies.&lt;/strong&gt; We use Session Cookies to operate our Service.&lt;/li&gt;&#xD;&#xA;    &lt;li&gt;&lt;strong&gt;Preference Cookies.&lt;/strong&gt; We use Preference Cookies to remember your preferences and various settings.&lt;/li&gt;&#xD;&#xA;    &lt;li&gt;&lt;strong&gt;Security Cookies.&lt;/strong&gt; We use Security Cookies for security purposes.&lt;/li&gt;&#xD;&#xA;&lt;/ul&gt;&#xD;&#xA;&#xD;&#xA;&lt;h2&gt;Use of Data&lt;/h2&gt;&#xD;&#xA;&#xD;&#xA;&lt;p&gt;Empresas Piccoli Ltda y Universidad Santo Tomás uses the collected data for various purposes:&lt;/p&gt;&#xD;&#xA;&lt;ul&gt;&#xD;&#xA;    &lt;li&gt;To provide and maintain the Service&lt;/li&gt;&#xD;&#xA;    &lt;li&gt;To notify you about changes to our Service&lt;/li&gt;&#xD;&#xA;    &lt;li&gt;To allow you to participate in interactive features of our Service when you choose to do so&lt;/li&gt;&#xD;&#xA;    &lt;li&gt;To provide customer care and support&lt;/li&gt;&#xD;&#xA;    &lt;li&gt;To provide analysis or valuable information so that we can improve the Service&lt;/li&gt;&#xD;&#xA;    &lt;li&gt;To monitor the usage of the Service&lt;/li&gt;&#xD;&#xA;    &lt;li&gt;To detect, prevent and address technical issues&lt;/li&gt;&#xD;&#xA;&lt;/ul&gt;&#xD;&#xA;&#xD;&#xA;&lt;h2&gt;Transfer Of Data&lt;/h2&gt;&#xD;&#xA;&lt;p&gt;Your information, including Personal Data, may be transferred to — and maintained on — computers located outside of your state, province, country or other governmental jurisdiction where the data protection laws may differ than those from your jurisdiction.&lt;/p&gt;&#xD;&#xA;&lt;p&gt;If you are located outside Chile and choose to provide information to us, please note that we transfer the data, including Personal Data, to Chile and process it there.&lt;/p&gt;&#xD;&#xA;&lt;p&gt;Your consent to this Privacy Policy followed by your submission of such information represents your agreement to that transfer.&lt;/p&gt;&#xD;&#xA;&lt;p&gt;Empresas Piccoli Ltda y Universidad Santo Tomás will take all steps reasonably necessary to ensure that your data is treated securely and in accordance with this Privacy Policy and no transfer of your Personal Data will take place to an organization or a country unless there are adequate controls in place including the security of your data and other personal information.&lt;/p&gt;&#xD;&#xA;&#xD;&#xA;&lt;h2&gt;Disclosure Of Data&lt;/h2&gt;&#xD;&#xA;&#xD;&#xA;&lt;h3&gt;Legal Requirements&lt;/h3&gt;&#xD;&#xA;&lt;p&gt;Empresas Piccoli Ltda y Universidad Santo Tomás may disclose your Personal Data in the good faith belief that such action is necessary to:&lt;/p&gt;&#xD;&#xA;&lt;ul&gt;&#xD;&#xA;    &lt;li&gt;To comply with a legal obligation&lt;/li&gt;&#xD;&#xA;    &lt;li&gt;To protect and defend the rights or property of Empresas Piccoli Ltda y Universidad Santo Tomás&lt;/li&gt;&#xD;&#xA;    &lt;li&gt;To prevent or investigate possible wrongdoing in connection with the Service&lt;/li&gt;&#xD;&#xA;    &lt;li&gt;To protect the personal safety of users of the Service or the public&lt;/li&gt;&#xD;&#xA;    &lt;li&gt;To protect against legal liability&lt;/li&gt;&#xD;&#xA;&lt;/ul&gt;&#xD;&#xA;&#xD;&#xA;&lt;h2&gt;Security Of Data&lt;/h2&gt;&#xD;&#xA;&lt;p&gt;The security of your data is important to us, but remember that no method of transmission over the Internet, or method of electronic storage is 100% secure. While we strive to use commercially acceptable means to protect your Personal Data, we cannot guarantee its absolute security.&lt;/p&gt;&#xD;&#xA;&#xD;&#xA;&lt;h2&gt;Service Providers&lt;/h2&gt;&#xD;&#xA;&lt;p&gt;We may employ third party companies and individuals to facilitate our Service (&quot;Service Providers&quot;), to provide the Service on our behalf, to perform Service-related services or to assist us in analyzing how our Service is used.&lt;/p&gt;&#xD;&#xA;&lt;p&gt;These third parties have access to your Personal Data only to perform these tasks on our behalf and are obligated not to disclose or use it for any other purpose.&lt;/p&gt;&#xD;&#xA;&#xD;&#xA;&lt;h3&gt;Analytics&lt;/h3&gt;&#xD;&#xA;&lt;p&gt;We may use third-party Service Providers to monitor and analyze the use of our Service.&lt;/p&gt;&#xD;&#xA;&lt;ul&gt;&#xD;&#xA;    &lt;li&gt;&#xD;&#xA;        &lt;p&gt;&lt;strong&gt;Google Analytics&lt;/strong&gt;&lt;/p&gt;&#xD;&#xA;        &lt;p&gt;Google Analytics is a web analytics service offered by Google that tracks and reports website traffic. Google uses the data collected to track and monitor the use of our Service. This data is shared with other Google services. Google may use the collected data to contextualize and personalize the ads of its own advertising network.&lt;/p&gt;&#xD;&#xA;        &lt;p&gt;You can opt-out of having made your activity on the Service available to Google Analytics by installing the Google Analytics opt-out browser add-on. The add-on prevents the Google Analytics JavaScript (ga.js, analytics.js, and dc.js) from sharing information with Google Analytics about visits activity.&lt;/p&gt;                &lt;p&gt;For more information on the privacy practices of Google, please visit the Google Privacy &amp; Terms web page: &lt;a href=&quot;https://policies.google.com/privacy?hl=en&quot;&gt;https://policies.google.com/privacy?hl=en&lt;/a&gt;&lt;/p&gt;&#xD;&#xA;    &lt;/li&gt;&#xD;&#xA;&lt;/ul&gt;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&lt;h2&gt;Links To Other Sites&lt;/h2&gt;&#xD;&#xA;&lt;p&gt;Our Service may contain links to other sites that are not operated by us. If you click on a third party link, you will be directed to that third party's site. We strongly advise you to review the Privacy Policy of every site you visit.&lt;/p&gt;&#xD;&#xA;&lt;p&gt;We have no control over and assume no responsibility for the content, privacy policies or practices of any third party sites or services.&lt;/p&gt;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&lt;h2&gt;Children's Privacy&lt;/h2&gt;&#xD;&#xA;&lt;p&gt;Our Service does not address anyone under the age of 18 (&quot;Children&quot;).&lt;/p&gt;&#xD;&#xA;&lt;p&gt;We do not knowingly collect personally identifiable information from anyone under the age of 18. If you are a parent or guardian and you are aware that your Children has provided us with Personal Data, please contact us. If we become aware that we have collected Personal Data from children without verification of parental consent, we take steps to remove that information from our servers.&lt;/p&gt;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&lt;h2&gt;Changes To This Privacy Policy&lt;/h2&gt;&#xD;&#xA;&lt;p&gt;We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page.&lt;/p&gt;&#xD;&#xA;&lt;p&gt;We will let you know via email and/or a prominent notice on our Service, prior to the change becoming effective and update the &quot;effective date&quot; at the top of this Privacy Policy.&lt;/p&gt;&#xD;&#xA;&lt;p&gt;You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are effective when they are posted on this page.&lt;/p&gt;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&lt;h2&gt;Contact Us&lt;/h2&gt;&#xD;&#xA;&lt;p&gt;If you have any questions about this Privacy Policy, please contact us:&lt;/p&gt;&#xD;&#xA;&lt;ul&gt;&#xD;&#xA;    &lt;li&gt;By email: guillermorodriguezpi@santotomas.cl&lt;/li&gt;&#xD;&#xA;&#xD;&#xA;    &lt;li&gt;By phone number: +56652485120&lt;/li&gt;&#xD;&#xA;&lt;/ul&gt;" xml:space="preserve">
+    <value>&lt;h1&gt;Política de privacidad&lt;/h1&gt;
+
+
+&lt;p&gt;Fecha efectiva: November 05, 2018&lt;/p&gt;
+
+
+&lt;p&gt;Empresas Piccoli Ltda y Universidad Santo Tomás ("nosotros", "a nosotros", "nuestro") opera el sitio web https://www.bibliomit.cl (en adelante, el "Servicio").&lt;/p&gt;
+
+&lt;p&gt;Esta página le informa de nuestras políticas en materia de recopilación, uso y divulgación de datos personales cuando utiliza nuestro Servicio y de las opciones de las que dispone en relación con esos datos. &lt;a href="https://www.freeprivacypolicy.com/free-privacy-policy-generator.php"&gt;Política de privacidad via Free Privacy Policy&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Utilizamos sus datos para prestarle el Servicio y mejorarlo. Al utilizar el Servicio, usted acepta la recopilación y el uso de información de conformidad con esta política. A menos que esta Política de privacidad defina lo contrario, los términos utilizados en ella tienen los mismos significados que nuestros Términos y Condiciones, disponibles en el https://www.bibliomit.cl&lt;/p&gt;
+
+&lt;h2&gt;Definiciones&lt;/h2&gt;
+&lt;ul&gt;
+    &lt;li&gt;
+        &lt;p&gt;&lt;strong&gt;Servicio&lt;/strong&gt;&lt;/p&gt;
+                &lt;p&gt;Servicio es el sitio web https://www.bibliomit.cl operado por Empresas Piccoli Ltda y Universidad Santo Tomás&lt;/p&gt;
+            &lt;/li&gt;
+    &lt;li&gt;
+        &lt;p&gt;&lt;strong&gt;Datos personales&lt;/strong&gt;&lt;/p&gt;
+        &lt;p&gt;Datos personales significa los datos sobre una persona física viva que puede ser identificada a partir de esos datos (o con esos datos y otra información de la que dispongamos o probablemente podamos disponer).&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+        &lt;p&gt;&lt;strong&gt;Datos de uso&lt;/strong&gt;&lt;/p&gt;
+        &lt;p&gt;Datos de uso son los datos recopilados automáticamente, generados por el uso del Servicio o por la propia infraestructura del Servicio (por ejemplo, la duración de la visita a una página).&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+        &lt;p&gt;&lt;strong&gt;Cookies&lt;/strong&gt;&lt;/p&gt;
+        &lt;p&gt;Las cookies son pequeños archivos ialmacenados en su dispositivo (ordenador o dispositivo móvil).&lt;/p&gt;
+    &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Recopilación y uso de la información&lt;/h2&gt;
+&lt;p&gt;Recopilamos diferentes tipos de información con diversas finalidades para prestarle el
+Servicio y mejorarlo.&lt;/p&gt;
+
+&lt;h3&gt;Tipos de datos recopilados&lt;/h3&gt;
+
+&lt;h4&gt;Datos personales&lt;/h4&gt;
+&lt;p&gt;Cuando utilice nuestro Servicio, es posible que le pidamos que nos proporcione determinada información personalmente identificable que podrá ser utilizada para contactar con usted o para identificarle ("Datos personales"). La información personalmente identificable puede incluir, entre otras, la siguiente:&lt;/p&gt;
+
+&lt;ul&gt;
+    &lt;li&gt;Dirección de e-mail&lt;/li&gt;    &lt;li&gt;Nombre y apellidos&lt;/li&gt;            &lt;li&gt;Cookies y datos de uso&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Datos de uso&lt;/h4&gt;
+
+&lt;p&gt;También recopilamos información sobre la forma en la que se accede y utiliza el Servicio («Datos de uso»). Estos Datos de uso pueden incluir información como la dirección del protocolo de Internet de su ordenador (por ejemplo, dirección IP), tipo de navegador, versión del navegador, las páginas que visita de nuestro Servicio, la hora y la fecha de su visita, el tiempo que pasa en esas páginas, identificadores exclusivos de dispositivos y otros datos de diagnóstico.&lt;/p&gt;
+
+&lt;h4&gt;Datos de cookies y seguimiento&lt;/h4&gt;
+&lt;p&gt;Utilizamos cookies y tecnologías de seguimiento similares para rastrear la actividad de nuestro Servicio y mantener determinada información.&lt;/p&gt;
+&lt;p&gt;Las cookies son archivos con una pequeña cantidad de datos que pueden incluir un identificador exclusivo anónimo. Las cookies son enviadas a su navegador desde un sitio web y se almacenan en su dispositivo. Otras tecnologías de seguimiento también utilizadas son balizas, etiquetas y scripts para recopilar y rastrear la información, así como para mejorar y analizar nuestro Servicio.&lt;/p&gt;
+&lt;p&gt;Usted puede ordenar a su navegador que rechace todas las cookies o que le avise cuando se envía una cookie. Sin embargo, si no acepta cookies, es posible que no pueda utilizar algunas partes de nuestro Servicio.&lt;/p&gt;
+&lt;p&gt;Ejemplos de Cookies que utilizamos:&lt;/p&gt;
+&lt;ul&gt;
+    &lt;li&gt;&lt;strong&gt;Cookies de sesión.&lt;/strong&gt; Utilizamos Cookies de sesión para operar nuestro Servicio.&lt;/li&gt;
+    &lt;li&gt;&lt;strong&gt;Cookies de preferencia.&lt;/strong&gt; Utilizamos Cookies de preferencia para recordar sus preferencias y diversos ajustes.&lt;/li&gt;
+    &lt;li&gt;&lt;strong&gt;Cookies de seguridad.&lt;/strong&gt; Utilizamos Cookies de seguridad para fines de seguridad.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Uso de datos&lt;/h2&gt; 
+&lt;p&gt;Empresas Piccoli Ltda y Universidad Santo Tomás utiliza los datos recopilados con diversas finalidades:&lt;/p&gt;    
+&lt;ul&gt;
+    &lt;li&gt;Suministrar y mantener nuestro Servicio&lt;/li&gt;
+    &lt;li&gt;Notificarle cambios en nuestro Servicio&lt;/li&gt;
+    &lt;li&gt;Permitirle participar en funciones interactivas de nuestro Servicio cuando decida hacerlo&lt;/li&gt;
+    &lt;li&gt;Prestar asistencia al cliente&lt;/li&gt;
+    &lt;li&gt;Recopilar análisis o información valiosa que nos permitan mejorar nuestro Servicio&lt;/li&gt;
+    &lt;li&gt;Controlar el uso de nuestro Servicio&lt;/li&gt;
+    &lt;li&gt;Detectar, evitar y abordar problemas técnicos&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Transferencia de datos&lt;/h2&gt;
+&lt;p&gt;Su información, incluyendo Datos personales, puede ser transferida a —y mantenida en— ordenadores localizados fuera de su estado, provincia, país u otra jurisdicción gubernamental donde las leyes de protección de datos pueden diferir de las de su jurisdicción.&lt;/p&gt;
+&lt;p&gt;Si usted se encuentra fuera de Chile y decide facilitarnos información, tenga en cuenta que nosotros transferimos los datos, incluyendo Datos personales, a Chile y que los tratamos allí.&lt;/p&gt;
+&lt;p&gt;Su aceptación de esta Política de privacidad seguida de su envío de esta información representa que está de acuerdo con dicha transferencia.&lt;/p&gt;
+&lt;p&gt;Empresas Piccoli Ltda y Universidad Santo Tomás emprenderá todas las medidas razonables necesarias para garantizar que sus datos sean tratados de forma segura y de conformidad con esta Política de privacidad y no se realizará ninguna transferencia de sus Datos personales a una organización o país, salvo que existan unos controles adecuados establecidos incluyendo la seguridad de sus datos y otra información personal.&lt;/p&gt;
+
+&lt;h2&gt;Divulgación de datos&lt;/h2&gt;
+
+&lt;h3&gt;Requisitos legales&lt;/h3&gt;
+&lt;p&gt;Empresas Piccoli Ltda y Universidad Santo Tomás puede divulgar sus Datos personales de buena fe cuando considere que esta acción es necesaria para lo siguiente:&lt;/p&gt;
+&lt;ul&gt;
+    &lt;li&gt;Cumplir una obligación legal&lt;/li&gt;
+    &lt;li&gt;Proteger y defender los derechos o bienes de Empresas Piccoli Ltda y Universidad Santo Tomás&lt;/li&gt;
+    &lt;li&gt;Prevenir o investigar posibles infracciones en relación con el Servicio&lt;/li&gt;
+    &lt;li&gt;Proteger la seguridad personal de usuarios del Servicio o del público&lt;/li&gt;
+    &lt;li&gt;Protegerse frente a consecuencias legales&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Seguridad de los datos&lt;/h2&gt;
+&lt;p&gt;La seguridad de sus datos es importante para nosotros, pero recuerde que ningún método de transmisión por Internet o método de almacenamiento electrónico resulta 100% seguro. A pesar de que nos esforzamos por utilizar medios comercialmente aceptables para proteger sus Datos personales, no podemos garantizar su seguridad absoluta.&lt;/p&gt;
+
+&lt;h2&gt;Proveedores de servicios&lt;/h2&gt;
+&lt;p&gt;Podemos contratar a personas físicas y jurídicas terceras para facilitar nuestro Servicio ("Proveedores de servicios"), para que presten el Servicio en nuestro nombre, para que suministren servicios relacionados con el Servicio o para que nos ayuden a analizar cómo se utiliza nuestro Servicio.&lt;/p&gt;
+&lt;p&gt;Estos terceros tienen acceso a sus Datos personales únicamente para realizar estas tareas en nuestro nombre y están obligados a no divulgarlos ni utilizarlos con ningún otro fin.&lt;/p&gt;
+
+&lt;h3&gt;Análisis&lt;/h3&gt;
+&lt;p&gt;Podemos utilizar Proveedores de servicios terceros para controlar y analizar el uso de nuestro Servicio.&lt;/p&gt;    
+&lt;ul&gt;
+        &lt;li&gt;
+        &lt;p&gt;&lt;strong&gt;Google Analytics&lt;/strong&gt;&lt;/p&gt;
+        &lt;p&gt;Google Analytics es un servicio de analítica web ofrecido por Google que rastrea e informa del tráfico de los sitios web. Google utiliza los datos recopilados para rastrear y controlar el uso de nuestro Servicio. Estos datos son compartidos con otros servicios de Google. Google puede utilizar los datos recopilados para contextualizar y personalizar los anuncios de su propia red de publicidad.&lt;/p&gt;
+        &lt;p&gt;Puede optar por que su actividad en el Servicio no esté disponible para Google Analytics instalando el complemento de inhabilitación para el navegador. Este complemento evita que el JavaScript de Google Analytics (ga.js, analytics.js y dc.js) comparta información con Google Analytics sobre la actividad de las visitas.&lt;/p&gt;                &lt;p&gt;Para más información sobre las prácticas de privacidad de Google, visite la página web de Privacidad y Condiciones de Google: &lt;a href="https://policies.google.com/privacy?hl=en"&gt;https://policies.google.com/privacy?hl=en&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+                                &lt;/ul&gt;
+
+
+&lt;h2&gt;Enlaces a otros sitios&lt;/h2&gt;
+&lt;p&gt;Nuestro Servicio puede contener enlaces a otros sitios no operados por nosotros. Si hace clic en el enlace de un tercero, será dirigido al sitio de ese tercero. Le recomendamos encarecidamente que revise la Política de privacidad de todos los sitios que visite.&lt;/p&gt;
+&lt;p&gt;No tenemos ningún control ni asumimos responsabilidad alguna con respecto al contenido, las políticas o prácticas de privacidad de sitios o servicios de terceros.&lt;/p&gt;
+
+
+&lt;h2&gt;Privacidad del menor&lt;/h2&gt;
+&lt;p&gt;Nuestro servicio no está dirigido a ningún menor de 18 años (en adelante, "Menor").&lt;/p&gt;
+&lt;p&gt;No recopilamos de forma consciente información personalmente identificable de menores de 18 años. Si es usted un padre/madre o tutor y tiene conocimiento de que su hijo nos ha facilitado Datos personales, contacte con nosotros. Si tenemos conocimiento de que hemos recopilado Datos personales de menores sin verificación del consentimiento parental, tomamos medidas para eliminar esa información de nuestros servidores.&lt;/p&gt;
+
+
+&lt;h2&gt;Cambios en esta Política de privacidad&lt;/h2&gt;
+&lt;p&gt;Podemos actualizar nuestra Política de privacidad periódicamente. Le notificaremos cualquier cambio publicando la nueva Política de privacidad en esta página.&lt;/p&gt;
+&lt;p&gt;Le informaremos a través del e-mail y/o de un aviso destacado sobre nuestro Servicio antes de que el cambio entre en vigor y actualizaremos la «fecha efectiva» en la parte superior de esta Política de privacidad.&lt;/p&gt;
+&lt;p&gt;Le recomendamos que revise esta Política de privacidad periódicamente para comprobar si se ha introducido algún cambio. Los cambios en esta Política de privacidad entran en vigor cuando se publican en esta página.&lt;/p&gt;
+
+
+&lt;h2&gt;Contacte con nosotros&lt;/h2&gt;
+&lt;p&gt;Si tiene alguna pregunta sobre esta Política de privacidad, contacte con nosotros: &lt;/p&gt;
+&lt;ul&gt;
+        &lt;li&gt;Por e-mail: guillermorodriguezpi@santotomas.cl&lt;/li&gt;
+          
+        &lt;li&gt;A través del número de teléfono: +56652485120&lt;/li&gt;
+        &lt;/ul&gt;</value>
+  </data>
+</root>

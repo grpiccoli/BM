@@ -1,0 +1,396 @@
+﻿<script>
+    //gráfico provincias
+    var chart = AmCharts.makeChart("chart-provincias", {
+        "type": "pie",
+        "language": "es",
+        "labelText": "[[title]]\n[[percents]]%",
+        "export": {
+            "enabled": true,
+            "menu": []
+        },
+        "listeners": [{
+            "event": "clickSlice",
+            "method": function (event) {
+                if (getVal("tp") !== "@((int)Tipo.Producción)") { return; }
+                var selected;
+                var chart = event.chart;
+                if (event.dataItem.dataContext.id !== undefined) {
+                    selected = event.dataItem.dataContext.id;
+                } else {
+                    selected = undefined;
+                }
+                var chartData = [];
+                var yr = getVal("year");
+                var start = getVal("start");
+                var end = getVal("end");
+                var url = '@Html.Raw(Url.Action("GetProvincias","Boletin",
+                new { tipo = (int)Tipo.Producción, year = "YR", start = "STR", end = "END" }, Context.Request.Scheme))';
+                url = url.replace("YR", yr).replace("STR", start).replace("END", end);
+                console.log(url);
+                AmCharts.loadFile(url, {}, function (data) {
+                    var r = JSON.parse(data);
+                    $.each(r, function (_i, value) {
+                        if (value.id === selected) {
+                            for (var x = 0; x < 3; x++) {
+                                chartData.push({
+                                    provincia: value.subs[x].provincia,
+                                    ton: value.subs[x].ton,
+                                    color: value.color,
+                                    pulled: true
+                                });
+                            }
+                        } else {
+                            chartData.push(value);
+                        }
+                    });
+                    chart.dataProvider = chartData;
+                    chart.validateData();
+                });
+            }
+        }],
+        "outlineThickness": 2,
+        "colorField": "color",
+        "outlineColor": "#FFFFFF",
+        "pulledField": "pulled",
+        "legend": {
+            "divId": "legend-provincias",
+            "position": "right",
+            "align": "center",
+            "valueText": "[[value]] Ton.",
+            "right": -4,
+            "valueWidth": 80,
+            "marginRight": 21
+        },
+        "valueField": "ton",
+        "titleField": "provincia",
+        "balloon": {
+            "fixedPosition": true
+        },
+        "numberFormatter": {
+            "decimalSeparator": ",",
+            "thousandsSeparator": "."
+        }
+    });
+    chart.autoMargins = false;
+    chart.marginTop = 40;
+    chart.marginBottom = 40;
+    chart.marginLeft = 0;
+    chart.marginRight = 0;
+    chart.pullOutRadius = 5;
+
+    //gráfico de comunas
+    var com = AmCharts.makeChart("chart-comunas", {
+        "type": "serial",
+        "language": "es",
+        "labelText": "[[title]]\n[[percents]]%",
+        "categoryField": "comuna",
+        "startDuration": 1,
+        "categoryAxis": {
+            "minPeriod": "mm",
+            "autoGridCount": false,
+            "equalSpacing": true,
+            "gridCount": 20,
+            "labelRotation": 90,
+            "axisHeight": 50
+        },
+        "valueAxes": [
+            {
+                "id": "ValueAxis-1",
+                "axisAlpha": 0,
+                "minimum": 0
+            }
+        ],
+        "legend": {
+            "divId": "legend-comunas",
+            "position": "right"
+        },
+        "export": {
+            "enabled": true,
+            "menu": []
+        },
+        "numberFormatter": {
+            "decimalSeparator": ",",
+            "thousandsSeparator": "."
+        }
+    });
+
+    //gráfico meses
+    var mes = AmCharts.makeChart("chart-meses", {
+        "type": "serial",
+        "dataDateFormat": "YYYY-MM",
+        "valueAxes": [{
+            "position": "left",
+            "minimum": 0,
+            "labelFrequency": 1,
+            "strictMinMax": true
+        }],
+        "export": {
+            "enabled": true,
+            "menu": []
+        },
+        "categoryField": "date",
+        "categoryAxis": {
+            "autoGridCount": false,
+            "gridCount": 13,
+            "gridThickness": 0,
+            "parseDates": true,
+            "minPeriod": "MM",
+            "dateFormats": [
+                { period: 'MM', format: 'MMM' },
+                { period: 'YYYY', format: 'MMM' }
+            ]
+        },
+        "legend": {
+            "divId": "legend-meses",
+            "align": "center",
+            "valueText": "[[value]]"
+        },
+        "chartCursor": {
+            "categoryBalloonDateFormat": 'MMM YYYY'
+        },
+        "numberFormatter": {
+            "decimalSeparator": ",",
+            "thousandsSeparator": "."
+        }
+    });
+
+    //cambiar meses en español
+    AmCharts.shortMonthNames = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+
+    function exportReport() {
+
+    }
+
+    function exportExcel() {
+        url = '@Html.Raw(Url.Action("GetXlsx","Boletin",
+                    new { year = "YR", start = "STR", end = "END" }, Context.Request.Scheme))';
+        url = url.replace("YR", getVal("year")).replace("STR", getVal("start")).replace("END", getVal("end"));
+        $.get(url, {}, function (r) {
+            var opt = [{ sheetid: "Name", header: true },
+                { sheetid: "Name", header: true },
+                { sheetid: "Name", header: true },
+                { sheetid: "Name", header: true },
+                { sheetid: "Name", header: true },
+                { sheetid: "Name", header: true }];
+            alasql.promise('SELECT INTO XLSX("MyAwesomeData.xlsx",?) FROM ?', [opt, r])
+                .then(function (_data) {
+                    console.log('Data saved');
+                }).catch(function (err) {
+                    console.log('Error:', err);
+                });
+        });
+    }
+
+    //funciones generales
+    //attr{ Def, Group, Name, Units }
+    function getVal(s) {
+        return $('#'+s).val();
+    }
+    function getText(s) {
+        return $("option:selected", $('#'+s)).text();
+    }
+    function getTab() {
+        return $('.tab-pane.active').attr('id');
+    }
+    function setTxt(cl, txt) {
+        $("."+cl).html(txt);
+    }
+    function abbr(txt) {
+        return txt.substring(0, 3)+".";
+    }
+
+    var disclaimer = [
+        `@Localizer["It is one of the objectives of the National Fisheries and Aquaculture Service to promote public access to information regarding the scope of its competences. In the context of the implementation of the \"Mitílidos Regional Strategic Program\", supported by CORFO, the line of action is \"to generate productive bulletins to facilitate access to the industry, to the information currently in the field of public sector\". In this sense it is necessary to point out the following:<br/><strong>a)</strong> The Productive Bulletin contains information of a general nature that does not address specific circumstances related to specific persons or bodies.<br/><strong>b)</strong> The Productive Bulletin is supported by the information provided by the owners of the centers of crops and processing plants, therefore, this information is of a declarative nature, and does not compromise any responsibility of the service for its content and dissemination.<br/><strong>c)</strong> The Production Bulletin contains information of a preliminary nature, therefore, it may be modified as long as its publication in the official yearbook is pending.<br/><strong>d)</strong> Additionally, Sernapesca is not responsible for the problems caused by technical errors, nor can it guarantee that this report is issued free of errors."]`,
+        `@Localizer["The mission of Intemit is to increase the competitiveness of Chilean mussel farming, strengthening its value chain from the supply, generating synergies of multidisciplinary-scientific-technological cooperation, through applied research, products and services, with emphasis on the development of solutions, to the main environmental and productive problems of the mitilicultor sector, to provide relevant information that allows making public-private decisions. In this sense it is necessary to point out the following:<br /><strong> a) </strong> The environmental data correspond to a segment of the biooceanographic data that Intemit manages according to the agreements for the use of the information signed by the holders of the area and intemit for the use and administration of the data associated with the bivalve mollusk program.<br /><strong> b) </strong> The environmental data is shown as reported without modification.<br /><strong> c) </strong> Additionally, Intemit is not responsible for problems caused by technical errors, nor can it guarantee that this report is issued free of errors."]`
+    ];
+
+    //cambio de tab o tipo
+    $('a[role="tab"]').on('click', function () {
+        tpChange($(this).attr('name'));
+    });
+
+    $('.tipo').on('click', function () {
+        var tp = $(this).data("value");
+        $("select[name=tp]").val(tp);
+        var tab = getTab();
+        if (tp > @((int)Tipo.Producción) && tab === "Provincias") {
+            $('#comunes').trigger('click');
+        }
+        tpChange(tab);
+    });
+
+    function tpChange(tab) {
+        var tp = getVal("tp");
+        //is produccion
+        var pro = false;
+        var amb = false;
+        var centr = "las";
+        if (tp === '@((int)Tipo.Producción)') {
+            pro = true;
+        } else if (tp > @((int)Tipo.Producción)) {
+            amb = true;
+        } else if (tp < @((int)Tipo.Abastecimiento)) {
+            centr = "los";
+        }
+        setTxt("ga",centr);
+        //if ambiental hide provincias
+        amb ? $(".prod").addClass("d-none") : $(".prod").removeClass("d-none");
+        //change source img
+        var img = $("#src img").attr('src');
+        img = amb ? img.replace("sernapesca", "intemit") : img.replace("intemit", "sernapesca");
+        $("#src img").attr('src', img);
+        //change src href
+        $("#src").attr('href', amb ? "//intemit.cl" : "//sernapesca.cl");
+        //set disclaimer
+        var disc = amb ? disclaimer[1] : disclaimer[0];
+        setTxt("tdisc", disc);
+        //set source
+        var src = amb ? "Intemit" : "Sernapesca";
+        setTxt("tt-src", src);
+        //set type of data
+        setTxt("tt-calc", amb ? "@Localizer["Average"]" : "@Localizer["Total"]");
+        var yr = getVal("year");
+        var start = getVal("start");
+        var end = getVal("end");
+        var rango = abbr(getText('start')) + "-" + abbr(getText('end'));
+        var ch;
+        var nt = tab.replace("Tabla", "Comunas");
+        var url = '@Html.Raw(Url.Action("GetFN","Boletin",
+        new { tipo = "TP", year = "YR", start = "STR", end = "END" }, Context.Request.Scheme))';
+        url = url.replace("TP", tp).replace("YR", yr).replace("STR", start).replace("END", end).replace("FN", nt);
+        var graph = true;
+        var chtype = "line";
+        var fa = 0;
+        var bullet = "round";
+        switch (tab) {
+            case "Provincias":
+                ch = chart;
+                break;
+            case "Comunas":
+                ch = com;
+                chtype = "column";
+                fa = 0.8;
+                bullet = "";
+                break;
+            case "Meses":
+                ch = mes;
+                break;
+            case "Tabla":
+                var baseline = amb ? 'NA' : 0;
+                setTxt("dato", baseline);
+                url = url + "&tb=true";
+                console.log(url);
+                $.get(url, {}, function (r) {
+                    var ys = 0;
+                    var y1s = 0;
+                    var yc = 0;
+                    var y1c = 0;
+                    $.each(r, function (_i, value) {
+                        if (value.year != null) {
+                        setTxt("yr." + value.comuna, Number(value.year).toLocaleString("@(Localizer["en-GB"])"));
+                        }
+                        if (value.lastyr != null) {
+                        setTxt("yr-1." + value.comuna, Number(value.lastyr).toLocaleString("@(Localizer["en-GB"])"));
+                        }
+                        ys += value.year;
+                        y1s += value.lastyr;
+                        if (value.year !== "0") { yc++; }
+                        if (value.lastyr !== "0") { y1c++; }
+                    });
+                    var ty = amb ? ys / yc : ys;
+                    var ty1 = amb ? y1s / y1c : y1s;
+                    setTxt("yr.total", ty.toLocaleString("@(Localizer["en-GB"])"));
+                    setTxt("yr-1.total", ty1.toLocaleString("@(Localizer["en-GB"])"));
+                });
+                graph = false;
+                break;
+            default:
+                graph = false;
+                break;
+        }
+
+        var url2 = '@Html.Raw(Url.Action("GetAttr","Boletin",
+        new { tp = "TP", lg = Localizer["en"].Value }, Context.Request.Scheme))';
+        url2 = url2.replace("TP", tp);
+        $.get(url2, {}, function (r) {
+            if (graph) {
+                console.log(url);
+                AmCharts.loadFile(url, {}, function (data) {
+                    var keys = JSON.parse(data).reduce(function (k, e) {
+                        for (key in e) {
+                            if ($.inArray(key, k) === -1 && key !== "date" && key !== "comuna") {
+                                k.push(key);
+                            }
+                        }
+                        return k;
+                    }, []);
+                    ch.graphs = [];
+                    if (tab !== "Provincias") {
+                        if (tab === "Comunas") {
+                            ch.valueAxes[0].stackType = pro ? "regular" : "none";
+                        }
+                        keys.sort().forEach(function (valueField) {
+                            year = valueField === "lastyr" || valueField.startsWith("b") ? yr - 1 : yr;
+                            var name = valueField.replace(/[a-c]+_/, "");
+                            var append = pro ? name : rango;
+                            var title = year + " " + append;
+                            var btxt = pro ? "[[title]] " : "";
+                            var stack = valueField === "ac_refrigerado";
+                            var graph = {
+                                //"type": chtype,
+                                "title": title,
+                                "valueField": valueField,
+                                "balloonText": btxt + "[[category]]: <b>[[value]] " + abbr(r["units"]) + "</b>",
+                                "lineAlphas": 0.2,
+                                "fillAlphas": fa,
+                                "color": "#ff731c",
+                                "bullet": bullet,
+                                "bulletBorderAlpha": 0,
+                                "lineThickness": 2,
+                                "newStack": stack
+                            };
+                            if (!amb) {
+                                graph.type = chtype;
+                            } else if (tab === "Comunas") {
+                                graph.bulletSize = 10;
+                                graph.fillAlphas = 0;
+                                graph.bullet = "round";
+                                graph.lineThickness = 0;
+                                graph.bulletBorderAlpha = 2;
+                                graph.useLineColorForBulletBorder = true;
+                                graph.bulletColor = "#FFFFFF";
+                            }
+                            ch.graphs.push(graph);
+                        });
+                    }
+                    ch.dataProvider = AmCharts.parseJSON(data);
+                    ch.validateData();
+                });
+            }
+            setTxt("tt-unit", r["units"]);
+            setTxt("tt-unitabbr", abbr(r["units"]));
+            setTxt("td", r["def"]);
+            setTxt("tt", r["name"]);
+            setTxt("gt", r["group"]);
+        });
+    }
+
+    //on load
+    $(document).ready(function () {
+        var year = getVal('year');
+        var last = year - 1;
+        var rango = abbr(getText('start')) + "-" + abbr(getText('end'));
+        setTxt("tt-year",year);
+        setTxt("tt-year-1",last);
+        setTxt("tt-range",rango);
+        tpChange(getTab());
+    });
+
+    //spinner
+    //$(document).ajaxStart(function () {
+    //    $('#loading').modal('show');
+    //});
+    //$(document).ajaxStop(function () {
+    //    $('#loading').modal('hide');
+    //});
+</script>

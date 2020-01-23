@@ -1,0 +1,38 @@
+﻿@model BiblioMit.Models.ForumViewModels.AddForumModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="container body-content">
+    <div class="row sectionHeader">
+        <div class="sectionHeading">
+            Crear nuevo Foro
+        </div>
+    </div>
+    <div class="row">
+        <div id="createForumSection">
+            <form asp-action="AddForum" method="post" id="createForumForm" enctype="multipart/form-data">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Title">T&iacute;tulo del Foro</label>
+                    <input asp-for="Title" class="form-control" placeholder="Escribe un título para el foro" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description">Descripci&oacute;n del Foro</label>
+                    <input asp-for="Description" class="form-control" placeholder="Escribe una breve descripción del foro" />
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div id="upload">
+                    <label>Subir imagen</label>
+                    <br />
+                    <label class="btn btn-default btn-file">
+                        Cargar <input asp-for="ImageUpload" typeof="file" style="display:none" />
+                    </label>
+                </div>
+                <button type="submit" id="newFormBtn" class="btn btn-submitPost">Crear Foro</button>
+            </form>
+        </div>
+    </div>
+</div>

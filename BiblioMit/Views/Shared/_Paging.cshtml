@@ -1,0 +1,82 @@
+﻿@{
+    var prevDisabled = (int)ViewData["pg"] == 1 ? "disabled" : "";
+    var nextDisabled = (int)ViewData["pg"] == (int)ViewData["last"] ? "disabled" : "";
+    var Model = new BiblioMit.Models.ViewModels.PagingPartial
+    {
+        Controller = (string)ViewData["controller"],
+        Action = (string)ViewData["action"],
+        Pg = (int)ViewData["pg"],
+        Last = (int)ViewData["last"],
+        Srt = (string)ViewData["srt"],
+        Asc = (bool)ViewData["asc"],
+        Rpp = (int)ViewData["rpp"]
+    };
+}
+
+<div class="btn-group d-flex" role="group" aria-label="Paging">
+    <a asp-controller="@Model.Controller"
+       asp-action="@Model.Action"
+       asp-route-srt="@Model.Srt"
+       asp-route-asc="@Model.Asc"
+       asp-route-rpp="@Model.Rpp"
+       asp-route-pg="1"
+       class="paging btn btn-outline-secondary w-100 @prevDisabled" role="button">
+        &laquo;<text class="hidden-xs hidden-s hidden-sm"> First</text>
+    </a>
+    <a asp-controller="@Model.Controller"
+       asp-action="@Model.Action"
+       asp-route-srt="@Model.Srt"
+       asp-route-asc="@Model.Asc"
+       asp-route-rpp="@Model.Rpp"
+       asp-route-pg="@(Model.Pg-1)"
+       class="paging btn btn-outline-secondary w-100 @prevDisabled" role="button">
+        &lsaquo;<text class="hidden-xs hidden-s hidden-sm"> Previous</text>
+    </a>
+    @{
+        int low = (Model.Pg > 5) ? Model.Pg - 4 : 1;
+        if (low > 1)
+        {
+            <a class="paging btn btn-outline-secondary w-100 disabled" role="button"><text>&hellip;</text></a>
+        }
+        int high = (Model.Last > low + 8) ? low + 8 : Model.Last;
+    }
+    @for (int i = low; i <= high; i++)
+    {
+        var disabled = "";
+        if (i == Model.Pg)
+        {
+            disabled = "disabled";
+        }
+        <a asp-controller="@Model.Controller"
+           asp-action="@Model.Action"
+           asp-route-srt="@Model.Srt"
+           asp-route-asc="@Model.Asc"
+           asp-route-rpp="@Model.Rpp"
+           asp-route-pg="@i"
+           class="paging btn btn-outline-secondary w-100 @disabled" role="button">
+            @i
+        </a>
+    }
+    @if (Model.Last > high)
+    {
+        <a class="paging btn btn-outline-secondary w-100 disabled" role="button"><text>&hellip;</text></a>
+    }
+    <a asp-controller="@Model.Controller"
+       asp-action="@Model.Action"
+       asp-route-srt="@Model.Srt"
+       asp-route-asc="@Model.Asc"
+       asp-route-rpp="@Model.Rpp"
+       asp-route-pg="@(Model.Pg + 1)"
+       class="paging btn btn-outline-secondary w-100 @nextDisabled" role="button">
+        <text class="hidden-xs hidden-s hidden-sm">Next </text>&rsaquo;
+    </a>
+    <a asp-controller="@Model.Controller"
+       asp-action="@Model.Action"
+       asp-route-srt="@Model.Srt"
+       asp-route-asc="@Model.Asc"
+       asp-route-rpp="@Model.Rpp"
+       asp-route-pg="@Model.Last"
+       class="paging btn btn-outline-secondary w-100 @nextDisabled" role="button">
+        <text class="hidden-xs hidden-s hidden-sm">Last </text>&raquo;
+    </a>
+</div>

@@ -1,0 +1,58 @@
+﻿body {
+    /*padding-top: 0px !important;*/
+}
+
+.jumbotron {
+    background-color: lightblue;
+    margin-top: 0;
+    padding: 1em;
+}
+
+.logo-diapo{
+    width:100%;
+    padding-top:20px;
+}
+
+.logo-jumbo {
+    max-height: 37px;
+}
+
+@media screen and (max-width: 62em) {
+    .first{
+        padding:0;
+        margin:0;
+    }
+
+    /* Hide captions */
+    .carousel-caption {
+        display: none;
+    }
+
+    .jumbotron {
+        margin: 0;
+        padding: 10px;
+    }
+
+    .logo-diapo{
+        height: auto;
+        max-width: 40vw;
+        padding:0.5em;
+    }
+}
+
+.btn-info {
+    color: black;
+    font: bold;
+}
+
+.carousel-inner, .container-fill, .carousel, .item, .fill {
+    height: 225px;
+    width: 100%;
+    background-position: center center;
+}
+
+.btn-info {
+    color: lightblue;
+    background-color: #3276b1;
+    border-color: #285e8e;
+}

@@ -1,0 +1,97 @@
+﻿@model List<string>
+@using BiblioMit.Services
+
+@{
+    var libs = Libman.LoadJson().libraries;
+    var prefix = "";
+    if(Model.First() == "TOP") { prefix = Model.First()+"_"; Model.RemoveAt(0); }
+    var style = prefix + "Styles";
+    var script = prefix + "Scripts";
+    var bundles = Bundler.LoadJson();
+}
+
+@foreach (var lib in Model)
+{
+    var library = !lib.StartsWith("/");
+    var l = libs.SingleOrDefault(m => m.library.StartsWith($"{lib}@"));
+    <environment include="Development">
+        @if (library)
+        {
+            foreach (var file in l.files)
+            {
+                if (file.Contains(".css"))
+                {
+                    this.Block(@<link href="@($"{l.destination.Replace("wwwroot", "")}{file}")" rel="stylesheet" />, style);
+                }
+                else if (file.Contains(".js"))
+                {
+                    this.Block(@<script src="@($"{l.destination.Replace("wwwroot", "")}{file}")"></script>, script);
+                }
+            }
+        }
+        else
+        {
+            foreach(var bundle in bundles.Where(m => m.outputFileName.Contains(lib)))
+            {
+                foreach(var input in bundle.inputFiles)
+                {
+                    var file = input.Replace("wwwroot", "");
+                    if (input.Contains(".css"))
+                    {
+                        this.Block(@<link href="@file" rel="stylesheet" />, style);
+                    }
+                    else
+                    {
+                        this.Block(@<script src="@file"></script>, script);
+                    }
+                }
+            }
+        }
+    </environment>
+    <environment exclude="Development">
+    @if (library)
+    {
+        var url = "unpkg.com";
+        switch (l.provider)
+        {
+            case "cdnjs":
+                l.library = l.library.Replace("@", "/");
+                url = "cdnjs.cloudflare.com/ajax/libs";
+                break;
+            case "":
+            default:
+                l.provider = "unpkg";
+                break;
+        }
+        foreach (var file in l.files)
+        {
+            if (file.Contains(".css"))
+            {
+                this.Block(@<link href="@($"{Context.Request.Scheme}://{url}/{l.library}/{file}")" rel="stylesheet"
+                                        asp-fallback-href="@($"{l.destination.Replace("wwwroot", "")}{file}")"
+                                        asp-subresource-integrity-href="@($"{l.destination.Replace("wwwroot", "")}{file}")" />, style);
+            }
+            else if (file.Contains(".js"))
+            {
+                this.Block(@<script src="@($"{Context.Request.Scheme}://{url}/{l.library}/{file}")"
+                                           asp-fallback-src="@($"{l.destination.Replace("wwwroot", "")}{file}")"
+                                           asp-subresource-integrity-src="@($"{l.destination.Replace("wwwroot", "")}{file}")"></script>, script);
+            }
+        }
+    }
+    else
+    {
+        foreach (var bundle in bundles.Where(m => m.outputFileName.Contains(lib)))
+        {
+            if (bundle.outputFileName.Contains(".css"))
+            {
+                this.Block(@<link href="@bundle.outputFileName" rel="stylesheet" asp-append-version="true" />, style);
+            }
+            else
+            {
+                this.Block(@<script src="@bundle.outputFileName" asp-append-version="true"></script>, script);
+            }
+        }
+    }
+    </environment>
+}

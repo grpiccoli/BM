@@ -1,0 +1,83 @@
+﻿@model BiblioMit.Models.PostViewModels.PostIndexModel
+
+<partial name="_Libs" model='new List<string> { "/background.min" }' />
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="container body-content">
+    <div class="row postHeader">
+        <div class="postHeading">
+            <span class="postIndexTitle">
+                @Model.Title
+            </span>
+            <span id="headingBtn"><a asp-controller="Fora" asp-action="Topic" asp-route-id="@Model.ForumId" class="btn btn-back">Volver a @Model.ForumName</a></span>
+        </div>
+    </div>
+
+    <div class="row" id="postIndexContent">
+        <div class="col-md-3 postAuthorContainer">
+            <div class="postAuthorImage" style="background-image:url(@Model.AuthorImageUrl)"></div>
+            <a asp-controller="Profiles" asp-action="Details" asp-route-id="@Model.AuthorId">
+                @Model.AuthorName (@Model.AuthorEmail)
+            </a>
+            <span class="postDate">@Model.Created</span>
+            @if (User.Claims.Any(c => c.Value == "Foros"))
+            {
+                <span class="isAdmin smaller">Administraci&oacute;n</span>
+            }
+        </div>
+        <div class="col-md-9 postContentContainer">
+            <div class="postContent">
+                @Html.Raw(Model.PostContent)
+            </div>
+        </div>
+    </div>
+    <div class="row" id="replyDivider"></div>
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="row" id="postReplyRow">
+            <span>
+                <a asp-controller="Reply" asp-action="Create" asp-route-id="@Model.Id" class="btn btn-newReply">
+                    Publicar Respuesta
+                </a>
+            </span>
+        </div>
+    }
+
+    @if (Model.Replies.Any())
+    {
+        foreach (var reply in Model.Replies)
+        {
+            <div class="row replyContent">
+                <div class="col-md-3 replyAuthorContainer">
+                    <div class="postAuthorImage" style="background-image:url(@reply.AuthorImageUrl)"></div>
+                    <a asp-controller="Profile" asp-action="Detail" asp-route-id="@reply.AuthorId">
+                        @reply.AuthorName
+                    </a>
+                    @if (User.Claims.Any(c => c.Value == "Foros"))
+                    {
+                        <div class="isAdmin smaller">Admin</div>
+                        <br />
+                    }
+                    <span class="postDate">@reply.Created</span>
+                </div>
+                <dv class="col-md-9 replyContentContainer">
+                    <div class="postContent">
+                        @Html.Raw(reply.ReplyContent)
+                    </div>
+                </dv>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="noPosts">
+            <h3>
+                Esta publicaci&oacute;n no tiene respuestas.<br />
+            </h3>
+        </div>
+    }
+</div>

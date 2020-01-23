@@ -1,0 +1,221 @@
+﻿@using BiblioMit.Models.VM.NavVM
+
+@{
+    var foro = new Dictionary<string, string[][]>
+    {
+        {
+            Localizer["Forums"].Value, new string[][]
+            {
+                new string[6]
+                {
+                    "Manage", "Index", Localizer["Profile"].Value, "", "", ""
+                },
+                new string[6]
+                {
+                    "Home", "Forum", Localizer["Forums"].Value, "","",""
+                }
+            }
+        }
+    };
+
+    var search = new Dictionary<string, string[][]>
+    {
+        {
+            Localizer["Engines"].Value, new string[][]
+            {
+                new string[6]
+                {
+                    "Publications", "Index", Localizer["Library"].Value, "fas fa-book-reader","",""
+                },
+                new string[6]
+                {
+                    "Contacts", "Index", Localizer["Contacts"].Value, "far fa-address-book" ,"",""
+                },
+                new string[6]
+                {
+                    "Publications", "Agenda", Localizer["Funding"].Value, "fas fa-hand-holding-usd" ,"",""
+                },
+                new string[6]
+                {
+                    "Home", "Search", Localizer["Website search"].Value, "fas fa-search", "modal", "#modal-action"
+                }
+            }
+        }
+    };
+
+    var maps = new Dictionary<string, string[][]>
+    {
+        {
+            Localizer["Maps"].Value, new string[][]
+            {
+                new string[6]
+                {
+                    "Ambiental", "Graph", Localizer["PSMBs"].Value, "","",""
+                },
+                new string[6]
+                {
+                    "Centres", "Producers", Localizer["Aquaculture Farms"].Value, "","",""
+                },
+                new string[6]
+                {
+                    "Centres", "Research", Localizer["Research Centers"].Value, "" ,"",""
+                }
+            }
+        }
+    };
+
+    var image = new Dictionary<string, string[][]>
+    {
+        {
+            Localizer["Catalogue"].Value, new string[][]
+            {
+                new string[6]
+                {
+                    "Photos", "Gallery", Localizer["Histopathology Gallery"].Value, "","",""
+                }
+            }
+        }
+    };
+
+    var digest = new Dictionary<string, string[][]>
+    {
+        {
+            Localizer["Publications"].Value, new string[][]
+            {
+                new string[6]
+                {
+                    "Boletin", "Index", Localizer["Production / Environmental"].Value, "","",""
+                }
+            }
+        }
+    };
+
+    var tools = new Dictionary<string, string[][]>();
+
+    var admin = User.Identity.Name == "WebMaster";
+
+    if (User.Identity.IsAuthenticated)
+    {
+        var access = admin || User.IsInRole("Editor");
+
+        if (admin || User.Claims.Any(c => c.Value == "per" || c.Value == "sernapesca") )
+        {
+            digest.Add(Localizer["Administration"].Value, new string[][]
+            {
+                new string[6]{ "Entries", "Index", Localizer["Uploaded Files"].Value, "","","" },
+                new string[6]{ "Columnas", "Index", Localizer["Input Format"].Value, "","","" }
+            });
+            if (User.IsInRole("Administrador"))
+            {
+                digest.Add(Localizer["Prod Uploads"].Value, new string[][]
+                {
+                    new string[6]{ "Entries", "Create", Localizer["Production"].Value, "","","" }
+                });
+            }
+        }
+
+        if (admin || User.Claims.Any(c => c.Value == "intemit") )
+        {
+            digest.Add(Localizer["Env Uploads"].Value, new string[][]
+            {
+                new string[6]{ "Entries", "CreateFito", Localizer["Environmental"].Value, "","","" }
+            });
+            digest.Add(Localizer["Graphs"].Value, new string[][]
+            {
+                new string[6]{ "Ambiental", "Graph", Localizer["PSMB statistics"].Value, "","","" }
+            });
+        }
+
+        if (admin)
+        {
+            foro.Add(Localizer["Administration"].Value,
+                new string[][]
+                {
+                    new string[6]{ "Fora", "Create", Localizer["Create Forum"].Value, "", "","" }
+                });
+
+            tools.Add(Localizer["Databases"].Value,
+                new string[][]
+                {
+                    new string[6]{ "Companies", "Index", Localizer["Companies and Institutions"].Value, "","","" },
+                    new string[6]{ "Centres", "Index", Localizer["Centres"].Value, "","","" },
+                    new string[6]{ "Coordinates", "Index", Localizer["Coordinates"].Value, "","","" },
+                    new string[6]{ "Productions", "Index", Localizer["Productions"].Value, "","","" },
+                    new string[6]{ "Contacts", "Index", Localizer["Contacts"].Value, "","","" }
+                });
+
+            tools.Add(Localizer["Users"].Value,
+                new string[][]
+                {
+                    new string[6]{ "User", "Index", Localizer["Users and claims"].Value, "","","" },
+                    new string[6]{ "AppRole", "Index", Localizer["Roles"].Value, "","","" }
+                });
+        }
+
+        if (admin || User.Claims.Any(c => c.Value == "mitilidb" ) )
+        {
+            image.Add(Localizer["Administration"].Value, new string[][]
+            {
+            new string[6]{ "Samplings", "Index", Localizer["Samplings"].Value, "","","" },
+            new string[6]{ "Individuals", "Index", Localizer["Individuals"].Value, "","","" },
+            new string[6]{ "Softs", "Index", Localizer["Softs"].Value, "","","" }
+            });
+
+            image.Add(Localizer["Images"].Value, new string[][]
+            {
+            new string[6]{ "Photos", "Index", Localizer["Image gallery"].Value, "","","" }
+            });
+        }
+    }
+}
+
+<nav class="navbar navbar-expand-xl navbar-dark bg-dark">
+    <ul class="navbar-nav mr-auto">
+        <li class="nav-item dropdown">
+            <button class="navbar-brand dropdown-toggle btn btn-nav" role="button" data-toggle="dropdown"
+               id="brand" aria-haspopup="true" aria-expanded="false">
+                <figure class="text-center">
+                    <img class="rounded-circle inicio" src="~/apple-touch-icon.png" alt="bibliomit icon" />
+                    <figcaption class="light-caption">BiblioMit</figcaption>
+                </figure>
+            </button>
+            <div class="dropdown-menu" aria-labelledby="brand">
+                <a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
+                <a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="About">Quienes Somos</a>
+                <a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Contact">Contáctanos</a>
+            </div>
+        </li>
+    </ul>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarApps" aria-controls="navbarApps" aria-expanded="false"
+            aria-label="Ver herramientas">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarApps">
+        <ul class="navbar-nav mr-auto">
+            <partial name="_NavDDwn" model='new NavDDwnVM {
+    Controller = "Home", Action = "Forum",Logo = "comments",Title = Localizer["Forums"].Value,
+    Sections = foro}' />
+            <partial name="_NavDDwn" model='new NavDDwnVM {
+    Controller = "Publications", Action = "Index", Logo = "search", Title = Localizer["Searches"].Value,
+    Sections = search }' />
+            <partial name="_NavDDwn" model='new NavDDwnVM {
+    Controller = "Centres", Action = "Producers", Logo = "map-marker-alt", Title = Localizer["Maps"].Value,
+    Sections = maps}' />
+            <partial name="_NavDDwn" model='new NavDDwnVM {
+    Controller = "Photos", Action = "Gallery", Logo = "camera-retro", Title = Localizer["Images"].Value,
+    Sections = image}' />
+            <partial name="_NavDDwn" model='new NavDDwnVM {
+    Controller = "Boletin", Action = "Index", Logo = "chart-line", Title = Localizer["Digest"].Value,
+    Sections = digest}' />
+            @if (admin)
+            {
+                <partial name="_NavDDwn" model='new NavDDwnVM {
+    Controller = "User", Action = "Index", Logo = "wrench", Title = Localizer["Administration"].Value,
+    Sections = tools}' />
+            }
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <partial name="_LoginPartial" model="new LoginViewModel { }" />
+        </ul>
+    </div>
+</nav>

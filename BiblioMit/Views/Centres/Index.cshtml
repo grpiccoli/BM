@@ -1,0 +1,71 @@
+@model IEnumerable<BiblioMit.Models.Centre>
+@using BiblioMit.Authorization;
+@using System.Globalization;
+
+@{
+    ViewData["Title"] = "Índice";
+    TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+}
+
+<h2>@ViewData["Title"]</h2>
+@if (User.IsInRole(Constants.ContactAdministratorsRole))
+{
+    <p>
+        <a asp-action="Create">Ingresar nuevo Centro</a>
+    </p>
+}
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name) /
+                    <br/>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Address)
+                </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Company)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @if (String.IsNullOrEmpty(item.Name))
+                {
+                    @Html.DisplayFor(modelItem => item.Id)
+                }
+                else
+                {
+                    @Html.DisplayFor(modelItem => item.Name)
+                }
+            </td>
+            <td>
+                @if (!String.IsNullOrEmpty(item.Address)) { @textInfo.ToTitleCase(item.Address.ToLower()) <text>,</text> }
+                @Html.DisplayFor(modelItem => item.Comuna.Name), @Html.DisplayFor(modelItem => item.Comuna.Provincia.Name), @StringManipulations.ToRomanNumeral(item.Comuna.Provincia.Region.Id) @Html.DisplayFor(modelItem => item.Comuna.Provincia.Region.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Company.BsnssName)
+                <br />
+                @Html.DisplayFor(modelItem => item.Company.Id)-@StringManipulations.GetDigit(item.Company.Id)
+            </td>
+            <td>
+@if (User.IsInRole(Constants.ContactAdministratorsRole))
+{
+                <a asp-action="Edit" asp-route-id="@item.Id">Editar</a><text> | </text>
+}
+                <a asp-action="Details" asp-route-id="@item.Id">Detalles</a>
+                @if (User.IsInRole(Constants.ContactAdministratorsRole))
+                {
+                <text> | </text>
+                <a asp-action="Delete" asp-route-id="@item.Id">Eliminar</a>
+                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

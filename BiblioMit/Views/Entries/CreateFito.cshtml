@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "Reportes Ambientales";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>@ViewData["Title"]</h2><span>(max. 2408 archivos)</span>
+
+        <form id="upload" method="post">
+            @Html.AntiForgeryToken()
+        </form>
+
+        <div id="MessageUploaderDone"></div>
+
+        <!-- Fine Uploader DOM Element
+    ====================================================================== -->
+        <div id="fine-uploader-manual-trigger"></div>
+
+        <div id="MessageUploaderError" style="color:red;"></div>
+
+    </div>
+</div>
+
+<partial name="_FineUploader" />
+
+<partial name="_ValidationScriptsPartial" />

@@ -1,0 +1,66 @@
+@model IEnumerable<BiblioMit.Models.Coordinate>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Latitude)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Longitude)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Vertex)
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["CentreSortParm"]">@Html.DisplayNameFor(model => model.Centre)
+                    @if (ViewData["CentreSortParm"].ToString() == "")
+                    {
+                        <text>
+                        &#x25B2;
+                        </text>
+                    }
+                    else
+                    {
+                        <text>
+                        &#x25BC;
+                        </text>
+                    }
+                </a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Latitude)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Longitude)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Vertex)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Centre.Id)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

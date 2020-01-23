@@ -1,0 +1,128 @@
+@model IEnumerable<BiblioMit.Models.VM.AgendaVM>
+
+@{
+    ViewData["Title"] = "Agenda de Ciencia y Tecnología";
+}
+
+<partial name="_Libs" model='new List<string> { "bootstrap-select",
+    "/bibliomit.min", "/bibico/style.min" }' />
+
+<div class="row">
+    <div class="col-lg-9 col-md-12">
+        <h2>@ViewData["Title"]</h2>
+        <h4>Fondos Concursables de financiamiento Ciencia y Tecnología</h4>
+    </div>
+</div>
+
+<form id="form" asp-action="Agenda" method="get" class="form-inline">
+    <div class="col-12 col-md-4">
+        <select id="fondos" name="fund" class="selectpicker form-control" multiple="" data-live-search="true" 
+                tabindex="-98" data-actions-box="true" value="@ViewData["fund"]" title="Seleccionar Fondos …"
+                data-selected-text-format="count > 4" data-size="5">
+            <optgroup label="Fondos CONICYT &mdash; Comisión Nacional de Investigación Científica y Tecnológica">
+                @foreach (var item in ((Dictionary<string, string>)ViewData["conicyt1"]).Keys)
+                {
+                    <option data-icon="bib-conicyt-mono" data-tokens="conicyt" selected="@(((string[])ViewData["fund"]).Contains(item))" data-subtext="@item" value="@item">@item.ToUpper()</option>
+                }
+                @foreach (var item in ((Dictionary<string, string>)ViewData["conicyt2"]).Keys)
+                {
+                    <option data-icon="bib-conicyt-mono" data-tokens="conicyt" selected="@(((string[])ViewData["fund"]).Contains(item))" data-subtext="@item" value="@item">@item.ToUpper()</option>
+                }
+            </optgroup>
+            <optgroup label="Fondos CORFO &mdash; Coorporación de Fomento a la Producción">
+                @foreach (var region in (IEnumerable<BiblioMit.Models.Region>)ViewData["regiones"])
+                {
+                    <option data-icon="bib-corfo-mono" data-tokens="corfo" selected="@(((string[])ViewData["fund"]).Contains("corfo" + region.Id))" value="@("corfo"+region.Id)">@((region.Id == 0) ? "Nacional" : StringManipulations.ToRomanNumeral(region.Id) + " " + region.Name)</option>
+                }
+            </optgroup>
+        </select>
+    </div>
+    <div class="input-group col-12 col-md-8">
+        <select id="estado" name="stt" class="selectpicker form-control show-tick" tabindex="-98" value="@ViewData["stt"]" title="Elegir estado de concurso …">
+            <option style="font-weight:bold; color:#48763d" selected="@((string)ViewData["stt"] == "abierto")" class="alert alert-success" data-icon="far fa-edit" value="abierto">Abiertos</option>
+            <option style="font-weight:bold;color:#57708f" selected="@((string)ViewData["stt"] == "evaluacion")" class="alert alert-info" data-icon="far fa-eye fa-fw" value="evaluacion">En evaluaci&oacute;n</option>
+            <option style="font-weight:bold;color:#8a6d3b" selected="@((string)ViewData["stt"] == "adjudicado")" class="alert alert-warning" data-icon="fas fa-award" value="adjudicado">Adjudicados</option>
+            <option style="font-weight:bold;color:#b14442" selected="@((string)ViewData["stt"] == "proximo")" class="alert alert-danger" data-icon="fa fa-calendar" value="proximo">Pr&oacute;ximos</option>
+        </select>
+        <div class="input-group-btn">
+            <button type="submit" value="Buscar" class="btn btn-primary btn-block" onclick="return empty();"><i class="fas fa-search"></i>  Buscar</button>
+        </div>
+    </div>
+</form>
+
+@if ((ViewData["fund"] as string[]).Count() > 0)
+{
+    <button type="button" class="stat btn btn-block btn-link" style="height:45px"><i class="fa fa-globe"></i> <strong>@String.Format("{0:n0}", Model.Count())</strong> Resultados en <strong>@((ViewData["fund"] as string[]).Count())</strong> Reps.</button>
+}
+
+@if ((bool)ViewData["any"])
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Fund)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Start)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.End)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <div class="img-with-text" style="float: left;padding-right:1vw;">
+                            <a style="font-size:small" asp-controller="Companies" asp-action="Details" asp-route-id="@item.Company.Id">
+                                <span style="font-size:70px;" class="bib-@item.Company.Acronym">
+                                    <span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span>
+                                </span>
+                            </a>
+                            <p style="font-size:smaller;">
+                                <strong>@item.Company.Acronym.ToString().ToUpper()</strong>
+                            </p>
+                        </div>
+                        <div>
+                            <p style="margin-bottom:0px;float: left;max-width:30vw;text-align:justify">
+                                <a target="_blank" href="@Html.DisplayFor(modelItem => item.MainUrl)">
+                                    @Html.DisplayFor(modelItem => item.Title)
+                                </a>
+                                <br />
+                                @Html.DisplayFor(modelItem => item.Fund)
+                                <br />
+                                @item.Company.Acronym.ToUpper() (@Html.DisplayFor(modelItem => item.Company.BsnssName))
+                                <br />
+                                @item.Description
+                            </p>
+                        </div>
+                    </td>
+                    <td>
+                        @if (String.IsNullOrEmpty(item.Start.ToString()))
+                        {
+                            <text>&mdash;</text>
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(modelItem => item.Start)
+                        }
+                    </td>
+                    <td>
+                        @if (String.IsNullOrEmpty(item.End.ToString()) | item.End == DateTime.MinValue)
+                        {
+                            <text>Abierto Todo el Año</text>
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(modelItem => item.End)
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

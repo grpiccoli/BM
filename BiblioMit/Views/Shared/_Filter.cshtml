@@ -1,0 +1,59 @@
+﻿@{ var Model = new BiblioMit.Models.ViewModels.FilterVM
+    {
+        Controller = (string)ViewData["controller"],
+        Action = (string)ViewData["action"],
+        Srt = (string)ViewData["srt"],
+        Asc = (bool)ViewData["asc"],
+        Rpp = (int)ViewData["rpp"],
+        Val = (string[])ViewData["val"]
+    };}
+
+@this.Block(@<script>
+    function filter(v) {
+        var tag = v.tagName;
+        var val = "@string.Join(",",Model.Val)"
+        var url = '@Html.Raw(Url.Action(Model.Action, Model.Controller,
+                    new {
+                        rpp = Model.Rpp,
+                        srt = "SRT",
+                        asc = Model.Asc,
+                        val = "JSVAL"
+                    }))';
+        var name = $(v).attr('id');
+        if (tag === "DIV") {
+            url = url.replace("SRT", name);
+            url = url.replace("JSVAL", val);
+        } else {
+            url = url.replace("SRT", "@Model.Srt");
+            var obj = {};
+            if (val !== "") {
+                var filters = val.split(';');
+                filters.forEach(function (filter) {
+                    var pair = filter.split(':');
+                    obj[pair[0]] = pair[1];
+                });
+            }
+            console.log(val);
+            if (tag === "INPUT") {
+                if ($(v).attr("type") === "checkbox") {
+                    obj[name] = $(v)[0].value;
+                } else if ($(v).hasClass('hasDatepicker')) {
+                    obj[name] = $(v)[0].value;
+                    //url = url.replace("JSVAL", $(v)[0].value);
+                } else {
+                    obj[name] = $(v).value;
+                    //url = url.replace("JSVAL", name + ":" + $(v).value);
+                }
+            } else if (tag === "SELECT") {
+                obj[name] = $(v).find(":selected").map(function () { return this.value }).get().join(',');
+                //url = url.replace("JSVAL", $(v).find(":selected").map(function () { return this.value }).get().join(","));
+            }
+            var out = [];
+            $.each(obj, function (index, value) {
+                out.push(index + ':' + value);
+            });
+            url = url.replace("JSVAL",out.join(';'));
+        }
+        window.location.href = url;
+    }
+</script>, "Scripts")

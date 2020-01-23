@@ -1,0 +1,26 @@
+﻿@using Microsoft.AspNetCore.Http.Features
+
+@{
+    var consentFeature = Context.Features.Get<ITrackingConsentFeature>();
+    var showBanner = !consentFeature?.CanTrack ?? false;
+    var cookieString = consentFeature?.CreateConsentCookie();
+}
+
+@if (showBanner)
+{
+    <div id="cookieConsent" class="alert alert-info alert-dismissible fade show" role="alert">
+        @Localizer["BiblioMit uses cookies and personal information to function correctly. By continuing to use BiblioMit you are giving consent to cookies being used."] 
+        <a asp-area="" asp-controller="Home" asp-action="Privacy">@Localizer["Learn More"]</a>.
+        <button type="button" class="accept-policy close" data-dismiss="alert" aria-label="Close" data-cookie-string="@cookieString">
+            <span aria-hidden="true">@Localizer["Accept"]</span>
+        </button>
+    </div>
+    @this.Block(@<script>
+                           (function () {
+                               var button = document.querySelector("#cookieConsent button[data-cookie-string]");
+                               button.addEventListener("click", function (_e) {
+                                   document.cookie = button.dataset.cookieString;
+                               }, false);
+                           })();
+    </script>, "Scripts")
+}

@@ -1,0 +1,242 @@
+@model IEnumerable<BiblioMit.Models.Individual>
+
+<partial name="_Libs" model='new List<string> { "/sampligs.min" }' />
+
+@{
+    ViewData["Title"] = Localizer["Details"];
+    var c = ViewData["lang"] as string;
+    var subject = (Model.Count() != 0) ? Model.First() : null;
+}
+
+@if (subject == null)
+{
+    <hr />
+    <br />
+    <a id="addUserModal"
+       data-toggle="modal"
+       data-target="#modal-action"
+       asp-action="AddIndividual"
+       asp-route-sampleId="@ViewData["SampleId"]"
+       class="btn btn-danger">
+        <i class="fas fa-plus"></i> @Localizer["Please add a first Subject to Sample"] @ViewData["SampleId"]
+    </a>
+}
+else
+{
+    <h2>@ViewData["Title"]</h2>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <h4>@Html.DisplayNameFor(model => model.SamplingId) @subject.SamplingId</h4>
+            </div>
+            <div class="col-md-9">
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayNameFor(model => subject.Sampling.Date)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => subject.Sampling.Date)
+                    </dd>
+                    <dt>
+                        @Localizer["Season"]
+                    </dt>
+                    <dd>
+                        @Localizer[(StringManipulations.GetSeason(subject.Sampling.Date))]
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => subject.Sampling.Salinity)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => subject.Sampling.Salinity)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => subject.Sampling.Temp)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => subject.Sampling.Temp)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => subject.Sampling.O2)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => subject.Sampling.O2)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => subject.Sampling.Centre)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => subject.Sampling.CentreId)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => subject.Sampling.Centre.Company)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => subject.Sampling.Centre.Company.BsnssName)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => subject.Sampling.Centre.Company.Id)
+                    </dt>
+                    <dd>
+                        @String.Format(new InterceptProvider(), "{0:U}", subject.Sampling.Centre.CompanyId)
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        <div class="row">
+            <a asp-action="Edit" class="btn" asp-route-id="@subject.SamplingId"><i class="fas fa-edit"></i> @Localizer["Edit"]</a> |
+            <a asp-action="Index" class="btn"><i class="icon-arrow-left"></i> @Localizer["Back to List of Samples"]</a>
+        </div>
+        <hr />
+    </div>
+    <div>
+        <a id="addUserModal"
+           data-toggle="modal"
+           data-target="#modal-action"
+           asp-action="AddIndividual"
+           asp-route-sampleId="@subject.SamplingId"
+           class="btn btn-danger">
+            <i class="fas fa-plus"></i> @Localizer["Add new Subject to Sample"] @subject.SamplingId
+        </a>
+        <table>
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(modelItem => subject.Id)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(modelItem => subject.Length)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(modelItem => subject.Sex)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(modelItem => subject.Maturity)
+                    </th>
+                    @foreach (SoftType e in Enum.GetValues(typeof(SoftType)))
+                    {
+                        <th title="@e.GetDisplayName(c)">
+                            @e.GetDisplayName(c)
+                        </th>
+                    }
+                    <th>
+                        @Html.DisplayNameFor(modelItem => subject.Comment)
+                    </th>
+                    <th>
+                        @Localizer["Options"]
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var individual in Model)
+                {
+                    var type = new Dictionary<int, bool[]>
+            {
+                {1, new bool[]{false,false,false}},
+                {2, new bool[]{false,true,false}},
+                {3, new bool[]{true,true,false}},
+                {4, new bool[]{true,false,true}},
+                {5, new bool[]{true,false,false}}
+            };
+                    //Dictionary SoftType vs ViewType: 1) Tissues? 2) Count? 3) Degree?
+                    var editTissue = new Dictionary<SoftType, int>
+            {
+                {SoftType.HaemocyticInfiltration, 5 },
+                {SoftType.RLO, 3 },
+                {SoftType.Microsporidia, 2 },
+                {SoftType.DN, 4 },
+                {SoftType.Abscess, 5 },
+                {SoftType.Lipofuscin, 5 },
+                {SoftType.Atresia, 1 },
+                {SoftType.Ciliates, 5 },
+                {SoftType.Trematode, 3 },
+                {SoftType.Copepod, 3 },
+                {SoftType.Ancistrum, 1 }
+            };
+            <tr>
+                <td>
+                    @individual.Id.ToString().Replace(individual.SamplingId.ToString(), "")
+                </td>
+                <td>
+                    @Html.DisplayFor(model => individual.Length)
+                </td>
+                <td>
+                    @individual.Sex.ToString().Substring(0, 1)
+                </td>
+                <td>
+                    @individual.Maturity.GetDisplayName(c)
+                </td>
+                @foreach (var dictSoft in editTissue)
+                {
+                    var ind = individual.Softs.Where(s => s.SoftType == dictSoft.Key);
+                    var item = ind.FirstOrDefault();
+                    bool any = (item != null);
+                    if (type[dictSoft.Value][0])
+                    {
+                        <td class="descriptionArea">
+                            <span class="buttonArea">
+                                <a id="editSoftModal"
+                                   data-toggle="modal"
+                                   data-target="#modal-action"
+                                   asp-action="EditSoft"
+                                   asp-route-id="@individual.Id"
+                                   asp-route-softType="@dictSoft.Key"
+                                   asp-route-sample="@individual.SamplingId"
+                                   asp-route-tissue="@type[dictSoft.Value][0]"
+                                   asp-route-count="@type[dictSoft.Value][1]"
+                                   asp-route-degree="@type[dictSoft.Value][2]"
+                                   class="btn btn-info btn-xs">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            </span>
+                            <span class="nameArea">
+                                @{
+                                    foreach (var itm in ind)
+                                    {
+                                        <text>
+                                            @itm.Count @Html.DisplayFor(modelItem => itm.Degree) @itm.Tissue.GetDisplayName(c),
+                                        </text>
+                                    }
+                                }
+                            </span>
+                        </td>
+                    }
+                    else
+                    {
+                        <td class="checkArea">
+                            <a id="editSoftModal"
+                               data-toggle="modal"
+                               data-target="#modal-action"
+                               asp-action="EditSoft"
+                               asp-route-id="@individual.Id"
+                               asp-route-softType="@dictSoft.Key"
+                               asp-route-sample="@individual.SamplingId"
+                               asp-route-tissue="@type[dictSoft.Value][0]"
+                               asp-route-count="@type[dictSoft.Value][1]"
+                               asp-route-degree="@type[dictSoft.Value][2]"
+                               class="btn btn-@(any ? "warning" : "success") btn-xs">
+                                @(any ? item.Count.ToString() : "")
+                                <i class="fas fa-@(any ? "check" : "times")"></i>
+                            </a>
+                        </td>
+                    }
+                }
+                <td>
+                    @individual.Comment
+                </td>
+                <td>
+                    <a id="editIndividualModal"
+                       data-toggle="modal"
+                       data-target="#modal-action"
+                       asp-action="EditIndividual"
+                       asp-route-id="@individual.Id"
+                       class="btn btn-info">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+            </tbody>
+        </table>
+    </div>
+}

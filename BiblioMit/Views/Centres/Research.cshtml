@@ -1,0 +1,241 @@
+@model IEnumerable<BiblioMit.Models.Centre>
+@using BiblioMit.Authorization;
+@using BiblioMit.Models;
+@using BiblioMit.Models.VM.MapsVM;
+
+@{
+    ViewData["Title"] = "Centros I+D";
+}
+
+<h2>Centros de Investigación, Tecnología y desarrollo</h2>
+
+<partial name="_Libs" model='new List<string> { "bootstrap-select" }' />
+
+<form asp-action="Research" method="get">
+    <div class="input-group col-12 col-lg-9 mb-3">
+        <select name="c" class="selectpicker form-control" multiple=""
+                data-live-search="true"
+                data-actions-box="true" tabindex="-98" value="@ViewData["c"]"
+                title="Filtrar por región, provincia y/o comuna"
+                data-selected-text-format="count > 3">
+            <optgroup label="Comunas">
+                @foreach (var u in (IQueryable<BSSVM>)ViewData["comunas"])
+                {
+                    <option selected="@u.Selected" data-subtext="@u.Subtext" value="@u.Value">@u.Text</option>
+                }
+            </optgroup>
+        </select>
+        <select name="i" class="selectpicker form-control" multiple="" data-live-search="true"
+                data-actions-box="true" tabindex="-98" value="@ViewData["i"]"
+                title="Filtrar por compañía" data-selected-text-format="count">
+            <optgroup label="Compañías">
+                @foreach (var u in (IQueryable<BSSVM>)ViewData["company"])
+                {
+                    <option data-icon="@u.Icon" data-tokens="@u.Tokens" selected="@u.Selected"
+                            data-subtext="@u.Subtext" value="@u.Value">
+                        @u.Text@if (u.Hellip)
+                        {<text>&hellip;</text>}
+                    </option>
+                }
+            </optgroup>
+        </select>
+        <div class="input-group-append">
+            <button type="submit" value="Buscar" class="btn btn-outline-info">
+                <i class="fas fa-filter fa-fw"></i> Filtrar
+            </button>
+        </div>
+    </div>
+</form>
+<div id="map" style="height: 450px;"></div>
+
+@if (User.IsInRole("Administrador"))
+{
+    <p>
+        <a asp-action="Create">Ingresar nuevo centro de I+D</a>
+    </p>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Company.BsnssName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Company.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Address)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Company.BsnssName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Company.Id)-@StringManipulations.GetDigit(item.CompanyId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Address)
+                    </td>
+                    <td>
+                        @if (User.IsInRole(Constants.ContactAdministratorsRole))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.Id">Editar</a><text> | </text>
+                        }
+                        <a asp-action="Details" asp-route-id="@item.Id">Detalles</a>
+                        @if (User.IsInRole(Constants.ContactAdministratorsRole))
+                        {
+                            <text> | </text>
+                            <a asp-action="Delete" asp-route-id="@item.Id">Eliminar</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<partial name="_ValidationScriptsPartial" />
+
+@section Scripts {
+    <script>
+        function initMap() {
+            if (!google.maps.Polygon.prototype.getBounds) {
+                google.maps.Polygon.prototype.getBounds = function () {
+                    var bounds = new google.maps.LatLngBounds();
+                    var paths = this.getPaths();
+                    var path;
+                    for (var i = 0; i < paths.getLength() ; i++) {
+                        path = paths.getAt(i);
+                        for (var ii = 0; ii < path.getLength() ; ii++) {
+                            bounds.extend(path.getAt(ii));
+                        }
+                    }
+                    return bounds;
+                }
+            }
+            var infowindow = new google.maps.InfoWindow({
+                size: new google.maps.Size(150, 50)
+            });
+            var array = [];
+            var polygons = [];
+            @foreach (var centre in Model)
+                {
+                    if (centre.Coordinates.Count > 0) {
+                        @:polygons.push(@Html.Raw(Json.Serialize(centre.Coordinates.Select(m => new
+                        {
+                            lat = m.Latitude,
+                            lng = m.Longitude
+                        }))));
+                        @:array.push([@Html.Raw(Json.Serialize(centre.Coordinates.Select(m => new
+                        {
+                            lat = m.Latitude,
+                            lng = m.Longitude,
+                            vtx = m.Vertex
+                        }))), @Html.Raw(Json.Serialize(centre.Name)), @Html.Raw(Json.Serialize(centre.CompanyId)), @Html.Raw(Json.Serialize(centre.Company.BsnssName)), @Html.Raw(Json.Serialize(centre.Address+", "+centre.Comuna.Name+", "+centre.Comuna.Provincia.Name+", "+StringManipulations.ToRomanNumeral(centre.Comuna.Provincia.Region.Id)+" "+centre.Comuna.Provincia.Region.Name)), @Html.Raw(Json.Serialize(centre.Company.Acronym)), @Html.Raw(Json.Serialize(centre.Id)) ]);
+                    }
+                }
+            var bounds = new google.maps.LatLngBounds();
+            for (var i = 0; i < polygons.length; i++) {
+                for (var j = 0; j < polygons[i].length; j++) {
+                    bounds.extend(polygons[i][j]);
+                }
+            }
+            var map = new google.maps.Map(document.getElementById('map'), {
+                mapTypeId: 'terrain'
+            });
+            map.fitBounds(bounds);
+            map.setCenter(bounds.getCenter());
+            var locations = [];
+            var markers = [];
+            for (var i = 0; i < array.length; i++) {
+            //for (var i = 0; i < polygons.length; i++) {
+                array[i][0].sort(function (a, b) { return (a.vtx > b.vtx) ? 1 : ((b.vtx > a.vtx) ? -1 : 0); });
+                for (var h = 0; h < array[i][0].length; h++) {
+                    delete array[i][0][h].vtx;
+                }
+                var consessionPolygon = new google.maps.Polygon({
+                    paths: array[i][0],
+                    //paths: polygons[i],
+                    strokeColor: '#FF0000',
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: '#FF0000',
+                    fillOpacity: 0.35
+                });
+                locations.push(consessionPolygon.getBounds().getCenter());
+                marker = new google.maps.Marker({
+                    position: consessionPolygon.getBounds().getCenter(),
+                    title: "Centro : "
+                        + String(array[i][1]),
+                    //label: String(array[i][1])
+                });
+                google.maps.event.addListener(marker, 'click', (function (marker, i) {
+                    return function () {
+                        infowindow.setContent(
+                            '<div id="content">'
+                            + '<div id="siteNotice">'
+                            + '</div>'
+                            + '<h2 id="firstHeading" class="firstHeading" style="margin-bottom:0px">' +
+                            String(array[i][3]) + '</h2>' +
+                            String(array[i][4]) +
+                            '<h4><img src="../images/ico/' + String(array[i][5]) + '.svg" height="30" /> ' +
+                            String(array[i][3]) + '</h4>'
+                            + 'RUT: ' + String(array[i][2])
+                            + '<h4>' + String(array[i][1]) + '</h4>'
+                            +'<div id="bodyContent">'
+                            +'<p><b>Direcci&oacuten : ' + String(array[i][4]) + '</b></p>'
+                            //+'<a href="/Centres/Details/' + String(array[i][6]) + '">Detalles</a>' +
+                            +'</div>'
+                            //+'</div>'
+                        );
+                        infowindow.open(map, marker);
+            //            map.setCenter(marker.getPosition());
+                    }
+                })(marker, i));
+                markers.push(marker);
+                consessionPolygon.setMap(map);
+            }
+            var markerCluster = new MarkerClusterer(map, markers, {
+                imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
+            });
+        }
+        function polygonCenter(poly) {
+            var lowx,
+                highx,
+                lowy,
+                highy,
+                lats = [],
+                lngs = [],
+                vertices = poly.getPath();
+
+            for (var i = 0; i < vertices.length; i++) {
+                lngs.push(vertices.getAt(i).lng());
+                lats.push(vertices.getAt(i).lat());
+            }
+
+            lats.sort();
+            lngs.sort();
+            lowx = lats[0];
+            highx = lats[vertices.length - 1];
+            lowy = lngs[0];
+            highy = lngs[vertices.length - 1];
+            center_x = lowx + ((highx - lowx) / 2);
+            center_y = lowy + ((highy - lowy) / 2);
+            return (new google.maps.LatLng(center_x, center_y));
+        }
+    </script>
+    <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkBD_nY7LaeVohfyIt-M2a2BuIhuy-51c&callback=initMap&language=es&region=CL"></script>
+}

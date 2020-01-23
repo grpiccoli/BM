@@ -1,0 +1,56 @@
+﻿@model IndexViewModel
+@{
+    ViewData["Title"] = "Perfil";
+    ViewData.AddActivePage(ManageNavPages.Index);
+}
+
+<h4>@ViewData["Title"]</h4>
+<partial name="_StatusMessage" for="StatusMessage" />
+<div class="row">
+    <div class="col-md-6">
+        <span id="userCreatedLabel">Miembro desde: @Model.MemberSince</span>
+        <span id="userRating">Puntuaci&oacute;n Actual: @Model.UserRating</span>
+        <div class="stars">
+            <span class="star @(Model.UserRating >= 2 ? "on" : Model.UserRating == 1 ? "half": "")"></span>
+            <span class="star @(Model.UserRating >= 4 ? "on" : Model.UserRating == 3 ? "half": "")"></span>
+            <span class="star @(Model.UserRating >= 6 ? "on" : Model.UserRating == 5 ? "half": "")"></span>
+            <span class="star @(Model.UserRating >= 8 ? "on" : Model.UserRating == 7 ? "half": "")"></span>
+            <span class="star @(Model.UserRating >= 10 ? "on" : Model.UserRating == 9 ? "half": "")"></span>
+        </div>
+        <form method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group"
+                 id="userProfileImage"
+                 style="background-image:url(@Model.ProfileImageUrl)"></div>
+            <div class="form-group">
+                <label asp-for="Username"></label>
+                <input asp-for="Username" class="form-control" disabled />
+            </div>
+            <div class="form-group">
+                <label asp-for="Email"></label>
+                @if (Model.IsEmailConfirmed)
+                {
+                    <div class="input-group">
+                        <input asp-for="Email" class="form-control" />
+                        <span class="input-group-addon" aria-hidden="true"><span class="glyphicon glyphicon-ok text-success"></span></span>
+                    </div>
+                }
+                else
+                {
+                    <input asp-for="Email" class="form-control" />
+                    <button asp-action="SendVerificationEmail" class="btn btn-link">Enviar un correo electronico de verificaci&oacute;n</button>
+                }
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PhoneNumber"></label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-default">Guardar</button>
+        </form>
+    </div>
+</div>
+
+    <partial name="_ValidationScriptsPartial" />
+

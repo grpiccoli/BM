@@ -1,0 +1,92 @@
+@model BiblioMit.Models.Company
+
+@{
+    ViewData["Title"] = "Detalles";
+}
+<h1>Detalles</h1>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-1 col-md-1 col-sm-2 col-xs-3">
+            <img src="~/images/ico/@(Model.Acronym).svg" alt="corfo" class="img-responsive" />
+        </div>
+        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-9">
+            <h2>Compa&ntilde;&iacute;a o Instituci&oacute;n</h2>
+            <hr />
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.BsnssName)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.BsnssName)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Id)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Id)-@StringManipulations.GetDigit(Model.Id)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Acronym)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Acronym)
+                </dd>
+                <dt>
+                    N&uacute;mero de Centros
+                </dt>
+                <dd>
+                    @Model.Centres.Count
+                </dd>
+            </dl>
+        </div>
+    </div>
+    <div class="row">
+        <h3>Centros</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="hidden-xs">Tipo</th>
+                    <th>Nombre</th>
+                    <th>Direcci&oacute;n</th>
+                    <th>Contactos</th>
+                </tr>
+            </thead>
+            @foreach (Centre item in Model.Centres)
+            {
+                <tbody>
+                    <tr>
+                        <td class="hidden-xs" style="vertical-align:middle">@item.Type</td>
+                        <td style="vertical-align:middle">
+                            <a href="@item.Url"><strong>@item.Name (@item.Acronym)</strong></a><br />
+                            <text class="hidden-lg hidden-md" style="font-size:smaller">Centro de @item.Type</text>
+                            <a style="font-size:smaller" asp-controller="Centres" asp-action="Details" asp-route-id="@item.Id">Detalles</a>
+                        </td>
+                        <td style="vertical-align:middle">
+                            <a target="_blank" href="https://www.google.cl/maps/place/@item.Address, @item.Comuna.Name">@item.Address, @item.Comuna.Name</a><br/>
+                            @item.Comuna.Provincia.Name, @StringManipulations.ToRomanNumeral(item.Comuna.Provincia.RegionId) @item.Comuna.Provincia.Region.Name
+                        </td>
+                        <td style="font-family:'Arial Narrow'">
+                            @foreach (Contact contact in item.Contacts)
+                            {
+                                <strong>@contact.Position</strong>
+                                <br/>
+                                @contact.Name @contact.Last
+                                <br/>
+                                <a href="emailto:@contact.Email">@contact.Email</a><br/>
+                                <a href="tel:@contact.Phone">
+                                    @String.Format("{0:(+##) ##### ####}", contact.Phone)
+                                </a>
+                                <br/>
+                                }
+</td>
+                    </tr>
+                </tbody>
+            }
+        </table>
+    </div>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Editar</a> |
+    <a asp-action="Index">Volver al listado de Compa&ntilde;&iacute;as e Instituci&oacute;nes</a>
+</div>

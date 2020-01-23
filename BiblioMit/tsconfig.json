@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "noEmitOnError": true,
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "target": "es6",
+    "lib": [
+      "es2015",
+      "es6",
+      "dom"
+    ],
+
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "maxNodeModuleJsDepth": 2,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "removeComments": true
+  },
+  "files": [
+    "./scripts/app.ts"
+  ],
+    "compileOnSave": true,
+    "typeAcquisition":
+    {
+      "enable": true
+    }
+}

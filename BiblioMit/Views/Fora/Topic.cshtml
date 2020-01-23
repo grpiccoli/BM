@@ -1,0 +1,115 @@
+﻿@model BiblioMit.Models.ForumViewModels.ForumTopicModel
+
+<partial name="_Libs" model='new List<string> { "/background.min" }' />
+
+@{
+    ViewData["Title"] = Model.Forum.Name;
+}
+
+<div class="container body-content">
+    <div class="row sectionHeader">
+        <div class="sectionHeading">
+            <span>Foro @Model.Forum.Name</span>
+            @if (Context.User.Identity.IsAuthenticated)
+            {
+                <span id="headingBtn">
+                    <a asp-controller="Posts"
+                       asp-action="Create"
+                       asp-route-id="@Model.Forum.Id" class="btn btn-newPost">
+                        Crear Publicaci&oacute;n
+                    </a>
+                </span>
+            }
+            <form asp-controller="Fora" asp-action="Search" method="post">
+                <div class="searchForm">
+                    <input asp-for="SearchQuery" type="text" placeholder="Buscar&hellip;" class="searchBar" onfocus="this.value = '';" />
+                    <button type="submit" class="btn btn-forumSearch">
+                        <i class="material-icons">search</i>
+                    </button>
+                </div>
+                <input asp-for="Forum.Id" name="id" type="hidden" />
+            </form>
+        </div>
+        <div class="sectionDescription">
+            <div class="forumLogo" style="background-image: url(@Model.Forum.ImageUrl)"></div>
+            <p>
+                Bienvenido al foro <strong>@(Model.Forum.Name)</strong>.
+                <br />
+                Por favor mantener las publicaciones amigables y relativo al tema del foro.
+            </p>
+            @if (!User.Identity.IsAuthenticated)
+            {
+                <p>
+                    <span>
+                        Debes
+                        <a asp-controller="Account" asp-action="Register">
+                            registrarte
+                        </a>
+                        o
+                        <a asp-controller="Account" asp-action="LogIn">
+                            iniciar sesi&oacute;n
+                        </a>
+                        para publicar respuestas
+                    </span>
+                </p>
+            }
+        </div>
+    </div>
+    <div class="row forumIndexContent">
+        @if (Model.Post.Any())
+        {
+            <table class="table table-hover table-boredered" id="forumIndexTable">
+                <tbody>
+                    @foreach (var post in Model.Post)
+                    {
+                        <tr>
+                            <td>
+                                <div class="postData">
+                                    <div class="postTitle">
+                                        <a asp-controller="Posts" asp-action="Index" asp-route-id="@post.Id">
+                                            @post.Title
+                                        </a>
+                                    </div>
+                                    <div class="forumSubTitle">
+                                        <div>
+                                            <span class="postAuthor">
+                                                <a asp-controller="Profile" asp-action="Detail" asp-route-id="@post.AuthorId">
+                                                    @post.AuthorName
+                                                </a>
+                                            </span>
+                                            (@post.AuthorRating)
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="forumPostCount">
+                                    Respuestas: @post.RepliesCount
+                                </div>
+                            </td>
+                            <td>
+                                <div class="postDate">
+                                    @post.DatePosted
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="noPosts">
+                <i class="mateial-icons md-72">question_answer</i>
+                <h3>
+                    Al parecer tu b&uacute;squeda no arroj&oacute; resultados.
+                    ¿Porqu&eacute; no crear una
+                    <a asp-controller="Posts" asp-action="Create" asp-route-id="@Model.Forum.Id">
+                        <span>publicaci&oacute;n</span>
+                    </a>
+                    al respecto?
+                </h3>
+            </div>
+        }
+    </div>
+</div>

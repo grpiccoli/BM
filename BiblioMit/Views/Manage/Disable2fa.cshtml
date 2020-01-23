@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "Deshabilitar verificación en dos pasos";
+    ViewData.AddActivePage(ManageNavPages.TwoFactorAuthentication);
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="alert alert-warning" role="alert">
+    <p>
+        <span class="glyphicon glyphicon-warning-sign"></span>
+        <strong>Esto solo deshabilita la verificaci&oacute;n en dos pasos.</strong>
+    </p>
+    <p>
+        La deshabilitaci&oacute;n de la verificaci&oacute;n en dos pasos no cambia las llaves usadas en las aplicaciones de autenticaci&oacute;n.
+        Si desea cambiar su llave usuada en la aplicaci&oacute;n de autenticación debe
+        <a asp-action="ResetAuthenticatorWarning">restablecer sus llaves de autenticaci&oacute;n.</a>
+    </p>
+</div>
+
+<div>
+    <form asp-action="Disable2fa" method="post" class="form-group">
+        <button class="btn btn-danger" type="submit">Deshabilitar la verificaci&oacute;n en dos pasos</button>
+    </form>
+</div>

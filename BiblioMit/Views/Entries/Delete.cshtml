@@ -1,0 +1,39 @@
+﻿@model BiblioMit.Models.ProdEntry
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>ELiminar</h2>
+
+<h3>¿Está seguro de que quiere eliminar esto?</h3>
+<div>
+    <h4>Entry</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.IP)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IP)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Reportes)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Reportes)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.AppUser)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.AppUser.Id)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Eliminar" class="btn btn-default" /><i class="far fa-trash-alt"></i> |
+        <a class="btn btn-group-md btn-default" asp-action="Index"><i class="fas fa-arrow-left fa-fw"></i>Volver atrás</a>
+    </form>
+</div>

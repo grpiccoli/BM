@@ -1,0 +1,98 @@
+﻿@model BiblioMit.Models.ViewModels.IndividualSoftTissueViewModel
+@using BiblioMit.Models
+
+@{
+    var tissue = "tissue";
+    var cnt = "count";
+    var degree = "degree";
+}
+
+<form asp-action="EditSoft" role="form">
+    <partial name="_ModalHeader" model='new ModalHeader
+{
+    Heading = Model.SoftType.GetDisplayName(ViewData["lang"] as string)
+        + " | " + Localizer["Subject"].Value
+        + ":  " + Model.Id.ToString().Replace(Model.SamplingId.ToString(), "")
+        + " | " + Localizer["Sample"].Value
+        + ":   " + Model.SamplingId
+}' />
+    <div class="form-horizontal modal-body">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="SamplingId" />
+        <input type="hidden" asp-for="SoftType" />
+        <input type="hidden" asp-for="Configs[tissue]" />
+        <input type="hidden" asp-for="Configs[cnt]" />
+        <input type="hidden" asp-for="Configs[degree]" />
+        <div class="form-group">
+            @if (Model.Configs[tissue])
+            {
+                <label asp-for="Tissues" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    @for (int i = 0; i < Model.Tissues.Count(); i++)
+                    {
+                        <div class="row">
+
+                            @if (Model.Configs[cnt])
+                            {
+                                <div class="col-xs-5 col-sm-3 col-md-3 col-lg-3">
+                                    <input class="form-control" asp-for="@Model.Tissues[i].Count" min="0" max="1000" />
+                                </div>
+                                <div class="col-xs-7 col-sm-9 col-md-9 col-lg-9">
+                                    <label asp-for="@Model.Tissues[i].Count">@Model.Tissues[i].Text</label>
+                                    <input type="hidden" asp-for="@Model.Tissues[i].Value" />
+                                    <input type="hidden" asp-for="@Model.Tissues[i].Text" />
+                                </div>
+                            }
+                            else if (Model.Configs[degree])
+                            {
+                                <div class="col-xs-5 col-sm-3 col-md-3 col-lg-3">
+                                    <label asp-for="@Model.Tissues[i].Degree" class="col-md-2 control-label">@Model.Tissues[i].Text</label>
+                                </div>
+                                <div class="col-xs-7 col-sm-9 col-md-9 col-lg-9">
+                                    <select class="form-control" asp-for="@Model.Tissues[i].Degree" asp-items="ViewBag.Degree"></select>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-xs-5 col-sm-2 col-md-2 col-lg-2">
+                                    <input class="form-control" asp-for="@Model.Tissues[i].Check" />
+                                </div>
+                                <div class="col-xs-7 col-sm-10 col-md-10 col-lg-10">
+                                    <label asp-for="@Model.Tissues[i].Check">@Model.Tissues[i].Text</label>
+                                    <input type="hidden" asp-for="@Model.Tissues[i].Value" />
+                                    <input type="hidden" asp-for="@Model.Tissues[i].Text" />
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                if (Model.Configs[cnt])
+                {
+                    <label asp-for="Count" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="Count" val="@Model.Count" value="@Model.Count" class="form-control" min="0" max="1000" />
+                    </div>
+                }
+                else
+                {
+                    <div class="row">
+                        <div class="col-xs-5 col-sm-2 col-md-2 col-lg-2">
+                            <input class="form-control" asp-for="Check" />
+                        </div>
+                        <div class="col-xs-7 col-sm-10 col-md-10 col-lg-10">
+                            <label asp-for="Check"></label>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+    <partial name="_ModalFooter" model='new ModalFooter { }' />
+</form>
+
+    <partial name="_ValidationScriptsPartial" />
+

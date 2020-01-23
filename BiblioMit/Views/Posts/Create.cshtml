@@ -1,0 +1,43 @@
+﻿@model BiblioMit.Models.PostViewModels.NewPostModel
+
+@{ 
+    ViewData["Title"] = "Nueva Publicación";
+}
+
+<div class="container body-content">
+    <div class="row sectionHeader">
+        <div class="sectionHeading noBorder">
+            @ViewData["Title"] | @Model.ForumName
+            <div class="forumLogo" style="background-image:url(@Model.ForumImageUrl)"></div>
+            <span id="headingBtn">
+                <a asp-controller="Fora"
+                   asp-action="Topic"
+                   asp-route-id="@Model.ForumId"
+                   class="btn btn-back">
+                    Volver a @Model.ForumName
+                </a>
+            </span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="createPostSection">
+            <div class="authorBlock">
+                Est&aacute;s publicando como <strong>@Model.AuthorName</strong>
+            </div>
+            <form asp-action="AddPost" method="post" id="addPostForm">
+                <div class="form-group">
+                    <label asp-for="Title">Título</label>
+                    <input asp-for="Title" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Content">Contenido</label>
+                    <textarea asp-for="Content" class="form-control"></textarea>
+                </div>
+                <button type="submit" id="submitPostBtn" class="btn btn-submitPost">
+                    Publicar
+                </button>
+                <input asp-for="ForumId" type="hidden" />
+            </form>
+        </div>
+    </div>
+</div>

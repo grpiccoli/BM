@@ -1,0 +1,259 @@
+@model BiblioMit.Models.Centre
+@using BiblioMit.Authorization;
+
+@{
+    ViewData["Title"] = "Detalles";
+}
+<h2>@ViewData["Title"]</h2>
+
+<br />
+<div class="row">
+    <div class="col-lg-6">
+        <div id="map" style="height: 350px;"></div>
+        <h4>Coordenadas de pol&iacute;gono</h4>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        V&eacute;rtice
+                    </th>
+                    <th>
+                        Latitud
+                    </th>
+                    <th>
+                        Longitud
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Coordinate coordinate in Model.Coordinates)
+                {
+                    <tr>
+                        <td>
+                            <strong>@coordinate.Vertex</strong>
+                        </td>
+                        <td>
+                            @coordinate.Latitude
+                        </td>
+                        <td>
+                            @coordinate.Longitude
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-lg-6">
+        <h4>Centro de @Model.Type</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            @if (Model.Type.ToString() == "Investigación")
+            {
+                <dt>
+                    @Html.DisplayNameFor(model => model.Name)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Name)
+                </dd>
+            }
+            else
+            {
+                <dt>
+                    @Html.DisplayNameFor(model => model.Id)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Id)
+                </dd>
+            }
+            <dt>
+                @Html.DisplayNameFor(model => model.Address)
+            </dt>
+            <dd>
+                <a target="_blank" href="https://www.google.cl/maps/search/?api=1&query=@( Model.Coordinates.First().Longitude + "," + Model.Coordinates.First().Latitude)">@Html.DisplayFor(model => model.Address)</a>
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Company)
+            </dt>
+            <dd>
+                <div class="col-lg-1">
+                    <img src="~/images/ico/@(Model.Company.Acronym).svg" height="30" />
+                </div>
+                <div class="col-lg-10">
+                    @Html.DisplayFor(model => model.Company.BsnssName)
+                    <br />
+                    @Html.DisplayFor(model => model.Company.Id)-@StringManipulations.GetDigit(Model.Company.Id)
+                </div>
+            </dd>
+        </dl>
+        <h4>Contactos</h4>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Posici&oacute;n
+                    </th>
+                    <th>
+                        Nombre
+                    </th>
+                    <th>
+                        Correo Electr&oacute;nico
+                    </th>
+                    <th>
+                        Tel&eacute;fono
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Contact contact in Model.Contacts)
+                {
+                    <tr>
+                        <td>
+                            <strong>@contact.Position</strong>
+                        </td>
+                        <td>
+                            @contact.Name @contact.Last
+                        </td>
+                        <td>
+                            <a href="emailto:@contact.Email">@contact.Email</a>
+                        </td>
+                        <td>
+                            <a href="tel:@contact.Phone">
+                                @String.Format("{0:(+##) ##### ####}", contact.Phone)
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div>
+    @if (AuthorizationService.AuthorizeAsync(User, Model, ContactOperations.Update).GetAwaiter().GetResult().Succeeded)
+    {
+        <a asp-action="Edit" asp-route-id="@Model.Id">Editar</a>
+    }
+    <a href="##" onClick="history.go(-1); return false;">Volver al listado</a>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
+    <script async defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkBD_nY7LaeVohfyIt-M2a2BuIhuy-51c&callback=initMap&language=es&region=CL"></script>
+    <script type="text/javascript">
+window.onload = function initMap() {
+    if (!google.maps.Polygon.prototype.getBounds) {
+        google.maps.Polygon.prototype.getBounds = function () {
+            var bounds = new google.maps.LatLngBounds();
+            var paths = this.getPaths();
+            var path;
+            for (var i = 0; i < paths.getLength() ; i++) {
+                path = paths.getAt(i);
+                for (var ii = 0; ii < path.getLength() ; ii++) {
+                    bounds.extend(path.getAt(ii));
+                }
+            }
+            return bounds;
+        }
+    }
+    var infowindow = new google.maps.InfoWindow({
+        size: new google.maps.Size(150, 50)
+    });
+    var array = [];
+    var polygons = [];
+            @if (Model.Coordinates.Count > 0) {
+                @:polygons.push(@Html.Raw(Json.Serialize(Model.Coordinates.Select(m => new
+                {
+                    lat = m.Latitude,
+                    lng = m.Longitude
+                }))));
+                @:array.push([@Html.Raw(Json.Serialize(Model.Coordinates.Select(m => new
+                {
+                    lat = m.Latitude,
+                    lng = m.Longitude,
+                    vtx = m.Vertex
+                }))), @Html.Raw(Json.Serialize(Model.Id)), @Html.Raw(Json.Serialize(Model.CompanyId)), @Html.Raw(Json.Serialize(Model.Company.BsnssName)), @Html.Raw(Json.Serialize(Model.Address)) ]);
+            }
+    var bounds = new google.maps.LatLngBounds();
+    for (var i = 0; i < polygons.length; i++) {
+        for (var j = 0; j < polygons[i].length; j++) {
+            bounds.extend(polygons[i][j]);
+        }
+    }
+    var map = new google.maps.Map(document.getElementById('map'), {
+        mapTypeId: 'terrain'
+    });
+    map.fitBounds(bounds);
+    map.setCenter(bounds.getCenter());
+    var locations = [];
+    var markers = [];
+    for (var i = 0; i < array.length; i++) {
+        array[i][0].sort(function (a, b) { return (a.vtx > b.vtx) ? 1 : ((b.vtx > a.vtx) ? -1 : 0); });
+        for (var h = 0; h < array[i][0].length; h++) {
+            delete array[i][0][h].vtx;
+        }
+        var consessionPolygon = new google.maps.Polygon({
+            paths: array[i][0],
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#FF0000',
+            fillOpacity: 0.35
+        });
+        locations.push(consessionPolygon.getBounds().getCenter());
+        marker = new google.maps.Marker({
+            position: consessionPolygon.getBounds().getCenter(),
+            title: "Código de Concesión : " + String(array[i][1]),
+            //label: String(array[i][1])
+        });
+        google.maps.event.addListener(marker, 'click', (function (marker, i) {
+            return function () {
+                infowindow.setContent('<div id="content">' +
+                    '<div id="siteNotice">' +
+                    '</div>' +
+                    '<h2 id="firstHeading" class="firstHeading" style="margin-bottom:0px">' +
+    //String(array[i][3]) + '</h2>' +
+    //String(array[i][4]) +
+                    '<h4>Compa&ntilde&iacutea ' + String(array[i][3]) + '</h4>' +
+                    'RUT: ' + String(array[i][2]) +
+                    '<h4>Concesi&oacuten ' + String(array[i][1]) + '</h4>' +
+                    '<div id="bodyContent">' +
+                    '<p><b>Localidad : ' + String(array[i][4]) + '</b></p>' +
+                    '<p align="right">Fuentes: <a target="_blank" href="http://www.sernapesca.cl"><img src="~/images/ico/sernapesca.svg" width="100" /></a>' +
+                    '<text> | </text><a target="_blank" href="http://www.subpesca.cl"><img src="~/images/ico/subpesca.svg" width="100" /></a>.</p>' +
+                    '</div>' +
+    '</div>');
+                infowindow.open(map, marker);
+                map.setCenter(marker.getPosition());
+            }
+        })(marker, i));
+        markers.push(marker);
+        consessionPolygon.setMap(map);
+    }
+    var markerCluster = new MarkerClusterer(map, markers, { imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m' });
+}
+function polygonCenter(poly) {
+    var lowx,
+        highx,
+        lowy,
+        highy,
+        lats = [],
+        lngs = [],
+        vertices = poly.getPath();
+
+    for (var i = 0; i < vertices.length; i++) {
+        lngs.push(vertices.getAt(i).lng());
+        lats.push(vertices.getAt(i).lat());
+    }
+
+    lats.sort();
+    lngs.sort();
+    lowx = lats[0];
+    highx = lats[vertices.length - 1];
+    lowy = lngs[0];
+    highy = lngs[vertices.length - 1];
+    center_x = lowx + ((highx - lowx) / 2);
+    center_y = lowy + ((highy - lowy) / 2);
+    return (new google.maps.LatLng(center_x, center_y));
+}
+    </script>
+}

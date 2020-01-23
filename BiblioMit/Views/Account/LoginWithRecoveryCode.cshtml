@@ -1,0 +1,25 @@
+﻿@model LoginWithRecoveryCodeViewModel
+@{
+    ViewData["Title"] = "Verificaci&oacute;n del c&oacute;digo de recuperaci&oacute;n";
+}
+
+<h2>@ViewData["Title"]</h2>
+<hr />
+<p>
+    Ha solicitado iniciar sesi&oacute;n con un c&oacute;digo de recuperaci&oacute;n. Este inicio de sesi&oacute;n no se recordar&aacute; hasta que proporcione un c&oacute;digo de aplicaci&oacute;n de autenticador al iniciar sesi&oacute;n o desactivar 2FA y volver a iniciar sesi&oacute;n.
+</p>
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="RecoveryCode"></label>
+                <input asp-for="RecoveryCode" class="form-control" autocomplete="off" />
+                <span asp-validation-for="RecoveryCode" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-default">Iniciar sesi&oacute;n</button>
+        </form>
+    </div>
+</div>
+
+<partial name="_ValidationScriptsPartial" />

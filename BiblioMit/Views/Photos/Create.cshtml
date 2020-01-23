@@ -1,0 +1,68 @@
+@model BiblioMit.Models.ViewModels.UploadPhotoViewModel
+
+@{
+    ViewData["Title"] = Localizer["Upload"];
+}
+
+<partial name="_Libs" model='new List<string> { "bootstrap-select" }' />
+
+<h2>@ViewData["Title"]</h2>
+
+<h1>@Localizer["New Image"]</h1>
+
+<form asp-action="Create" enctype="multipart/form-data">
+    <div class="form-horizontal">
+        <h4>@Localizer["Image"]</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="File" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="File" class="form-control" accept="image/*" />
+                <span asp-validation-for="File" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="IndividualId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select data-val="true"
+                        data-val-required="@Localizer["The Subject field is required"]"
+                        id="IndividualId" name="IndividualId" data-live-search="true" class="selectpicker form-control">
+                    @foreach(var group in ViewData["IndividualId"] as IEnumerable<IGrouping<int, Individual>>)
+                    {
+                        <optgroup label="Sample @group.Key">
+                            @foreach (var ind in group.OrderBy(g => g.Number))
+                            {
+                                <option value="@ind.Id" data-tokens="@group.Key @ind.Number @ind.Id">
+                                    @Localizer["Subject"] @ind.Number@(ind.Depth.HasValue ? ", "+Localizer["Depth"].Value+" "+ind.Depth+"m" : "")
+                                </option>
+                            }
+                        </optgroup>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Magnification" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="Magnification" class="form-control" asp-items="ViewBag.Magnification"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Comment" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Comment" class="form-control" />
+                <span asp-validation-for="Comment" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="@Localizer["Upload"]" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">@Localizer["Back to List"]</a>
+</div>
