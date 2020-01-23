@@ -92,20 +92,20 @@ namespace BiblioMit
                 .AddViewLocalization()
                 .AddDataAnnotationsLocalization();
 
-            services.AddHsts(options =>
-            {
-                options.Preload = true;
-                options.IncludeSubDomains = true;
-                options.MaxAge = TimeSpan.FromDays(60);
-                options.ExcludedHosts.Add("bibliomit.cl");
-                options.ExcludedHosts.Add("www.bibliomit.cl");
-            });
+            //services.AddHsts(options =>
+            //{
+            //    options.Preload = true;
+            //    options.IncludeSubDomains = true;
+            //    options.MaxAge = TimeSpan.FromDays(60);
+            //    options.ExcludedHosts.Add("bibliomit.cl");
+            //    options.ExcludedHosts.Add("www.bibliomit.cl");
+            //});
 
-            services.AddHttpsRedirection(options =>
-            {
-                options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
-                options.HttpsPort = 443;
-            });
+            //services.AddHttpsRedirection(options =>
+            //{
+            //    options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
+            //    options.HttpsPort = 443;
+            //});
 
             services.AddNodeServices(o =>
             {
@@ -211,7 +211,7 @@ namespace BiblioMit
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                app.UseHsts();
+                //app.UseHsts();
             }
 
             var path = new List<string> { "lib", "cldr-data", "main" };
@@ -227,7 +227,7 @@ namespace BiblioMit
                 SupportedUICultures = supportedCultures
             });
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             //app.UseWebOptimizer();
 
