@@ -1,15 +1,8 @@
-﻿using System;
-using System.IO;
-using System.Net;
-using System.Linq;
-using BiblioMit.Data;
+﻿using System.IO;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
-using Z.EntityFramework.Extensions;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using BiblioMit.Models;
 
 namespace BiblioMit
 {

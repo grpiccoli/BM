@@ -65,17 +65,18 @@
         }
         foreach (var file in l.files)
         {
+            var path = l.destination.Replace("wwwroot/", "");
             if (file.Contains(".css"))
             {
                 this.Block(@<link href="@($"{Context.Request.Scheme}://{url}/{l.library}/{file}")" rel="stylesheet"
-                                        asp-fallback-href="@($"{l.destination.Replace("wwwroot", "")}{file}")"
-                                        asp-subresource-integrity-href="@($"{l.destination.Replace("wwwroot", "")}{file}")" />, style);
+                                        asp-fallback-href="@($"{path}{file}")"
+                                        asp-subresource-integrity-href="@($"{path}{file}")" />, style);
             }
             else if (file.Contains(".js"))
             {
                 this.Block(@<script src="@($"{Context.Request.Scheme}://{url}/{l.library}/{file}")"
-                                           asp-fallback-src="@($"{l.destination.Replace("wwwroot", "")}{file}")"
-                                           asp-subresource-integrity-src="@($"{l.destination.Replace("wwwroot", "")}{file}")"></script>, script);
+                                           asp-fallback-src="@($"{path}{file}")"
+                                           asp-subresource-integrity-src="@($"{path}{file}")"></script>, script);
             }
         }
     }
@@ -83,13 +84,14 @@
     {
         foreach (var bundle in bundles.Where(m => m.outputFileName.Contains(lib)))
         {
+            var path = bundle.outputFileName.Replace("wwwroot", "");
             if (bundle.outputFileName.Contains(".css"))
             {
-                this.Block(@<link href="@bundle.outputFileName" rel="stylesheet" asp-append-version="true" />, style);
+                this.Block(@<link href="@path" rel="stylesheet" asp-append-version="true" />, style);
             }
             else
             {
-                this.Block(@<script src="@bundle.outputFileName" asp-append-version="true"></script>, script);
+                this.Block(@<script src="@path" asp-append-version="true"></script>, script);
             }
         }
     }

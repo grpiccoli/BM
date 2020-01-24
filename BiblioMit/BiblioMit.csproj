@@ -48,45 +48,10 @@
   </ItemGroup>
   
   <ItemGroup>
-    <Compile Remove="Controllers\bakupPub.cs" />
-    <Compile Remove="Migrations\20190110022315_Initial.cs" />
-    <Compile Remove="Migrations\20190110022315_Initial.Designer.cs" />
-    <Compile Remove="Migrations\20190111134939_Initial.cs" />
-    <Compile Remove="Migrations\20190111134939_Initial.Designer.cs" />
-    <Compile Remove="Migrations\20190128041346_Initial.cs" />
-    <Compile Remove="Migrations\20190128041346_Initial.Designer.cs" />
-    <Compile Remove="Migrations\20190128045027_Initial.cs" />
-    <Compile Remove="Migrations\20190128045027_Initial.Designer.cs" />
-    <Compile Remove="Migrations\20190128045643_Initial.cs" />
-    <Compile Remove="Migrations\20190128045643_Initial.Designer.cs" />
-    <Compile Remove="Migrations\20190128050120_Initial.cs" />
-    <Compile Remove="Migrations\20190128050120_Initial.Designer.cs" />
-    <Compile Remove="Migrations\20190128051152_Initial.cs" />
-    <Compile Remove="Migrations\20190128051152_Initial.Designer.cs" />
-    <Compile Remove="Migrations\20190207163209_Initial.cs" />
-    <Compile Remove="Migrations\20190207163209_Initial.Designer.cs" />
-    <Compile Remove="Migrations\20190219165310_Initial2.cs" />
-    <Compile Remove="Migrations\20190219165310_Initial2.Designer.cs" />
-    <Compile Remove="Migrations\20190223001757_Initial3.cs" />
-    <Compile Remove="Migrations\20190223001757_Initial3.Designer.cs" />
-    <Compile Remove="Migrations\20190223002521_Initial.cs" />
-    <Compile Remove="Migrations\20190223002521_Initial.Designer.cs" />
-    <Compile Remove="Migrations\20190223230234_Initial.cs" />
-    <Compile Remove="Migrations\20190223230234_Initial.Designer.cs" />
-    <Compile Remove="Migrations\20190509165606_Initial.cs" />
-    <Compile Remove="Migrations\20190509165606_Initial.Designer.cs" />
-    <Compile Remove="Migrations\20190509202908_Initial.cs" />
-    <Compile Remove="Migrations\20190509202908_Initial.Designer.cs" />
-    <Compile Remove="Migrations\20190510233054_Initial.cs" />
-    <Compile Remove="Migrations\20190510233054_Initial.Designer.cs" />
     <Compile Remove="Migrations\20190511002826_Initial.cs" />
     <Compile Remove="Migrations\20190511002826_Initial.Designer.cs" />
   </ItemGroup>
   
-  <ItemGroup>
-    <None Include="Controllers\bakupPub.cs" />
-  </ItemGroup>
-
   <ItemGroup>
     <Compile Update="Resources\EnumResources.Designer.cs">
       <DesignTime>True</DesignTime>
