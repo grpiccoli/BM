@@ -196,7 +196,7 @@ END";
         }
         public async Task Insert<TSource>(string path)
         {
-            var name = new Pluralizer().Pluralize(typeof(TSource).ToString().Split(".").Last());
+            var name = typeof(TSource).ToString().Split(".").Last();
             _context.Database.SetCommandTimeout(10000);
             var tableName = $"dbo.{name}";
             var tsv = Path.Combine(path, $"{name}.tsv");
