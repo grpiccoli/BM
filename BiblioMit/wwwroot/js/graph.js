@@ -116,18 +116,27 @@ const psmb = new Choices(epsmb, {
     fuseOptions: {
         include: 'score'
     }
-}).ajax(
-    function (callback) {
-        fetch('/ambiental/psmblist')
-            .then(function (response) {
-                response.json().then(function (data) {
-                    callback(data, "value", "label", false);
-                });
-            })
-            .catch(function (error) {
-                console.error(error);
-            });
-    });
+});
+psmb.setChoices(async () => await fetch('/ambiental/psmblist')
+    .then(items => items.json())
+    .catch(err => console.log(err))
+);
+//psmb.setChoices(async () => {
+//    const items = await fetch('/ambiental/psmblist');
+//    return items.json();
+//});
+    //.ajax(
+    //function (callback) {
+    //    fetch('/ambiental/psmblist')
+    //        .then(function (response) {
+    //            response.json().then(function (data) {
+    //                callback(data, "value", "label", false);
+    //            });
+    //        })
+    //        .catch(function (error) {
+    //            console.error(error);
+    //        });
+    //});
 
 //VARIABLE SELECT
 const evariable = document.getElementById('variable');
@@ -159,17 +168,24 @@ const variables = new Choices(evariable, {
     fuseOptions: {
         include: 'score'
     }
-}).ajax(function (callback) {
-    fetch('/ambiental/variablelist')
-        .then(function (response) {
-            response.json().then(function (data) {
-                callback(data, "value", "label", false);
-            });
-        })
-        .catch(function (error) {
-            console.error(error);
-        });
 });
+//    .ajax(function (callback) {
+//    fetch('/ambiental/variablelist')
+//        .then(function (response) {
+//            response.json().then(function (data) {
+//                callback(data, "value", "label", false);
+//            });
+//        })
+//        .catch(function (error) {
+//            console.error(error);
+//        });
+//});
+
+variables.setChoices(async () => await fetch('/ambiental/variablelist')
+    .then(items => items.json())
+    .catch(err => console.log(err))
+);
+
 var temp;
 //SEMAFORO select
 const etl = document.getElementById('tl');
@@ -406,38 +422,49 @@ etl.addEventListener('removeItem', function (event) {
         }
     }
 }, false);
-    const tl = new Choices(etl, {
-        maxItemCount: 10,
-        removeItemButton: true,
-        duplicateItemsAllowed: false,
-        paste: false,
-        searchResultLimit: 10,
-        shouldSort: false,
-        placeholderValue: "Variables semáforo",
-        searchPlaceholderValue: "Buscar datos",
-        loadingText: 'Cargando...',
-        noResultsText: 'Sin resultados',
-        noChoicesText: 'Sin opciones a elegir',
-        itemSelectText: 'Presione para seleccionar',
-        maxItemText: (maxItemCount) => {
-            return `Máximo ${maxItemCount} valores`;
-        },
-        fuseOptions: {
-            include: 'score'
-        }
-    }).ajax(function (callback) {
-        if (semaforo) {
-            fetch('/ambiental/tllist')
-                .then(function (response) {
-                    response.json().then(function (data) {
-                        callback(data, "value", "label", false);
-                    });
-                })
-                .catch(function (error) {
-                    console.error(error);
-                });
-        }
-    });
+const tl = new Choices(etl, {
+    maxItemCount: 10,
+    removeItemButton: true,
+    duplicateItemsAllowed: false,
+    paste: false,
+    searchResultLimit: 10,
+    shouldSort: false,
+    placeholderValue: "Variables semáforo",
+    searchPlaceholderValue: "Buscar datos",
+    loadingText: 'Cargando...',
+    noResultsText: 'Sin resultados',
+    noChoicesText: 'Sin opciones a elegir',
+    itemSelectText: 'Presione para seleccionar',
+    maxItemText: (maxItemCount) => {
+        return `Máximo ${maxItemCount} valores`;
+    },
+    fuseOptions: {
+        include: 'score'
+    }
+});
+
+//.ajax(function (callback) {
+//if (semaforo) {
+//    fetch('/ambiental/tllist')
+//        .then(function (response) {
+//            response.json().then(function (data) {
+//                callback(data, "value", "label", false);
+//            });
+//        })
+//        .catch(function (error) {
+//            console.error(error);
+//        });
+//}
+//});
+
+tl.setChoices(async () => await fetch('/ambiental/tllist')
+    .then(items => items.json())
+    .catch(err => console.log(err))
+);
+//tl.setChoices(async function () {
+//    const items = await fetch('/ambiental/tllist');
+//    return items.json();
+//});
 //DOWNLOAD EXCEL
 //function getXlsx() {
 //    alasql.promise('SELECT * INTO XLSX("graphData.xlsx",{headers:true}) FROM ?', [chart.data])

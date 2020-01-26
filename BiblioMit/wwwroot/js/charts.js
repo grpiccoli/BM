@@ -143,8 +143,8 @@ function Chart(type, selector, data, options) {
         }
 
         // rewrite default config with options
-        for (var o in _options) {
-            data[o] = _options[o];
+        for (var p in _options) {
+            data[p] = _options[p];
         }
 
         data["dataProvider"] = _data;
