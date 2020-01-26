@@ -12,6 +12,7 @@ using System.IO;
 //using Amazon.S3.Model;
 using BiblioMit.Services;
 using Microsoft.AspNetCore.Authorization;
+using System.Globalization;
 
 namespace BiblioMit.Controllers
 {
@@ -70,7 +71,7 @@ namespace BiblioMit.Controllers
                 AuthorRating = p.User.Rating,
                 AuthorName = p.User.UserName,
                 Title = p.Title,
-                DatePosted = p.Created.ToString(),
+                DatePosted = p.Created.ToString(CultureInfo.InvariantCulture),
                 RepliesCount = p.Replies.Count(),
                 Forum = BuildForumListing(p)
             });
@@ -103,7 +104,7 @@ namespace BiblioMit.Controllers
         {
             var imageUri = "/images/ico/bibliomit.svg";
 
-            if(model.ImageUpload != null)
+            if(model?.ImageUpload != null)
             {
                 imageUri = UploadForumImage(model.ImageUpload);
             }
@@ -116,7 +117,7 @@ namespace BiblioMit.Controllers
                 ImageUrl = imageUri
             };
 
-            await _forumService.Create(forum);
+            await _forumService.Create(forum).ConfigureAwait(false);
 
             return RedirectToAction("Index", "Fora");
         }
@@ -158,7 +159,7 @@ namespace BiblioMit.Controllers
             return BuildForumListing(forum);
         }
 
-        private ForumListingModel BuildForumListing(Forum forum)
+        private static ForumListingModel BuildForumListing(Forum forum)
         {
             return new ForumListingModel
             {

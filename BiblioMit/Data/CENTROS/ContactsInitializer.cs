@@ -209,7 +209,8 @@ namespace BiblioMit.Data
                     //Plantas
 
                 };
-                await context.BulkInsertAsync(Contacts).ConfigureAwait(false);
+                await context.AddRangeAsync(Contacts)
+                    .ConfigureAwait(false);
             }
             return;
             #endregion

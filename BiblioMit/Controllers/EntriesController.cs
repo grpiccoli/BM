@@ -17,6 +17,7 @@ using BiblioMit.Extensions;
 using Microsoft.AspNetCore.Http;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
+using System.Globalization;
 
 namespace BiblioMit.Controllers
 {
@@ -69,10 +70,10 @@ namespace BiblioMit.Controllers
 
             ViewData[nameof(Tipo)] = EViewData.Enum2Select<Tipo>(Filters, "Name");
 
-            ViewData["Date"] = string.Format("'{0}'",
-                string.Join("','", _context.ProdEntry.Select(v => v.Date.Date.ToString("yyyy-M-d")).Distinct().ToList()));
+            ViewData["Date"] = string.Format(CultureInfo.CurrentCulture, "'{0}'",
+                string.Join("','", _context.ProdEntry.Select(v => v.Date.Date.ToString("yyyy-M-d", CultureInfo.CurrentCulture)).Distinct().ToList()));
 
-            return View(await applicationDbContext.ToListAsync());
+            return View(await applicationDbContext.ToListAsync().ConfigureAwait(false));
         }
 
         // GET: Entries/Details/5
@@ -85,7 +86,8 @@ namespace BiblioMit.Controllers
 
             var entry = await _context.ProdEntry
                 .Include(e => e.AppUser)
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id)
+                .ConfigureAwait(false);
             if (entry == null)
             {
                 return NotFound();
@@ -113,6 +115,7 @@ namespace BiblioMit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateFito(IFormFile qqfile)
         {
+            if (qqfile == null) return Json(new { success = false, error = "error file null" });
             string error = null;
 
             if (qqfile.Length > 0)
@@ -124,10 +127,9 @@ namespace BiblioMit.Controllers
                     {
                         var html = stream.ReadToEnd();
                         var temp = new TableToExcel();
-                        var xlsx = new ExcelPackage();
-                        temp.Process(html, out xlsx);
+                        temp.Process(html, out ExcelPackage xlsx);
                         //var package = new ExcelPackage(xlsx);
-                        error = await Import.Fito(xlsx, _context, toskip);
+                        error = await Import.Fito(xlsx, _context, toskip).ConfigureAwait(false);
                     }
                 }
                 catch (FileNotFoundException ex)
@@ -169,7 +171,7 @@ namespace BiblioMit.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (entry.Excel == null) return View(nameof(Create));
+                if (entry?.Excel == null) return View(nameof(Create));
 
                 entry.AppUserId = _userManager.GetUserId(User);
                 entry.IP = Request.HttpContext.Connection.RemoteIpAddress.ToString();
@@ -177,7 +179,8 @@ namespace BiblioMit.Controllers
                 entry.Date = DateTime.Now;
                 entry.Success = false;
                 _context.Add(entry);
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync()
+                    .ConfigureAwait(false);
 
                 var result = string.Empty;
 
@@ -231,7 +234,8 @@ namespace BiblioMit.Controllers
                 return NotFound();
             }
 
-            var entry = await _context.ProdEntry.SingleOrDefaultAsync(m => m.Id == id);
+            var entry = await _context.ProdEntry.SingleOrDefaultAsync(m => m.Id == id)
+                .ConfigureAwait(false);
             if (entry == null)
             {
                 return NotFound();
@@ -247,7 +251,7 @@ namespace BiblioMit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,AppUserId,IP,ProcessStart,ProcessTime,Stage,Reportes")] Entry entry)
         {
-            if (id != entry.Id)
+            if (id != entry?.Id)
             {
                 return NotFound();
             }
@@ -257,7 +261,8 @@ namespace BiblioMit.Controllers
                 try
                 {
                     _context.Update(entry);
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync()
+                        .ConfigureAwait(false);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -286,7 +291,8 @@ namespace BiblioMit.Controllers
 
             var entry = await _context.ProdEntry
                 .Include(e => e.AppUser)
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id)
+                .ConfigureAwait(false);
             if (entry == null)
             {
                 return NotFound();
@@ -300,9 +306,9 @@ namespace BiblioMit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var entry = await _context.ProdEntry.SingleOrDefaultAsync(m => m.Id == id);
+            var entry = await _context.ProdEntry.SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             _context.ProdEntry.Remove(entry);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
             return RedirectToAction(nameof(Index));
         }
 

@@ -1,8 +1,9 @@
 ﻿using HtmlAgilityPack;
-using Microsoft.AspNetCore.Hosting;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
@@ -11,18 +12,21 @@ namespace BiblioMit.Models
 {
     public static class StringManipulations
     {
-        public static string CheckSRI(string local, string url)
+        public static string CheckSRI(string local, Uri url)
         {
             var path = Directory.GetCurrentDirectory();
             var file = Path.Combine(path, "wwwroot", local);
-            FileStream fileStream = File.OpenRead(file);
-            var localHash = SHA384.Create().ComputeHash(fileStream);
-            var req = System.Net.WebRequest.Create($"https://{url}");
-            Stream urlStream = req.GetResponse().GetResponseStream();
-            var urlHash = SHA384.Create().ComputeHash(urlStream);
-            if (urlHash == localHash) return Convert.ToBase64String(localHash);
-            Console.WriteLine("Error: {0}", $"local and source hash differ in file {local}");
-            return null;
+            using (FileStream fileStream = File.OpenRead(file))
+            using (var sha = SHA384.Create())
+            {
+                var localHash = sha.ComputeHash(fileStream);
+                var req = WebRequest.Create(url);
+                Stream urlStream = req.GetResponse().GetResponseStream();
+                var urlHash = sha.ComputeHash(urlStream);
+                if (urlHash == localHash) return Convert.ToBase64String(localHash);
+                Console.WriteLine("Error: {0}", $"local and source hash differ in file {local}");
+                return null;
+            }
         }
         public static string HtmlToPlainText(string html)
         {
@@ -75,7 +79,7 @@ namespace BiblioMit.Models
                 }
             }
             Digito = 11 - (Acumulador % 11);
-            RutDigito = Digito.ToString().Trim();
+            RutDigito = Digito.ToString(CultureInfo.InvariantCulture).Trim();
             if (Digito == 10)
             {
                 RutDigito = "K";
@@ -94,14 +98,14 @@ namespace BiblioMit.Models
             List<int> indexes = new List<int>();
             for (int index = 0; ; index += value.Length)
             {
-                index = str.IndexOf(value, index);
+                index = str.IndexOf(value, index, StringComparison.InvariantCultureIgnoreCase);
                 if (index == -1)
                     return indexes;
                 indexes.Add(index);
             }
         }
-        public static List<string> romanNumerals = new List<string>() { "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I" };
-        public static List<int> numerals = new List<int>() { 1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1 };
+        readonly static List<string> romanNumerals = new List<string>() { "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I" };
+        readonly static List<int> numerals = new List<int>() { 1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1 };
 
         public static string ToRomanNumeral(int number)
         {
@@ -149,18 +153,24 @@ namespace BiblioMit.Models
             //    return resultado;
             //}).Result;
 
-            string url = String.Format("http://www.google.com/translate_t?hl={0}&ie=UTF8&text={1}&langpair={2}", targetLanguage, input, languagePair);
-            HttpClient hc = new HttpClient();
-            HttpResponseMessage result = hc.GetAsync(url).Result;
-            HtmlDocument doc = new HtmlDocument() { OptionReadEncoding = true };
-            doc.Load(result.Content.ReadAsStreamAsync().Result);
-            string resultado = "bla";
-            try
+            var url = new Uri(string.Format(CultureInfo.InvariantCulture,
+                "http://www.google.com/translate_t?hl={0}&ie=UTF8&text={1}&langpair={2}", targetLanguage, input, languagePair));
+            using (HttpClient hc = new HttpClient())
             {
-                resultado = HtmlToPlainText(doc.DocumentNode.SelectSingleNode("//span[@id='result_box']/span").InnerHtml);
+                HttpResponseMessage result = hc.GetAsync(url).Result;
+                HtmlDocument doc = new HtmlDocument() { OptionReadEncoding = true };
+                doc.Load(result.Content.ReadAsStreamAsync().Result);
+                string resultado = "bla";
+                try
+                {
+                    resultado = HtmlToPlainText(doc.DocumentNode.SelectSingleNode("//span[@id='result_box']/span").InnerHtml);
+                }
+                catch 
+                {
+                
+                }
+                return resultado;
             }
-            catch { }
-            return resultado;
         }
     }
 }

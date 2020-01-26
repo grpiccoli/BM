@@ -1,11 +1,13 @@
 ﻿using BiblioMit.Data;
 using BiblioMit.Extensions;
 using BiblioMit.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using NCalc;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -24,6 +26,7 @@ namespace BiblioMit.Services
                 List<string> toskip = null
             )
         {
+            if (context == null) return (null, null);
             var data = typeof(T).GetFields(bindingFlags).Concat(typeof(T).BaseType.GetFields(bindingFlags)).ToArray();
 
             var Id = context.Excel.SingleOrDefault(e => e.Name == planilla).Id;
@@ -56,14 +59,18 @@ namespace BiblioMit.Services
         ApplicationDbContext context,
         List<string> toskip = null)
         {
+            if (context == null) return "No context";
             (Centre centre, EnsayoFito item, List<Phytoplankton> fitos, _, string error) = 
                 await AmbAsync(package, context, toskip)
                 .ConfigureAwait(false);
             if (!string.IsNullOrEmpty(error)) return error;
             if (centre != null) context.Centre.Update(centre);
-            context.EnsayoFito.Add(item);
-            context.Phytoplankton.AddRange(fitos.ToArray());
-            await context.SaveChangesAsync();
+            await context.EnsayoFito.AddAsync(item)
+                .ConfigureAwait(false);
+            await context.Phytoplankton.AddRangeAsync(fitos.ToArray())
+                .ConfigureAwait(false);
+            await context.SaveChangesAsync()
+                .ConfigureAwait(false);
             return null;
         }
 
@@ -71,6 +78,7 @@ namespace BiblioMit.Services
         ApplicationDbContext context,
         List<string> toskip = null)
         {
+            if (context == null || package == null) return (null, null, null, null, "missing arguments");
             var planilla = nameof(EnsayoFito);
 
             var fitos = new List<Phytoplankton>();
@@ -117,23 +125,27 @@ namespace BiblioMit.Services
             var fin = context.Columna.SingleOrDefault(c => c.ExcelId == Id && c.Name == "TEXTO FIN RESULTADOS DE MUESTRAS DE AGUA");
             var end = worksheet.GetRowByValue('A', fin.Description);
             var inicio = context.Columna.SingleOrDefault(c => c.ExcelId == Id && c.Name == "CELDA INICIO RESULTADOS DE MUESTRAS DE AGUA");
-            int.TryParse(Regex.Replace(inicio.Description, "[A-Z]+", ""), out int start);
+            var parsed = int.TryParse(Regex.Replace(inicio.Description, "[A-Z]+", ""), out int start);
+
+            if (!parsed) return (null, null, null, null, "error parsing start");
 
             TextInfo textInfo = new CultureInfo("en-GB", false).TextInfo;
 
-            var gen = Regex.Replace(textInfo.ToTitleCase(worksheet.Cells[$"A{start+1}"].Value.ToString().ToLower()), " .*", "");
+            var gen = Regex.Replace(textInfo
+                .ToTitleCase(worksheet.Cells[$"A{start+1}"].Value.ToString().ToUpperInvariant()), " .*", "");
 
             for (int row = start+2; row < end; row++)
             {
                 var sp = worksheet.Cells[row, 1].Value.ToString();
 
-                if (sp.ToLower().Contains("total")) continue;
+                if (sp.ToUpperInvariant().Contains("TOTAL", StringComparison.InvariantCultureIgnoreCase)) continue;
 
                 var c = Regex.Replace(worksheet.Cells[row, 3].Value.ToString(), @",([0-9]{3})", @"$1");
 
                 if (string.IsNullOrWhiteSpace(c))
                 {
-                    gen = Regex.Replace(textInfo.ToTitleCase(worksheet.Cells[row, 1].Value.ToString().ToLower()), " .*", "");
+                    gen = Regex.Replace(textInfo
+                        .ToTitleCase(worksheet.Cells[row, 1].Value.ToString().ToUpperInvariant()), " .*", "");
                     continue;
                 }
 
@@ -166,7 +178,7 @@ namespace BiblioMit.Services
                 };
                 if (!string.IsNullOrWhiteSpace(e))
                 {
-                    fito.EAR = (EAR)Convert.ToInt16(e);
+                    fito.EAR = (EAR)Convert.ToInt16(e, new CultureInfo("es-CL"));
                 }
                 fitos.Add(fito);
             }
@@ -213,6 +225,7 @@ $"PSMB {item.PSMBId} de la declaración {item.Id} con fecha {item.FechaMuestreo}
         ApplicationDbContext context, IHubContext<EntryHub> hubContext,
         List<string> toskip = null) where T : Planilla
         {
+            if (entry == null || context == null || hubContext == null || package == null) return;
             double pgr = 0;
             var planilla = entry.Reportes.ToString();
             var planillas = new List<T> { };
@@ -233,7 +246,8 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
                 entry.OutPut += msg;
 
                 context.Update(entry);
-                context.BulkSaveChanges();
+                await context.SaveChangesAsync()
+                    .ConfigureAwait(false);
 
                 return;
             };
@@ -263,12 +277,14 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
 
                         await hubContext
                             .Clients.All
-                            .SendAsync("Update", "log", msg);
+                            .SendAsync("Update", "log", msg)
+                            .ConfigureAwait(false);
 
                         status = "warning";
                         await hubContext
                             .Clients.All
-                            .SendAsync("Update", "status", status);
+                            .SendAsync("Update", "status", status)
+                            .ConfigureAwait(false);
 
                         continue;
                     }
@@ -294,21 +310,24 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
                             entry.OutPut += msg;
 
                             context.Update(entry);
-                            context.BulkSaveChanges();
+                            await context.SaveChangesAsync()
+                                .ConfigureAwait(false);
 
                             await hubContext
                             .Clients.All
-                            .SendAsync("Update", "log", msg);
+                            .SendAsync("Update", "log", msg)
+                            .ConfigureAwait(false);
 
                             await hubContext
                                 .Clients.All
-                                .SendAsync("Update", "status", status);
+                                .SendAsync("Update", "status", status)
+                                .ConfigureAwait(false);
 
                             return;
                         }
                         if ((string)d.Value["opt"] != null)
                         {
-                            Expression e = new Expression((value + (string)d.Value["opt"]).Replace(",", "."));
+                            Expression e = new Expression((value + (string)d.Value["opt"]).Replace(",", ".", StringComparison.InvariantCultureIgnoreCase));
                             item[d.Key] = e.Evaluate();
                         }
                         else
@@ -324,7 +343,7 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
                         item.Fecha = new DateTime(item.Year, item.Month, 1);
                     }
 
-                    var test = (item.Fecha).ToString("MMyyyy");
+                    var test = (item.Fecha).ToString("MMyyyy", new CultureInfo("es-CL"));
 
                     var n = item.Declaracion;
 
@@ -332,10 +351,10 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
 
                     var dt = (int)item.Dato;
 
-                    var test2 = string.Format("{0}{1}{2}",
+                    var test2 = string.Format(new CultureInfo("es-CL"), "{0}{1}{2}",
                         n, dt, test);
 
-                    item.Id = Convert.ToInt64(test2);
+                    item.Id = Convert.ToInt64(test2, new CultureInfo("es-CL"));
 
                     planillas.Add(item);
 
@@ -343,12 +362,14 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
 
                     await hubContext
                         .Clients.All
-                        .SendAsync("Update", "progress", pgr);
+                        .SendAsync("Update", "progress", pgr)
+                        .ConfigureAwait(false);
                     await hubContext
                         .Clients.All
-                        .SendAsync("Update", "status", status);
+                        .SendAsync("Update", "status", status)
+                        .ConfigureAwait(false);
 
-                    System.Diagnostics.Debug.WriteLine($"row:{item.Row} sheet:{item.Sheet}");
+                    Debug.WriteLine($"row:{item.Row} sheet:{item.Sheet}");
                 }
             }
 
@@ -405,12 +426,14 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
 
                                 await hubContext
                                 .Clients.All
-                                .SendAsync("Update", "log", msg);
+                                .SendAsync("Update", "log", msg)
+                                .ConfigureAwait(false);
 
                                 status = "warning";
                                 await hubContext
                                     .Clients.All
-                                    .SendAsync("Update", "status", status);
+                                    .SendAsync("Update", "status", status)
+                                    .ConfigureAwait(false);
 
                                 continue;
                             }
@@ -425,7 +448,9 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
                         {
                             try
                             {
-                                var comuna = context.Comuna.FirstOrDefault(c => c.Name.ToLower() == dato.NombreComuna.ToString().ToLower());
+                                var comuna = context.Comuna.FirstOrDefault(c => 
+                                c.Name.ToUpperInvariant() == 
+                                dato.NombreComuna.ToString(new CultureInfo("es-CL")).ToUpperInvariant());
                                 var centre = new Centre
                                 {
                                     Id = dato.CentreId,
@@ -452,12 +477,14 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
 
                                 await hubContext
                                 .Clients.All
-                                .SendAsync("Update", "log", msg);
+                                .SendAsync("Update", "log", msg)
+                                .ConfigureAwait(false);
 
                                 status = "warning";
                                 await hubContext
                                     .Clients.All
-                                    .SendAsync("Update", "status", status);
+                                    .SendAsync("Update", "status", status)
+                                    .ConfigureAwait(false);
 
                                 continue;
                             }
@@ -472,7 +499,8 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
                         entry.Agregadas++;
                         await hubContext
                             .Clients.All
-                            .SendAsync("Update", "agregada", entry.Agregadas);
+                            .SendAsync("Update", "agregada", entry.Agregadas)
+                            .ConfigureAwait(false);
                         //context.Entries.Update(entry);
                     }
                     catch
@@ -488,7 +516,8 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
 
                         await hubContext
                             .Clients.All
-                        .SendAsync("Update", "log", msg);
+                        .SendAsync("Update", "log", msg)
+                        .ConfigureAwait(false);
 
                         entry.OutPut += msg;
 
@@ -499,7 +528,8 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
 
                             await hubContext
                                 .Clients.All
-                                .SendAsync("Update", "log", msg);
+                                .SendAsync("Update", "log", msg)
+                                .ConfigureAwait(false);
 
                             entry.OutPut += msg;
                         }
@@ -510,7 +540,8 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
                         status = "warning";
                         await hubContext
                             .Clients.All
-                            .SendAsync("Update", "status", status);
+                            .SendAsync("Update", "status", status)
+                            .ConfigureAwait(false);
                         continue;
                     }
                 }
@@ -527,7 +558,8 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
                             entry.Actualizadas++;
                             await hubContext
                                 .Clients.All
-                                .SendAsync("Update", "agregada", entry.Agregadas);
+                                .SendAsync("Update", "agregada", entry.Agregadas)
+                                .ConfigureAwait(false);
                             //context.Entries.Update(entry);
                         }
                         catch
@@ -536,7 +568,8 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
 
                             await hubContext
                                 .Clients.All
-                                .SendAsync("Update", "log", msg);
+                                .SendAsync("Update", "log", msg)
+                                .ConfigureAwait(false);
 
                             entry.OutPut += msg;
                             entry.Observaciones++;
@@ -544,7 +577,8 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
                             status = "warning";
                             await hubContext
                                 .Clients.All
-                                .SendAsync("Update", "status", status);
+                                .SendAsync("Update", "status", status)
+                                .ConfigureAwait(false);
                             continue;
                         }
                     }
@@ -553,14 +587,16 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
                 pgr += pgrP;
 
                 await hubContext.Clients.All
-                    .SendAsync("Update", "progress", pgr);
+                    .SendAsync("Update", "progress", pgr)
+                    .ConfigureAwait(false);
                 await hubContext.Clients.All
-                    .SendAsync("Update", "status", status);
+                    .SendAsync("Update", "status", status)
+                    .ConfigureAwait(false);
             }
 
-            context.Centre.AddRange(centros);
-            context.Origen.AddRange(origenes);
-            context.Planilla.AddRange(datos);
+            await context.Centre.AddRangeAsync(centros).ConfigureAwait(false);
+            await context.Origen.AddRangeAsync(origenes).ConfigureAwait(false);
+            await context.Planilla.AddRangeAsync(datos).ConfigureAwait(false);
             context.Planilla.UpdateRange(updates);
 
             //context.BulkInsert(centros);
@@ -571,14 +607,17 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
             status = "success";
 
             await hubContext.Clients.All
-                .SendAsync("Update", "progress", 100);
+                .SendAsync("Update", "progress", 100)
+                .ConfigureAwait(false);
             await hubContext.Clients.All
-                .SendAsync("Update", "status", status);
+                .SendAsync("Update", "status", status)
+                .ConfigureAwait(false);
 
             msg = $">{entry.Agregadas} añadidos" + (entry.Actualizadas != 0 ? $"y {entry.Actualizadas} registros actualizados " : " ") + "exitosamente.";
             entry.OutPut += msg;
             entry.Success = true;
-            await hubContext.Clients.All.SendAsync("Update", "log", msg);
+            await hubContext.Clients.All.SendAsync("Update", "log", msg)
+                .ConfigureAwait(false);
 
             context.ProdEntry.Update(entry);
 
@@ -587,18 +626,19 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
 
         public static T AddChanges<T>(T val1, T val2) where T : class, IHasBasicIndexer
         {
-            FieldInfo[] fi = val1.GetType().GetFields();
+            if(val1 != null && val2 != null){
+                FieldInfo[] fi = val1.GetType().GetFields();
 
-            foreach (FieldInfo f in fi)
-            {
-                var var1 = f.GetValue(val1);
-                var var2 = f.GetValue(val2);
-                if (var1 != var2)
+                foreach (FieldInfo f in fi)
                 {
-                    val1[f.Name] = val2[f.Name];
+                    var var1 = f.GetValue(val1);
+                    var var2 = f.GetValue(val2);
+                    if (var1 != var2)
+                    {
+                        val1[f.Name] = val2[f.Name];
+                    }
                 }
             }
-
             return val1;
         }
 
@@ -612,6 +652,7 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
 
         public static object GetFromExcel<T>(ExcelWorksheet worksheet, string var, int? row)
         {
+            if (worksheet == null) return null;
             int? col;
             object value = null;
             var type = typeof(T);
@@ -641,7 +682,7 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
                     var num = Regex.Replace(Regex.Replace(val.ToString(), @"(-.*|\.+)$", ""), @"[^0-9]", "");
                     if (!string.IsNullOrWhiteSpace(num))
                     {
-                        value = Convert.ToInt32(num);
+                        value = Convert.ToInt32(num, CultureInfo.InvariantCulture);
                     }
                 }
             }
@@ -652,7 +693,7 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
                     var num = Regex.Replace(Regex.Replace(val.ToString(), @"(?<=^.+)(-.*|\.+)$", ""), @"[^0-9\.,-]", "");
                     if (!string.IsNullOrWhiteSpace(num))
                     {
-                        var culture = CultureInfo.CreateSpecificCulture(num.Contains(',') ? "es-CL" : "en-GB");
+                        var culture = CultureInfo.CreateSpecificCulture(num.Contains(',', StringComparison.InvariantCultureIgnoreCase) ? "es-CL" : "en-GB");
                         value = Convert.ToDouble(num, culture);
                     }
                 }
@@ -679,11 +720,17 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
             {
                 foreach (var tipo in Enum.GetNames(typeof(ProductionType)))
                 {
-                    if (val.ToString().ToLower().Contains(tipo.ToString().ToLower()))
+                    if (val.ToString().ToUpperInvariant()
+                        .Contains(tipo.ToString(CultureInfo.InvariantCulture)
+                        .ToUpperInvariant(),
+                        StringComparison.InvariantCultureIgnoreCase))
                     {
-                        Enum.TryParse(tipo, out ProductionType production);
-                        value = production;
-                        break;
+                        var parsed = Enum.TryParse(tipo, out ProductionType production);
+                        if (parsed)
+                        {
+                            value = production;
+                            break;
+                        }
                     }
                 }
                 if (value == null) value = ProductionType.Desconocido;
@@ -692,21 +739,27 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
             {
                 foreach (var tipo in Enum.GetNames(typeof(Item)))
                 {
-                    if (val.ToString().ToLower()[0] == tipo.ToString().ToLower()[0])
+                    if (val.ToString().ToUpperInvariant()[0] == 
+                        tipo.ToString(CultureInfo.InvariantCulture).ToUpperInvariant()[0])
                     {
-                        Enum.TryParse(tipo, out Item production);
-                        value = production;
-                        break;
+                        var parsed = Enum.TryParse(tipo, out Item production);
+                        if (parsed)
+                        {
+                            value = production;
+                            break;
+                        }
                     }
                 }
             }
             else if (type == typeof(Tipo))
             {
-                value = val.ToString().ToLower().Contains("m") ? Tipo.MateriaPrima : Tipo.Producción;
+                value = val.ToString().ToUpperInvariant()
+                    .Contains("M", StringComparison.InvariantCultureIgnoreCase) ? Tipo.MateriaPrima : Tipo.Producción;
             }
             else if (type == typeof(Enum))
             {
-                value = Enum.Parse(DataTableExtensions.GetEnumType("BiblioMit.Models." + typeof(T).ToString()), val.ToString());
+                value = Enum.Parse(DataTableExtensions
+                    .GetEnumType("BiblioMit.Models." + typeof(T).ToString()), val.ToString());
             }
             try
             {

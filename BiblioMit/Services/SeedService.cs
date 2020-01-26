@@ -52,14 +52,12 @@ namespace BiblioMit.Services
             {
                 await AddProcedure().ConfigureAwait(false);
                 await Users().ConfigureAwait(false);
-                var adminId = _context.AppUser.Where(u => u.Email == "adminmit@bibliomit.cl").SingleOrDefault().Id;
+
                 var tsvPath = Path.Combine(_environment.ContentRootPath, "Data", "FORA");
                 if (!_context.Forum.Any())
                     await Insert<Forum>(tsvPath).ConfigureAwait(false);
-
-                await PostInitializer
-                    .Initialize(_context, adminId)
-                    .ConfigureAwait(false);
+                if (!_context.Post.Any())
+                    await Insert<Post>(tsvPath).ConfigureAwait(false);
 
                 tsvPath = Path.Combine(_environment.ContentRootPath, "Data", "CENTROS");
                 if (!_context.Region.Any())
@@ -85,6 +83,7 @@ namespace BiblioMit.Services
                 if (!_context.CentreProducto.Any())
                     await Insert<CentreProducto>(tsvPath).ConfigureAwait(false);
 
+                var adminId = _context.AppUser.Where(u => u.Email == "adminmit@bibliomit.cl").SingleOrDefault().Id;
                 await ContactsInitializer
                     .Initialize(_context, adminId)
                     .ConfigureAwait(false);
@@ -228,7 +227,7 @@ END";
                                         CreatedDate = DateTime.Now,
                                         Name = item,
                                         Description = "",
-                                        NormalizedName = item.ToLower()
+                                        NormalizedName = _normalizer.Normalize(item)
                                     });
                             };
 
@@ -302,9 +301,9 @@ END";
                             var user = new AppUser
                             {
                                 UserName = item.Name,
-                                NormalizedUserName = item.Name.ToLower(),
+                                NormalizedUserName = _normalizer.Normalize(item.Name),
                                 Email = item.Email,
-                                NormalizedEmail = item.Email.ToLower(),
+                                NormalizedEmail = _normalizer.Normalize(item.Email),
                                 EmailConfirmed = true,
                                 LockoutEnabled = false,
                                 SecurityStamp = Guid.NewGuid().ToString(),

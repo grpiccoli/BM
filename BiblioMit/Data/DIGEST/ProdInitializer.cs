@@ -42,7 +42,8 @@ new ProdEntry { Id = 439, AppUserId = adminId, Date = DateTime.Today, OutPut = "
 new ProdEntry { Id = 440, AppUserId = adminId, Date = DateTime.Today, OutPut = ">1636 añadidos exitosamente.", IP = "1.1.1.1", Actualizadas = 0, Agregadas = 1636, Observaciones = 0, Success = true, Min = DateTime.ParseExact("2018-01-01","yyyy-MM-dd",System.Globalization.CultureInfo.InvariantCulture), Max = DateTime.ParseExact("2018-06-01","yyyy-MM-dd",System.Globalization.CultureInfo.InvariantCulture), FileName = "2018_2 MATERIA PRIMA Y PRODUCCION  2018 (AL 2do TRIMESTRE).xlsx", Reportes = Tipo.Producción },
 new ProdEntry { Id = 481, AppUserId = adminId, Date = DateTime.Today, OutPut = ">2327 añadidos exitosamente.", IP = "1.1.1.1", Actualizadas = 0, Agregadas = 2327, Observaciones = 0, Success = true, Min = DateTime.ParseExact("2018-01-01","yyyy-MM-dd",System.Globalization.CultureInfo.InvariantCulture), Max = DateTime.ParseExact("2018-09-01","yyyy-MM-dd",System.Globalization.CultureInfo.InvariantCulture), FileName = "2018_3 MATERIA PRIMA Y PRODUCCION  2018 (AL 3ER  TRIMESTRE).xlsx", Reportes = Tipo.Producción },
                 };
-                await context.BulkInsertAsync(Entradas).ConfigureAwait(false);
+                await context.AddRangeAsync(Entradas)
+                    .ConfigureAwait(false);
             }
             #endregion
 

@@ -109,7 +109,8 @@ namespace BiblioMit.Data
             //context.BulkInsert(entries);
             foreach (var f in fitos)
             {
-                var fito = context.Phytoplankton.SingleOrDefault(p => p.EnsayoFitoId == f.EnsayoFitoId && p.Species == f.Species);
+                var fito = context.Phytoplankton
+                    .SingleOrDefault(p => p.EnsayoFitoId == f.EnsayoFitoId && p.Species == f.Species);
                 if (fito == null)
                 {
                     await context.Phytoplankton.AddAsync(f)
@@ -119,7 +120,7 @@ namespace BiblioMit.Data
             await context.SaveChangesAsync()
                 .ConfigureAwait(false);
             //context.BulkInsert(fitos);
-            await context.BulkInsertAsync(groups)
+            await context.AddRangeAsync(groups)
                 .ConfigureAwait(false);
         }
     }
