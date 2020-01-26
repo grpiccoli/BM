@@ -1,17 +1,17 @@
 <partial name="_Libs" model='new List<string> { "jquery-validation", "jquery-validation-unobtrusive", 
          "cldrjs", "globalize", "jquery-validation-unobtrusive-extensions" }' />
-
+@using System.IO
 @inject Microsoft.AspNetCore.Hosting.IHostingEnvironment HostingEnvironment
 @{
     string GetDefaultLocale()
     {
         const string localePattern = "lib\\cldr-data\\main\\{0}";
         var currentCulture = System.Globalization.CultureInfo.CurrentCulture;
-        var cultureToUse = "es-CL"; //Default regionalisation to use
+        var cultureToUse = "es"; //Default regionalisation to use
 
-        if (System.IO.Directory.Exists(System.IO.Path.Combine(HostingEnvironment.WebRootPath, string.Format(localePattern, currentCulture.Name))))
+        if (Directory.Exists(System.IO.Path.Combine(HostingEnvironment.WebRootPath, string.Format(localePattern, currentCulture.Name))))
             cultureToUse = currentCulture.Name;
-        else if (System.IO.Directory.Exists(System.IO.Path.Combine(HostingEnvironment.WebRootPath, 
+        else if (Directory.Exists(System.IO.Path.Combine(HostingEnvironment.WebRootPath, 
             string.Format(localePattern, currentCulture.TwoLetterISOLanguageName))))
             cultureToUse = currentCulture.TwoLetterISOLanguageName;
 

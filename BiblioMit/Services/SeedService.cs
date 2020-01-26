@@ -53,13 +53,15 @@ namespace BiblioMit.Services
                 await AddProcedure().ConfigureAwait(false);
                 await Users().ConfigureAwait(false);
 
-                var tsvPath = Path.Combine(_environment.ContentRootPath, "Data", "FORA");
+                var tsvPath = Path
+                    .Combine(_environment.ContentRootPath, "Data", "FORA");
                 if (!_context.Forum.Any())
                     await Insert<Forum>(tsvPath).ConfigureAwait(false);
                 if (!_context.Post.Any())
                     await Insert<Post>(tsvPath).ConfigureAwait(false);
 
-                tsvPath = Path.Combine(_environment.ContentRootPath, "Data", "CENTROS");
+                tsvPath = Path
+                    .Combine(_environment.ContentRootPath, "Data", "CENTROS");
                 if (!_context.Region.Any())
                     await Insert<Region>(tsvPath).ConfigureAwait(false);
                 if (!_context.Provincia.Any())
@@ -83,7 +85,9 @@ namespace BiblioMit.Services
                 if (!_context.CentreProducto.Any())
                     await Insert<CentreProducto>(tsvPath).ConfigureAwait(false);
 
-                var adminId = _context.AppUser.Where(u => u.Email == "adminmit@bibliomit.cl").SingleOrDefault().Id;
+                var adminId = _context.AppUser
+                    .Where(u => u.Email == "adminmit@bibliomit.cl")
+                    .SingleOrDefault().Id;
                 await ContactsInitializer
                     .Initialize(_context, adminId)
                     .ConfigureAwait(false);
@@ -93,7 +97,8 @@ namespace BiblioMit.Services
                 if (!_context.Coordinate.Any())
                     await Insert<Coordinate>(tsvPath).ConfigureAwait(false);
 
-                tsvPath = Path.Combine(_environment.ContentRootPath, "Data", "HISTOPATHOLOGY");
+                tsvPath = Path
+                    .Combine(_environment.ContentRootPath, "Data", "HISTOPATHOLOGY");
                 if (!_context.Sampling.Any())
                     await Insert<Sampling>(tsvPath).ConfigureAwait(false);
                 if (!_context.Individual.Any())
@@ -103,7 +108,8 @@ namespace BiblioMit.Services
                 if (!_context.Photo.Any())
                     await Insert<Photo>(tsvPath).ConfigureAwait(false);
                 
-                tsvPath = Path.Combine(_environment.ContentRootPath, "Data", "DIGEST");
+                tsvPath = Path
+                    .Combine(_environment.ContentRootPath, "Data", "DIGEST");
                 if (!_context.Excel.Any())
                     await Insert<Excel>(tsvPath).ConfigureAwait(false);
                 if (!_context.Columna.Any())
@@ -124,7 +130,8 @@ namespace BiblioMit.Services
                 if (!_context.Phytoplankton.Any())
                     await Insert<Phytoplankton>(tsvPath).ConfigureAwait(false);
                 
-                tsvPath = Path.Combine(_environment.ContentRootPath, "Data", "SEMAFORO");
+                tsvPath = Path
+                    .Combine(_environment.ContentRootPath, "Data", "SEMAFORO");
                 if (!_context.Spawning.Any())
                     await Insert<Spawning>(tsvPath).ConfigureAwait(false);
                 if (!_context.RepStage.Any())
