@@ -70,13 +70,13 @@
             {
                 this.Block(@<link href="@($"{Context.Request.Scheme}://{url}/{l.library}/{file}")" rel="stylesheet"
                                         asp-fallback-href="@($"{path}{file}")"
-                                        asp-subresource-integrity-href="@($"{path}{file}")" />, style);
+                                         />, style);
             }
             else if (file.Contains(".js"))
             {
                 this.Block(@<script src="@($"{Context.Request.Scheme}://{url}/{l.library}/{file}")"
                                            asp-fallback-src="@($"{path}{file}")"
-                                           asp-subresource-integrity-src="@($"{path}{file}")"></script>, script);
+                                           ></script>, script);
             }
         }
     }
@@ -97,3 +97,6 @@
     }
     </environment>
 }
+
+@*asp-subresource-integrity-src="@($"{path}{file}")"
+asp-subresource-integrity-href="@($"{path}{file}")"*@
