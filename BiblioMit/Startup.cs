@@ -28,24 +28,25 @@ namespace BiblioMit
 {
     public class Startup
     {
+        private readonly string _os;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            _os = Environment.OSVersion.Platform.ToString();
         }
 
-        public IConfiguration Configuration { get; }
-
-        public string os = Environment.OSVersion.Platform.ToString();
+    public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString(os + "Connection")));
+                    Configuration.GetConnectionString(_os + "Connection")));
 
             services.AddHostedService<SeedBackground>();
             services.AddScoped<ISeed, SeedService>();
+            services.AddScoped<IImport, Import>();
 
             //services.AddRecaptcha(new RecaptchaOptions
             //{
@@ -216,9 +217,9 @@ namespace BiblioMit
 
             var path = new List<string> { "lib", "cldr-data", "main" };
 
-            var ch = os == "Win32NT" ? @"\" : "/";
+            var ch = _os == "Win32NT" ? @"\" : "/";
 
-            var di = new DirectoryInfo(Path.Combine(env.WebRootPath, string.Join(ch, path)));
+            var di = new DirectoryInfo(Path.Combine(env?.WebRootPath, string.Join(ch, path)));
             var supportedCultures = di.GetDirectories().Where(x => x.Name != "root").Select(x => new CultureInfo(x.Name)).ToList();
             app.UseRequestLocalization(new RequestLocalizationOptions
             {
@@ -235,7 +236,8 @@ namespace BiblioMit
 
             app.UseCookiePolicy();
 
-            var options = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
+            var options = app?.ApplicationServices
+                .GetService<IOptions<RequestLocalizationOptions>>();
             app.UseRequestLocalization(options.Value);
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions

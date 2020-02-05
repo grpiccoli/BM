@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace BiblioMit.Models.VM
 {
     public class Libs
     {
-        public string defaultProvider { get; set; }
-        public List<Lib> libraries { get; set; }
+        public string DefaultProvider { get; set; }
+        public List<LibManLibrary> Libraries { get; } = new List<LibManLibrary>();
     }
 }

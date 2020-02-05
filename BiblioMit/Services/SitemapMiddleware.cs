@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -14,9 +14,9 @@ namespace BiblioMit.Services
 {
     public class SitemapMiddleware
     {
-        private RequestDelegate _next;
-        private string _rootUrl;
-        public SitemapMiddleware(RequestDelegate next, string rootUrl)
+        private readonly RequestDelegate _next;
+        private readonly Uri _rootUrl;
+        public SitemapMiddleware(RequestDelegate next, Uri rootUrl)
         {
             _next = next;
             _rootUrl = rootUrl;
@@ -24,7 +24,7 @@ namespace BiblioMit.Services
 
         public async Task Invoke(HttpContext context)
         {
-            if (context.Request.Path.Value.Equals("/sitemap.xml", StringComparison.OrdinalIgnoreCase))
+            if (context != null && context.Request.Path.Value.Equals("/sitemap.xml", StringComparison.OrdinalIgnoreCase))
             {
                 var stream = context.Response.Body;
                 context.Response.StatusCode = 200;
@@ -32,7 +32,7 @@ namespace BiblioMit.Services
                 string sitemapContent = "<urlset xmlns=\"https://www.sitemaps.org/schemas/sitemap/0.9\">";
                 var controllers = Assembly.GetExecutingAssembly().GetTypes()
                     .Where(type => typeof(Controller).IsAssignableFrom(type)
-                    || type.Name.EndsWith("controller")).ToList();
+                    || type.Name.EndsWith("controller", StringComparison.CurrentCultureIgnoreCase)).ToList();
 
                 foreach (var controller in controllers)
                 {
@@ -48,9 +48,13 @@ namespace BiblioMit.Services
                         {
                             cnt++;
                             sitemapContent += "<url>";
-                            sitemapContent += string.Format("<loc>{0}/{1}/{2}</loc>", _rootUrl,
-                            controller.Name.ToLower().Replace("controller", ""), method.Name.ToLower());
-                            sitemapContent += string.Format("<lastmod>{0}</lastmod>", DateTime.UtcNow.ToString("yyyy-MM-dd"));
+                            sitemapContent += string.Format(CultureInfo.InvariantCulture,
+                                "<loc>{0}/{1}/{2}</loc>", _rootUrl,
+                            controller.Name.ToUpperInvariant()
+                            .Replace("controller", "", StringComparison.CurrentCultureIgnoreCase), 
+                            method.Name.ToUpperInvariant());
+                            sitemapContent += string.Format(CultureInfo.InvariantCulture,
+                                "<lastmod>{0}</lastmod>", DateTime.UtcNow.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
                             sitemapContent += "</url>";
                         }
                     }
@@ -61,11 +65,11 @@ namespace BiblioMit.Services
                     var bytes = Encoding.UTF8.GetBytes(sitemapContent);
                     memoryStream.Write(bytes, 0, bytes.Length);
                     memoryStream.Seek(0, SeekOrigin.Begin);
-                    await memoryStream.CopyToAsync(stream, bytes.Length);
+                    await memoryStream.CopyToAsync(stream, bytes.Length).ConfigureAwait(false);
                 }
             }
             else
-                await _next(context);
+                await _next(context).ConfigureAwait(false);
         }
     }
 
@@ -74,7 +78,7 @@ namespace BiblioMit.Services
         public static IApplicationBuilder UseSitemapMiddleware(this IApplicationBuilder app,
             string rootUrl = "https://www.bibliomit.cl")
         {
-            return app.UseMiddleware<SitemapMiddleware>(new[] { rootUrl });
+            return app.UseMiddleware<SitemapMiddleware>(new[] { new Uri(rootUrl) });
         }
     }
 }

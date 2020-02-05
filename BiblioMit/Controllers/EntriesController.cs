@@ -27,11 +27,13 @@ namespace BiblioMit.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<AppUser> _userManager;
         private readonly IServiceProvider _serviceProvider;
-
+        private readonly IImport _import;
         public EntriesController(ApplicationDbContext context,
+            IImport import,
             IServiceProvider serviceProvider,
             UserManager<AppUser> userManager)
         {
+            _import = import;
             _context = context;
             _userManager = userManager;
             _serviceProvider = serviceProvider;
@@ -112,7 +114,7 @@ namespace BiblioMit.Controllers
 
         [HttpPost]
         //[Produces("application/json")]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateFito(IFormFile qqfile)
         {
             if (qqfile == null) return Json(new { success = false, error = "error file null" });
@@ -129,14 +131,14 @@ namespace BiblioMit.Controllers
                         var temp = new TableToExcel();
                         temp.Process(html, out ExcelPackage xlsx);
                         //var package = new ExcelPackage(xlsx);
-                        error = await Import.Fito(xlsx, _context, toskip).ConfigureAwait(false);
+                        error = await _import.Fito(xlsx, toskip).ConfigureAwait(false);
                     }
                 }
                 catch (FileNotFoundException ex)
                 {
                     return Json(new { success = false, error = ex.Message });
                 }
-        }
+            }
             return Json(new { success = string.IsNullOrWhiteSpace(error), error });
         }
 
@@ -204,16 +206,7 @@ namespace BiblioMit.Controllers
                 Stream stream = entry.Excel.OpenReadStream();
                 ExcelPackage package = new ExcelPackage(stream);
 
-                Task import = Task.Factory.StartNew(async () =>
-                {
-                    using (var serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>()
-                            .CreateScope())
-                    {
-                        var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
-                        var hub = serviceScope.ServiceProvider.GetService<IHubContext<EntryHub>>();
-                        await Import.Read<Planilla>(package, entry, context, hub, toskip);
-                    }
-                });
+                await _import.Read<Planilla>(package, entry, toskip).ConfigureAwait(false);
 
                 return RedirectToAction(nameof(Index), new { id = entry.Id });
             }

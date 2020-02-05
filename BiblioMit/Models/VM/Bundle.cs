@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace BiblioMit.Models.VM
 {
-    public class Bundle
+    public class BundleConfig
     {
-        public string outputFileName { get; set; }
-        public string[] inputFiles { get; set; }
+        public string OutputFileName { get; set; }
+        public List<string> InputFiles { get; } = new List<string>();
     }
 }

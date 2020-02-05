@@ -21,7 +21,7 @@
       ]
     },
     {
-      "library": "alasql@0.5.4",
+      "library": "alasql@0.5.5",
       "destination": "wwwroot/lib/alasql/",
       "files": [ "dist/alasql.min.js" ]
     },
@@ -180,7 +180,7 @@
       "files": [ "dist/umd/tooltip.min.js" ]
     },
     {
-      "library": "xlsx@0.15.4",
+      "library": "xlsx@0.15.5",
       "destination": "wwwroot/lib/xlsx/",
       "files": [ "dist/xlsx.core.min.js" ]
     }

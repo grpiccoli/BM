@@ -1,10 +1,12 @@
-﻿namespace BiblioMit.Models.VM
+﻿using System.Collections.Generic;
+
+namespace BiblioMit.Models.VM
 {
-    public class Lib
+    public class LibManLibrary
     {
-        public string library { get; set; }
-        public string destination { get; set; }
-        public string[] files { get; set; }
-        public string provider { get; set; }
+        public string Library { get; set; }
+        public string Destination { get; set; }
+        public List<string> Files { get; } = new List<string>();
+        public string Provider { get; set; }
     }
 }

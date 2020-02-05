@@ -27,6 +27,7 @@ namespace BiblioMit.Services
         private readonly string _os;
         private readonly string _conn;
         private readonly ApplicationDbContext _context;
+        private readonly AddBulkFiles _addBulkFiles;
         private readonly ILookupNormalizer _normalizer;
         public SeedService(
             ILogger<SeedService> logger,
@@ -34,9 +35,11 @@ namespace BiblioMit.Services
             IConfiguration configuration,
             IHostingEnvironment environment,
             ApplicationDbContext context,
+            AddBulkFiles addBulkFiles,
             ILookupNormalizer normalizer
             )
         {
+            _addBulkFiles = addBulkFiles;
             _logger = logger;
             _localizer = localizer;
             Configuration = configuration;
@@ -148,9 +151,8 @@ namespace BiblioMit.Services
                     await Insert<Larvae>(tsvPath).ConfigureAwait(false);
                 if (!_context.Larva.Any())
                     await Insert<Larva>(tsvPath).ConfigureAwait(false);
-                await AddBulkFiles
-                    .Add(_context, _environment.ContentRootPath)
-                    .ConfigureAwait(false);
+                await _addBulkFiles
+                    .Add().ConfigureAwait(false);
             }
             catch (Exception ex)
             {

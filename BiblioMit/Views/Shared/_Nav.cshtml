@@ -98,7 +98,7 @@
     {
         var access = admin || User.IsInRole("Editor");
 
-        if (admin || User.Claims.Any(c => c.Value == "per" || c.Value == "sernapesca") )
+        if (admin || User.Claims.Any(c => c.Value == "per" || c.Value == "sernapesca" || c.Value == "intemit") )
         {
             digest.Add(Localizer["Administration"].Value, new string[][]
             {

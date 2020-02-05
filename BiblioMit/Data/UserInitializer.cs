@@ -57,7 +57,7 @@ namespace BiblioMit.Data
                         new UserInitializerVM
                         {
                             Name = "MytiliDB",
-                            Email = "mytilidb@bibliomit.clññ|",
+                            Email = "mytilidb@bibliomit.cl",
                             Roles = new string[] { RoleData.AppRoles.ElementAt(0) },
                             Key = "sivisam2016",
                             Image = "/images/ico/bibliomit.svg",

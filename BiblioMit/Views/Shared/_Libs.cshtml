@@ -2,7 +2,7 @@
 @using BiblioMit.Services
 
 @{
-    var libs = Libman.LoadJson().libraries;
+    var libs = Libman.LoadJson().Libraries;
     var prefix = "";
     if(Model.First() == "TOP") { prefix = Model.First()+"_"; Model.RemoveAt(0); }
     var style = prefix + "Styles";
@@ -13,27 +13,27 @@
 @foreach (var lib in Model)
 {
     var library = !lib.StartsWith("/");
-    var l = libs.SingleOrDefault(m => m.library.StartsWith($"{lib}@"));
+    var l = libs.SingleOrDefault(m => m.Library.StartsWith($"{lib}@"));
     <environment include="Development">
         @if (library)
         {
-            foreach (var file in l.files)
+            foreach (var file in l.Files)
             {
                 if (file.Contains(".css"))
                 {
-                    this.Block(@<link href="@($"{l.destination.Replace("wwwroot", "")}{file}")" rel="stylesheet" />, style);
+                    this.Block(@<link href="@($"{l.Destination.Replace("wwwroot", "")}{file}")" rel="stylesheet" />, style);
                 }
                 else if (file.Contains(".js"))
                 {
-                    this.Block(@<script src="@($"{l.destination.Replace("wwwroot", "")}{file}")"></script>, script);
+                    this.Block(@<script src="@($"{l.Destination.Replace("wwwroot", "")}{file}")"></script>, script);
                 }
             }
         }
         else
         {
-            foreach(var bundle in bundles.Where(m => m.outputFileName.Contains(lib)))
+            foreach(var bundle in bundles.Where(m => m.OutputFileName.Contains(lib)))
             {
-                foreach(var input in bundle.inputFiles)
+                foreach(var input in bundle.InputFiles)
                 {
                     var file = input.Replace("wwwroot", "");
                     if (input.Contains(".css"))
@@ -52,29 +52,29 @@
     @if (library)
     {
         var url = "unpkg.com";
-        switch (l.provider)
+        switch (l.Provider)
         {
             case "cdnjs":
-                l.library = l.library.Replace("@", "/");
+                l.Library = l.Library.Replace("@", "/");
                 url = "cdnjs.cloudflare.com/ajax/libs";
                 break;
             case "":
             default:
-                l.provider = "unpkg";
+                l.Provider = "unpkg";
                 break;
         }
-        foreach (var file in l.files)
+        foreach (var file in l.Files)
         {
-            var path = l.destination.Replace("wwwroot/", "");
+            var path = l.Destination.Replace("wwwroot/", "");
             if (file.Contains(".css"))
             {
-                this.Block(@<link href="@($"{Context.Request.Scheme}://{url}/{l.library}/{file}")" rel="stylesheet"
+                this.Block(@<link href="@($"{Context.Request.Scheme}://{url}/{l.Library}/{file}")" rel="stylesheet"
                                         asp-fallback-href="@($"{path}{file}")"
-                                         />, style);
+                                        />, style);
             }
             else if (file.Contains(".js"))
             {
-                this.Block(@<script src="@($"{Context.Request.Scheme}://{url}/{l.library}/{file}")"
+                this.Block(@<script src="@($"{Context.Request.Scheme}://{url}/{l.Library}/{file}")"
                                            asp-fallback-src="@($"{path}{file}")"
                                            ></script>, script);
             }
@@ -82,10 +82,10 @@
     }
     else
     {
-        foreach (var bundle in bundles.Where(m => m.outputFileName.Contains(lib)))
+        foreach (var bundle in bundles.Where(m => m.OutputFileName.Contains(lib)))
         {
-            var path = bundle.outputFileName.Replace("wwwroot", "");
-            if (bundle.outputFileName.Contains(".css"))
+            var path = bundle.OutputFileName.Replace("wwwroot", "");
+            if (bundle.OutputFileName.Contains(".css"))
             {
                 this.Block(@<link href="@path" rel="stylesheet" asp-append-version="true" />, style);
             }

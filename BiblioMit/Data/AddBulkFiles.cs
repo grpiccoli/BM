@@ -1,5 +1,6 @@
 ﻿using BiblioMit.Models;
 using BiblioMit.Services;
+using Microsoft.Extensions.Hosting;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
@@ -10,10 +11,22 @@ using System.Threading.Tasks;
 
 namespace BiblioMit.Data
 {
-    public static class AddBulkFiles
+    public class AddBulkFiles
     {
-        public async static Task Add(ApplicationDbContext context, string path)
+        private readonly IImport _import;
+        private readonly ApplicationDbContext _context;
+        private readonly IHostingEnvironment _environment;
+        public AddBulkFiles(IImport import,
+            ApplicationDbContext context,
+            IHostingEnvironment environment)
         {
+            _environment = environment;
+            _context = context;
+            _import = import;
+        }
+        public async Task Add()
+        {
+            var path = _environment.ContentRootPath;
             var sep = "/";
 
             var boletin = string.Join(sep, path, "..", "UNSYNC/DB");
@@ -40,10 +53,9 @@ namespace BiblioMit.Data
                         var html = stream.ReadToEnd();
                         stream.Close();
                         var temp = new TableToExcel();
-                        var xlsx = new ExcelPackage();
-                        temp.Process(html, out xlsx);
-                        (Centre centre, EnsayoFito item, List<Phytoplankton> fito, List<Groups> group, string err) = 
-                            await Import.AmbAsync(xlsx, context, toskip)
+                        temp.Process(html, out ExcelPackage xlsx);
+                        (Centre centre, EnsayoFito item, List<Phytoplankton> fito, List<Groups> group, string err) =
+                            await _import.AmbAsync(xlsx, toskip)
                             .ConfigureAwait(false);
                         if (item != null && !fito.Any())
                         {
@@ -83,25 +95,25 @@ namespace BiblioMit.Data
             }
             foreach(var c in centres)
             {
-                var centre = await context.FindAsync<Centre>(c.Id)
+                var centre = await _context.FindAsync<Centre>(c.Id)
                     .ConfigureAwait(false);
                 if(centre == null)
                 {
-                    await context.Centre.AddAsync(c).ConfigureAwait(false);
+                    await _context.Centre.AddAsync(c).ConfigureAwait(false);
                 }
                 else
                 {
-                    context.Centre.Update(c);
+                    _context.Centre.Update(c);
                 }
             }
             //context.BulkInsert(centres);
             foreach (var e in entries)
             {
-                var entrie = await context.FindAsync<EnsayoFito>(e.Id)
+                var entrie = await _context.FindAsync<EnsayoFito>(e.Id)
                     .ConfigureAwait(false);
                 if (entrie == null)
                 {
-                    await context.EnsayoFito.AddAsync(e)
+                    await _context.EnsayoFito.AddAsync(e)
                         .ConfigureAwait(false);
                 }
             }
@@ -109,18 +121,18 @@ namespace BiblioMit.Data
             //context.BulkInsert(entries);
             foreach (var f in fitos)
             {
-                var fito = context.Phytoplankton
+                var fito = _context.Phytoplankton
                     .SingleOrDefault(p => p.EnsayoFitoId == f.EnsayoFitoId && p.Species == f.Species);
                 if (fito == null)
                 {
-                    await context.Phytoplankton.AddAsync(f)
+                    await _context.Phytoplankton.AddAsync(f)
                         .ConfigureAwait(false);
                 }
             }
-            await context.SaveChangesAsync()
+            await _context.SaveChangesAsync()
                 .ConfigureAwait(false);
             //context.BulkInsert(fitos);
-            await context.AddRangeAsync(groups)
+            await _context.AddRangeAsync(groups)
                 .ConfigureAwait(false);
         }
     }

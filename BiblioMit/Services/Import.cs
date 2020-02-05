@@ -1,7 +1,6 @@
 ﻿using BiblioMit.Data;
 using BiblioMit.Extensions;
 using BiblioMit.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using NCalc;
 using OfficeOpenXml;
@@ -16,20 +15,26 @@ using System.Threading.Tasks;
 
 namespace BiblioMit.Services
 {
-    public static class Import
+    public class Import : IImport
     {
-        public static (Dictionary<string, Dictionary<string, object>>, string) Analyze<T>
+        private readonly ApplicationDbContext _context;
+        private readonly IHubContext<EntryHub> _hubContext;
+        public Import(ApplicationDbContext context,
+            IHubContext<EntryHub> hubContext)
+        {
+            _hubContext = hubContext;
+            _context = context;
+        }
+        public (Dictionary<string, Dictionary<string, object>>, string) Analyze<T>
             (
                 string planilla,
-                ApplicationDbContext context,
                 BindingFlags bindingFlags,
                 List<string> toskip = null
             )
         {
-            if (context == null) return (null, null);
             var data = typeof(T).GetFields(bindingFlags).Concat(typeof(T).BaseType.GetFields(bindingFlags)).ToArray();
 
-            var Id = context.Excel.SingleOrDefault(e => e.Name == planilla).Id;
+            var Id = _context.Excel.SingleOrDefault(e => e.Name == planilla).Id;
 
             var ddata = new Dictionary<string, Dictionary<string, object>> { };
 
@@ -38,7 +43,7 @@ namespace BiblioMit.Services
                 var name = Regex.Replace(dt.Name, "<([a-zA-Z0-9_]+)>.*", "$1");
                 if (toskip != null && toskip.Any(s => s == name)) continue;
                 Console.WriteLine($"{Id} {name}");
-                var var = context.Columna.SingleOrDefault(c => c.ExcelId == Id && c.Name == name);
+                var var = _context.Columna.SingleOrDefault(c => c.ExcelId == Id && c.Name == name);
                 var tmp = new Dictionary<string, object>
                 {
                     { "type", dt.FieldType },
@@ -55,30 +60,29 @@ namespace BiblioMit.Services
             return (ddata, null);
         }
         
-        public async static Task<string> Fito(ExcelPackage package,
-        ApplicationDbContext context,
+        public async Task<string> Fito(ExcelPackage package,
         List<string> toskip = null)
         {
-            if (context == null) return "No context";
             (Centre centre, EnsayoFito item, List<Phytoplankton> fitos, _, string error) = 
-                await AmbAsync(package, context, toskip)
+                await AmbAsync(package, toskip)
                 .ConfigureAwait(false);
+
             if (!string.IsNullOrEmpty(error)) return error;
-            if (centre != null) context.Centre.Update(centre);
-            await context.EnsayoFito.AddAsync(item)
+
+            if (centre != null) _context.Centre.Update(centre);
+            await _context.EnsayoFito.AddAsync(item)
                 .ConfigureAwait(false);
-            await context.Phytoplankton.AddRangeAsync(fitos.ToArray())
+            await _context.Phytoplankton.AddRangeAsync(fitos.ToArray())
                 .ConfigureAwait(false);
-            await context.SaveChangesAsync()
+            await _context.SaveChangesAsync()
                 .ConfigureAwait(false);
             return null;
         }
 
-        public async static Task<(Centre, EnsayoFito, List<Phytoplankton>, List<Groups>, string)> AmbAsync(ExcelPackage package,
-        ApplicationDbContext context,
+        public async Task<(Centre, EnsayoFito, List<Phytoplankton>, List<Groups>, string)> AmbAsync(ExcelPackage package,
         List<string> toskip = null)
         {
-            if (context == null || package == null) return (null, null, null, null, "missing arguments");
+            if (package == null) return (null, null, null, null, "missing arguments");
             var planilla = nameof(EnsayoFito);
 
             var fitos = new List<Phytoplankton>();
@@ -87,7 +91,7 @@ namespace BiblioMit.Services
             var bindingFlags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
 
             (Dictionary<string, Dictionary<string, object>> tdata, string error)
-                = Analyze<EnsayoFito>(planilla, context, bindingFlags, toskip);
+                = Analyze<EnsayoFito>(planilla, bindingFlags, toskip);
 
             if (error != null) return (null, null, null, null, error);
 
@@ -116,15 +120,15 @@ namespace BiblioMit.Services
                 }
             }
 
-            var find = await context.FindAsync<EnsayoFito>(item.Id)
+            var find = await _context.FindAsync<EnsayoFito>(item.Id)
                 .ConfigureAwait(false);
             if (find != null) return (null, null, null, null, "Archivo ya ingresado");
 
             //Get Fitos
-            var Id = context.Excel.SingleOrDefault(e => e.Name == planilla).Id;
-            var fin = context.Columna.SingleOrDefault(c => c.ExcelId == Id && c.Name == "TEXTO FIN RESULTADOS DE MUESTRAS DE AGUA");
+            var Id = _context.Excel.SingleOrDefault(e => e.Name == planilla).Id;
+            var fin = _context.Columna.SingleOrDefault(c => c.ExcelId == Id && c.Name == "TEXTO FIN RESULTADOS DE MUESTRAS DE AGUA");
             var end = worksheet.GetRowByValue('A', fin.Description);
-            var inicio = context.Columna.SingleOrDefault(c => c.ExcelId == Id && c.Name == "CELDA INICIO RESULTADOS DE MUESTRAS DE AGUA");
+            var inicio = _context.Columna.SingleOrDefault(c => c.ExcelId == Id && c.Name == "CELDA INICIO RESULTADOS DE MUESTRAS DE AGUA");
             var parsed = int.TryParse(Regex.Replace(inicio.Description, "[A-Z]+", ""), out int start);
 
             if (!parsed) return (null, null, null, null, "error parsing start");
@@ -154,7 +158,7 @@ namespace BiblioMit.Services
                 var group = new Groups();
                 try
                 {
-                    group = context.Groups.SingleOrDefault(g => g.Name == gen);
+                    group = _context.Groups.SingleOrDefault(g => g.Name == gen);
                 }
                 catch
                 {
@@ -164,7 +168,7 @@ namespace BiblioMit.Services
                 {
                     group = new Groups
                     {
-                        Id = context.Groups.Max(g => g.Id),
+                        Id = _context.Groups.Max(g => g.Id),
                         Name = gen
                     };
                     groups.Add(group);
@@ -185,7 +189,7 @@ namespace BiblioMit.Services
 
             if (item.CentreId.HasValue)
             {
-                var centre = await context.FindAsync<Centre>(item.CentreId.Value)
+                var centre = await _context.FindAsync<Centre>(item.CentreId.Value)
                     .ConfigureAwait(false);
 
                 if (centre == null)
@@ -212,7 +216,7 @@ $"El centro {item.CentreId} de la declaración {item.Id} con fecha {item.FechaMu
 "No se especifica número de Centro válido y no se puede deducir a partir del número de centro");
             }
 
-            var psmb = await context.FindAsync<PSMB>(item.PSMBId)
+            var psmb = await _context.FindAsync<PSMB>(item.PSMBId)
                 .ConfigureAwait(false);
             if (psmb == null)
                 return (null, null, null, null,
@@ -221,11 +225,10 @@ $"PSMB {item.PSMBId} de la declaración {item.Id} con fecha {item.FechaMuestreo}
             return (null, item, fitos, groups, null);
         }
 
-        public async static Task Read<T>(ExcelPackage package, ProdEntry entry,
-        ApplicationDbContext context, IHubContext<EntryHub> hubContext,
+        public async Task Read<T>(ExcelPackage package, ProdEntry entry,
         List<string> toskip = null) where T : Planilla
         {
-            if (entry == null || context == null || hubContext == null || package == null) return;
+            if (entry == null || package == null) return;
             double pgr = 0;
             var planilla = entry.Reportes.ToString();
             var planillas = new List<T> { };
@@ -235,7 +238,7 @@ $"PSMB {item.PSMBId} de la declaración {item.Id} con fecha {item.FechaMuestreo}
             var msg = string.Empty;
 
             (Dictionary<string, Dictionary<string, object>> tdata, string error)
-                = Analyze<T>(planilla, context, bindingFlags, toskip);
+                = Analyze<T>(planilla, bindingFlags, toskip);
 
             if (error != null)
             {
@@ -245,8 +248,8 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
 
                 entry.OutPut += msg;
 
-                context.Update(entry);
-                await context.SaveChangesAsync()
+                _context.Update(entry);
+                await _context.SaveChangesAsync()
                     .ConfigureAwait(false);
 
                 return;
@@ -275,13 +278,13 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
 
                         entry.OutPut += msg;
 
-                        await hubContext
+                        await _hubContext
                             .Clients.All
                             .SendAsync("Update", "log", msg)
                             .ConfigureAwait(false);
 
                         status = "warning";
-                        await hubContext
+                        await _hubContext
                             .Clients.All
                             .SendAsync("Update", "status", status)
                             .ConfigureAwait(false);
@@ -309,16 +312,16 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
 
                             entry.OutPut += msg;
 
-                            context.Update(entry);
-                            await context.SaveChangesAsync()
+                            _context.Update(entry);
+                            await _context.SaveChangesAsync()
                                 .ConfigureAwait(false);
 
-                            await hubContext
+                            await _hubContext
                             .Clients.All
                             .SendAsync("Update", "log", msg)
                             .ConfigureAwait(false);
 
-                            await hubContext
+                            await _hubContext
                                 .Clients.All
                                 .SendAsync("Update", "status", status)
                                 .ConfigureAwait(false);
@@ -360,11 +363,11 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
 
                     pgr += pgrRow;
 
-                    await hubContext
+                    await _hubContext
                         .Clients.All
                         .SendAsync("Update", "progress", pgr)
                         .ConfigureAwait(false);
-                    await hubContext
+                    await _hubContext
                         .Clients.All
                         .SendAsync("Update", "status", status)
                         .ConfigureAwait(false);
@@ -392,13 +395,13 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
                 dato.Peso = r.Sum(p => p.Peso);
                 dato.Row = r.Sum(p => p.Row);
 
-                var find = context.Find<T>(dato.Id);
+                var find = await _context.FindAsync<T>(dato.Id).ConfigureAwait(false);
 
                 if (find == null)
                 {
                     if (dato.Dato == Tipo.Semilla && !origenes.Any(o => o.Id == dato.OrigenId))
                     {
-                        var orig = context.Find<Origen>(dato.OrigenId);
+                        var orig = await _context.FindAsync<Origen>(dato.OrigenId).ConfigureAwait(false);
 
                         if (orig == null)
                         {
@@ -424,13 +427,13 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
                                 entry.OutPut += msg;
                                 entry.Observaciones++;
 
-                                await hubContext
+                                await _hubContext
                                 .Clients.All
                                 .SendAsync("Update", "log", msg)
                                 .ConfigureAwait(false);
 
                                 status = "warning";
-                                await hubContext
+                                await _hubContext
                                     .Clients.All
                                     .SendAsync("Update", "status", status)
                                     .ConfigureAwait(false);
@@ -442,13 +445,14 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
 
                     if (!centros.Any(o => o.Id == dato.CentreId))
                     {
-                        var parent = context.Find<Centre>(dato.CentreId);
+                        var parent = await _context.FindAsync<Centre>(dato.CentreId)
+                            .ConfigureAwait(false);
 
                         if (parent == null)
                         {
                             try
                             {
-                                var comuna = context.Comuna.FirstOrDefault(c => 
+                                var comuna = _context.Comuna.FirstOrDefault(c => 
                                 c.Name.ToUpperInvariant() == 
                                 dato.NombreComuna.ToString(new CultureInfo("es-CL")).ToUpperInvariant());
                                 var centre = new Centre
@@ -475,13 +479,13 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
                                 entry.OutPut += msg;
                                 entry.Observaciones++;
 
-                                await hubContext
+                                await _hubContext
                                 .Clients.All
                                 .SendAsync("Update", "log", msg)
                                 .ConfigureAwait(false);
 
                                 status = "warning";
-                                await hubContext
+                                await _hubContext
                                     .Clients.All
                                     .SendAsync("Update", "status", status)
                                     .ConfigureAwait(false);
@@ -497,7 +501,7 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
                     {
                         //context.SaveChanges();
                         entry.Agregadas++;
-                        await hubContext
+                        await _hubContext
                             .Clients.All
                             .SendAsync("Update", "agregada", entry.Agregadas)
                             .ConfigureAwait(false);
@@ -514,19 +518,20 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
 
                         msg = $">W: Declaración de {dato.Dato} N°{dato.Id}, con fecha {dato.Fecha}, en hoja {dato.Sheet}, filas {dato.Rows} no pudieron ser procesadas. Verificar archivo.";
 
-                        await hubContext
+                        await _hubContext
                             .Clients.All
                         .SendAsync("Update", "log", msg)
                         .ConfigureAwait(false);
 
                         entry.OutPut += msg;
 
-                        var centre = context.Centre.Find(dato.CentreId);
+                        var centre = await _context.Centre.FindAsync(dato.CentreId)
+                            .ConfigureAwait(false);
                         if (centre == null)
                         {
                             msg = $">Centro {dato.CentreId} no existe en base de datos.";
 
-                            await hubContext
+                            await _hubContext
                                 .Clients.All
                                 .SendAsync("Update", "log", msg)
                                 .ConfigureAwait(false);
@@ -538,7 +543,7 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
                         entry.Observaciones++;
 
                         status = "warning";
-                        await hubContext
+                        await _hubContext
                             .Clients.All
                             .SendAsync("Update", "status", status)
                             .ConfigureAwait(false);
@@ -556,7 +561,7 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
                         {
                             //context.SaveChanges();
                             entry.Actualizadas++;
-                            await hubContext
+                            await _hubContext
                                 .Clients.All
                                 .SendAsync("Update", "agregada", entry.Agregadas)
                                 .ConfigureAwait(false);
@@ -566,7 +571,7 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
                         {
                             msg = $">Unknown error: Declaración de {dato.Dato} N°{dato.Id}, con fecha {dato.Fecha}, en hoja {dato.Sheet}, filas {dato.Rows} no pudieron ser procesadas. Verificar archivo.";
 
-                            await hubContext
+                            await _hubContext
                                 .Clients.All
                                 .SendAsync("Update", "log", msg)
                                 .ConfigureAwait(false);
@@ -575,7 +580,7 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
                             entry.Observaciones++;
 
                             status = "warning";
-                            await hubContext
+                            await _hubContext
                                 .Clients.All
                                 .SendAsync("Update", "status", status)
                                 .ConfigureAwait(false);
@@ -586,18 +591,18 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
 
                 pgr += pgrP;
 
-                await hubContext.Clients.All
+                await _hubContext.Clients.All
                     .SendAsync("Update", "progress", pgr)
                     .ConfigureAwait(false);
-                await hubContext.Clients.All
+                await _hubContext.Clients.All
                     .SendAsync("Update", "status", status)
                     .ConfigureAwait(false);
             }
 
-            await context.Centre.AddRangeAsync(centros).ConfigureAwait(false);
-            await context.Origen.AddRangeAsync(origenes).ConfigureAwait(false);
-            await context.Planilla.AddRangeAsync(datos).ConfigureAwait(false);
-            context.Planilla.UpdateRange(updates);
+            await _context.Centre.AddRangeAsync(centros).ConfigureAwait(false);
+            await _context.Origen.AddRangeAsync(origenes).ConfigureAwait(false);
+            await _context.Planilla.AddRangeAsync(datos).ConfigureAwait(false);
+            _context.Planilla.UpdateRange(updates);
 
             //context.BulkInsert(centros);
             //context.BulkInsert(origenes);
@@ -606,22 +611,22 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
 
             status = "success";
 
-            await hubContext.Clients.All
+            await _hubContext.Clients.All
                 .SendAsync("Update", "progress", 100)
                 .ConfigureAwait(false);
-            await hubContext.Clients.All
+            await _hubContext.Clients.All
                 .SendAsync("Update", "status", status)
                 .ConfigureAwait(false);
 
             msg = $">{entry.Agregadas} añadidos" + (entry.Actualizadas != 0 ? $"y {entry.Actualizadas} registros actualizados " : " ") + "exitosamente.";
             entry.OutPut += msg;
             entry.Success = true;
-            await hubContext.Clients.All.SendAsync("Update", "log", msg)
+            await _hubContext.Clients.All.SendAsync("Update", "log", msg)
                 .ConfigureAwait(false);
 
-            context.ProdEntry.Update(entry);
+            _context.ProdEntry.Update(entry);
 
-            context.SaveChanges();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public static T AddChanges<T>(T val1, T val2) where T : class, IHasBasicIndexer
