@@ -168,16 +168,16 @@ namespace BiblioMit
             //    pipeline.MinifyHtmlFiles();
             //});
 
-            services.AddWebMarkupMin()
-                .AddHtmlMinification(
-                    options =>
-                    {
-                        options.MinificationSettings.RemoveRedundantAttributes = true;
-                        options.MinificationSettings.RemoveHttpProtocolFromAttributes = true;
-                        options.MinificationSettings.RemoveHttpsProtocolFromAttributes = true;
-                    })
-                .AddXmlMinification()
-                .AddHttpCompression();
+            //services.AddWebMarkupMin()
+            //    .AddHtmlMinification(
+            //        options =>
+            //        {
+            //            options.MinificationSettings.RemoveRedundantAttributes = true;
+            //            options.MinificationSettings.RemoveHttpProtocolFromAttributes = true;
+            //            options.MinificationSettings.RemoveHttpsProtocolFromAttributes = true;
+            //        })
+            //    .AddXmlMinification()
+            //    .AddHttpCompression();
 
             Libman.LoadJson();
             Bundler.LoadJson();
@@ -246,7 +246,7 @@ namespace BiblioMit
 
             app.UseAuthorization();
 
-            app.UseWebMarkupMin();
+            //app.UseWebMarkupMin();
 
             app.UseEndpoints(endpoints =>
             {
