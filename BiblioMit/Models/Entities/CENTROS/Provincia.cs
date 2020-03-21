@@ -1,5 +1,4 @@
-﻿using BiblioMit.Models.VM;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -21,9 +20,8 @@ namespace BiblioMit.Models
         public int Surface { get; set; }
         [Display(Name = "Población")]
         public int Population { get; set; }
-
-        public virtual ICollection<Comuna> Comunas { get; set; }
-        public virtual ICollection<Polygon> Polygons { get; set; }
-        public virtual ICollection<AreaCodeProvincia> AreaCodeProvincias { get; set; }
+        public virtual ICollection<Comuna> Comunas { get; } = new List<Comuna>();
+        public virtual ICollection<Polygon> Polygons { get; } = new List<Polygon>();
+        public virtual ICollection<AreaCodeProvincia> AreaCodeProvincias { get; } = new List<AreaCodeProvincia>();
     }
 }

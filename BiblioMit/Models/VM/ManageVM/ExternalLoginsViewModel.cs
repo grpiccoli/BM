@@ -9,9 +9,9 @@ namespace BiblioMit.Models.ManageViewModels
 {
     public class ExternalLoginsViewModel
     {
-        public IList<UserLoginInfo> CurrentLogins { get; set; }
+        public List<UserLoginInfo> CurrentLogins { get; } = new List<UserLoginInfo>();
 
-        public IList<AuthenticationScheme> OtherLogins { get; set; }
+        public List<AuthenticationScheme> OtherLogins { get; } = new List<AuthenticationScheme>();
 
         public bool ShowRemoveButton { get; set; }
 

@@ -24,8 +24,8 @@ namespace BiblioMit.Models
         public string Species { get; set; }
 
         public string Comment { get; set; }
-        
+
         //Child
-        public ICollection<Photo> Photos { get; set; }
+        public virtual ICollection<Photo> Photos { get; } = new List<Photo>();
     }
 }

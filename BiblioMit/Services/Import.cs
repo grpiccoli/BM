@@ -34,7 +34,7 @@ namespace BiblioMit.Services
         {
             var data = typeof(T).GetFields(bindingFlags).Concat(typeof(T).BaseType.GetFields(bindingFlags)).ToArray();
 
-            var Id = _context.Excel.SingleOrDefault(e => e.Name == planilla).Id;
+            var Id = _context.ExcelFile.SingleOrDefault(e => e.Name == planilla).Id;
 
             var ddata = new Dictionary<string, Dictionary<string, object>> { };
 
@@ -125,7 +125,7 @@ namespace BiblioMit.Services
             if (find != null) return (null, null, null, null, "Archivo ya ingresado");
 
             //Get Fitos
-            var Id = _context.Excel.SingleOrDefault(e => e.Name == planilla).Id;
+            var Id = _context.ExcelFile.SingleOrDefault(e => e.Name == planilla).Id;
             var fin = _context.Columna.SingleOrDefault(c => c.ExcelId == Id && c.Name == "TEXTO FIN RESULTADOS DE MUESTRAS DE AGUA");
             var end = worksheet.GetRowByValue('A', fin.Description);
             var inicio = _context.Columna.SingleOrDefault(c => c.ExcelId == Id && c.Name == "CELDA INICIO RESULTADOS DE MUESTRAS DE AGUA");
@@ -155,15 +155,7 @@ namespace BiblioMit.Services
 
                 var e = worksheet.Cells[row, 2].Value.ToString();
                 var ce = Convert.ToDouble(c, CultureInfo.CreateSpecificCulture("es-CL"));
-                var group = new Groups();
-                try
-                {
-                    group = _context.Groups.SingleOrDefault(g => g.Name == gen);
-                }
-                catch
-                {
-                    return (null, null, null, null, $"Grupo {gen} no encontrado");
-                }
+                var group = _context.Groups.SingleOrDefault(g => g.Name == gen);
                 if (group == null)
                 {
                     group = new Groups
@@ -405,7 +397,7 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
 
                         if (orig == null)
                         {
-                            try
+                            if(dato.OrigenId.HasValue && dato.Origen != null)
                             {
                                 var origen = new Origen
                                 {
@@ -417,7 +409,7 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
                                 //context.Origen.Add(origen);
                                 //context.SaveChanges();
                             }
-                            catch
+                            else
                             {
                                 msg = $">W: Origen no existe en archivo." +
                                     $">Declaración de {dato.Dato} N°{dato.Id}, con fecha {dato.Fecha}, " +
@@ -437,7 +429,6 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
                                     .Clients.All
                                     .SendAsync("Update", "status", status)
                                     .ConfigureAwait(false);
-
                                 continue;
                             }
                         }
@@ -450,26 +441,26 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
 
                         if (parent == null)
                         {
-                            try
+                            var comuna = _context.Comuna.FirstOrDefault(c => 
+                            c.Name.Equals(dato.NombreComuna, 
+                            StringComparison.InvariantCultureIgnoreCase));
+                            if(comuna != null)
                             {
-                                var comuna = _context.Comuna.FirstOrDefault(c => 
-                                c.Name.ToUpperInvariant() == 
-                                dato.NombreComuna.ToString(new CultureInfo("es-CL")).ToUpperInvariant());
                                 var centre = new Centre
                                 {
                                     Id = dato.CentreId,
                                     ComunaId = comuna.Id,
                                     CompanyId = 0,
                                     PSMBId = 0,
-                                    Type = (CentreType)2,
+                                    Type = (CentreTypes)2,
                                     CuerpoAgua = CuerpoAgua.Mar
                                 };
 
                                 centros.Add(centre);
-                                //context.Centre.Add(centre);
-                                //context.SaveChanges();
                             }
-                            catch
+                            else
+                            //context.Centre.Add(centre);
+                            //context.SaveChanges();
                             {
                                 msg = $">W: Comuna {dato.NombreComuna} no existe en base de datos." +
                                     $">Declaración de {dato.Dato} N°{dato.Id}, con fecha {dato.Fecha}, " +
@@ -497,8 +488,8 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
 
                     datos.Add(dato);
                     //context.Add(dato);
-                    try
-                    {
+                    //try
+                    //{
                         //context.SaveChanges();
                         entry.Agregadas++;
                         await _hubContext
@@ -506,49 +497,49 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
                             .SendAsync("Update", "agregada", entry.Agregadas)
                             .ConfigureAwait(false);
                         //context.Entries.Update(entry);
-                    }
-                    catch
-                    {
-                        //Buscadores de Empresas
-                        //http://www.genealog.cl
-                        //https://www.mercantil.com
-                        //https://www.smartx.cl
-                        //Buscador de personas
-                        //https://www.nombrerutyfirma.cl
+                    //}
+                    //catch
+                    //{
+                    //    //Buscadores de Empresas
+                    //    //http://www.genealog.cl
+                    //    //https://www.mercantil.com
+                    //    //https://www.smartx.cl
+                    //    //Buscador de personas
+                    //    //https://www.nombrerutyfirma.cl
 
-                        msg = $">W: Declaración de {dato.Dato} N°{dato.Id}, con fecha {dato.Fecha}, en hoja {dato.Sheet}, filas {dato.Rows} no pudieron ser procesadas. Verificar archivo.";
+                    //    msg = $">W: Declaración de {dato.Dato} N°{dato.Id}, con fecha {dato.Fecha}, en hoja {dato.Sheet}, filas {dato.Rows} no pudieron ser procesadas. Verificar archivo.";
 
-                        await _hubContext
-                            .Clients.All
-                        .SendAsync("Update", "log", msg)
-                        .ConfigureAwait(false);
+                    //    await _hubContext
+                    //        .Clients.All
+                    //    .SendAsync("Update", "log", msg)
+                    //    .ConfigureAwait(false);
 
-                        entry.OutPut += msg;
+                    //    entry.OutPut += msg;
 
-                        var centre = await _context.Centre.FindAsync(dato.CentreId)
-                            .ConfigureAwait(false);
-                        if (centre == null)
-                        {
-                            msg = $">Centro {dato.CentreId} no existe en base de datos.";
+                    //    var centre = await _context.Centre.FindAsync(dato.CentreId)
+                    //        .ConfigureAwait(false);
+                    //    if (centre == null)
+                    //    {
+                    //        msg = $">Centro {dato.CentreId} no existe en base de datos.";
 
-                            await _hubContext
-                                .Clients.All
-                                .SendAsync("Update", "log", msg)
-                                .ConfigureAwait(false);
+                    //        await _hubContext
+                    //            .Clients.All
+                    //            .SendAsync("Update", "log", msg)
+                    //            .ConfigureAwait(false);
 
-                            entry.OutPut += msg;
-                        }
+                    //        entry.OutPut += msg;
+                    //    }
 
-                        entry.OutPut += msg;
-                        entry.Observaciones++;
+                    //    entry.OutPut += msg;
+                    //    entry.Observaciones++;
 
-                        status = "warning";
-                        await _hubContext
-                            .Clients.All
-                            .SendAsync("Update", "status", status)
-                            .ConfigureAwait(false);
-                        continue;
-                    }
+                    //    status = "warning";
+                    //    await _hubContext
+                    //        .Clients.All
+                    //        .SendAsync("Update", "status", status)
+                    //        .ConfigureAwait(false);
+                    //    continue;
+                    //}
                 }
                 else
                 {
@@ -557,8 +548,8 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
                     {
                         updates.Add(updated);
                         //context.Update(updated);
-                        try
-                        {
+                        //try
+                        //{
                             //context.SaveChanges();
                             entry.Actualizadas++;
                             await _hubContext
@@ -566,26 +557,26 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
                                 .SendAsync("Update", "agregada", entry.Agregadas)
                                 .ConfigureAwait(false);
                             //context.Entries.Update(entry);
-                        }
-                        catch
-                        {
-                            msg = $">Unknown error: Declaración de {dato.Dato} N°{dato.Id}, con fecha {dato.Fecha}, en hoja {dato.Sheet}, filas {dato.Rows} no pudieron ser procesadas. Verificar archivo.";
+                        //}
+                        //catch
+                        //{
+                        //    msg = $">Unknown error: Declaración de {dato.Dato} N°{dato.Id}, con fecha {dato.Fecha}, en hoja {dato.Sheet}, filas {dato.Rows} no pudieron ser procesadas. Verificar archivo.";
 
-                            await _hubContext
-                                .Clients.All
-                                .SendAsync("Update", "log", msg)
-                                .ConfigureAwait(false);
+                        //    await _hubContext
+                        //        .Clients.All
+                        //        .SendAsync("Update", "log", msg)
+                        //        .ConfigureAwait(false);
 
-                            entry.OutPut += msg;
-                            entry.Observaciones++;
+                        //    entry.OutPut += msg;
+                        //    entry.Observaciones++;
 
-                            status = "warning";
-                            await _hubContext
-                                .Clients.All
-                                .SendAsync("Update", "status", status)
-                                .ConfigureAwait(false);
-                            continue;
-                        }
+                        //    status = "warning";
+                        //    await _hubContext
+                        //        .Clients.All
+                        //        .SendAsync("Update", "status", status)
+                        //        .ConfigureAwait(false);
+                        //    continue;
+                        //}
                     }
                 }
 
@@ -666,19 +657,14 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
             object val;
             if (row.HasValue)
             {
-                try
-                {
-                    col = worksheet.GetColumnByName(var);
-                    val = worksheet.Cells[row.Value, col.Value].Value;
-                }
-                catch
-                {
-                    return null;
-                }
+                col = worksheet.GetColumnByName(var);
+                if (col == null) return null;
+                val = worksheet.Cells[row.Value, col.Value]?.Value;
+                if (val == null) return null;
             }
             else
             {
-                val = worksheet.Cells[var].Value;
+                val = worksheet.Cells[var]?.Value;
             }
             if (type == typeof(int) || type == typeof(int?))
             {
@@ -766,11 +752,11 @@ $@">ERROR: El valor para la columna {error} no fue encontrada en la base de dato
                 value = Enum.Parse(DataTableExtensions
                     .GetEnumType("BiblioMit.Models." + typeof(T).ToString()), val.ToString());
             }
-            try
+            if(value is T)
             {
                 return (T)value;
             }
-            catch
+            else
             {
                 return null;
             }

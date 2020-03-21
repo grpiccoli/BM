@@ -79,7 +79,7 @@ namespace BiblioMit.Models
         [Display(Name = "Tissue")]
         public Tissue Tissue { get; set; }
         //Child
-        public ICollection<Photo> Photos { get; set; }
+        public virtual ICollection<Photo> Photos { get; } = new List<Photo>();
 
         [Display(Name = "Count")]
         [Range(1,1000, ErrorMessage = "This value must be between {0} and {1}")]

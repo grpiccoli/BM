@@ -10,7 +10,7 @@ namespace BiblioMit.Models
         }
         public override int GetHashCode()
         {
-            return EnsayoFitoId.GetHashCode()*Species.GetHashCode();
+            return EnsayoFitoId.GetHashCode()*Species.GetHashCode(System.StringComparison.InvariantCultureIgnoreCase);
         }
         public int Id { get; set; }
         public int EnsayoFitoId { get; set; }

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Localization;
 
 namespace BiblioMit.Areas.Identity.Pages.Account
 {
@@ -18,9 +19,13 @@ namespace BiblioMit.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<AppUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
-
-        public LoginModel(SignInManager<AppUser> signInManager, ILogger<LoginModel> logger)
+        private readonly IStringLocalizer<LoginModel> _localizer;
+        public LoginModel(
+            SignInManager<AppUser> signInManager, 
+            ILogger<LoginModel> logger,
+            IStringLocalizer<LoginModel> localizer)
         {
+            _localizer = localizer;
             _signInManager = signInManager;
             _logger = logger;
         }
@@ -28,35 +33,35 @@ namespace BiblioMit.Areas.Identity.Pages.Account
         [BindProperty]
         public LoginInputModel Input { get; set; }
 
-        public IList<AuthenticationScheme> ExternalLogins { get; set; }
+        public List<AuthenticationScheme> ExternalLogins { get; } = new List<AuthenticationScheme>();
 
-        public string ReturnUrl { get; set; }
+        public Uri ReturnUrl { get; set; }
 
         [TempData]
         public string ErrorMessage { get; set; }
 
-        public async Task OnGetAsync(string returnUrl = null)
+        public async Task OnGetAsync(Uri returnUrl = null)
         {
             if (!string.IsNullOrEmpty(ErrorMessage))
             {
                 ModelState.AddModelError(string.Empty, ErrorMessage);
             }
 
-            returnUrl = returnUrl ?? Url.Content("~/");
+            returnUrl ??= new Uri("~/");
 
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme)
                 .ConfigureAwait(false);
 
-            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()
-                .ConfigureAwait(false)).ToList();
+            ExternalLogins.AddRange((await _signInManager.GetExternalAuthenticationSchemesAsync()
+                .ConfigureAwait(false)).ToList());
 
             ReturnUrl = returnUrl;
         }
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync(Uri returnUrl = null)
         {
-            returnUrl = returnUrl ?? Url.Content("~/");
+            returnUrl ??= new Uri("~/");
 
             if (ModelState.IsValid)
             {
@@ -67,8 +72,8 @@ namespace BiblioMit.Areas.Identity.Pages.Account
                     .ConfigureAwait(false);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
+                    _logger.LogInformation(_localizer["User logged in."]);
+                    return LocalRedirect(returnUrl.AbsoluteUri);
                 }
                 if (result.RequiresTwoFactor)
                 {
@@ -76,7 +81,7 @@ namespace BiblioMit.Areas.Identity.Pages.Account
                 }
                 if (result.IsLockedOut)
                 {
-                    _logger.LogWarning("User account locked out.");
+                    _logger.LogWarning(_localizer[ "User account locked out."]);
                     return RedirectToPage("./Lockout");
                 }
                 else

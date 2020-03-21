@@ -1,6 +1,6 @@
 @model IEnumerable<BiblioMit.Models.Individual>
 
-<partial name="_Libs" model='new List<string> { "/sampligs.min" }' />
+<partial name="_LibsPg" model='new HashSet<string> { "sampligs" }' />
 
 @{
     ViewData["Title"] = Localizer["Details"];

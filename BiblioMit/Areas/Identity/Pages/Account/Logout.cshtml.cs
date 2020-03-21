@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Localization;
 
 namespace BiblioMit.Areas.Identity.Pages.Account
 {
@@ -16,24 +17,28 @@ namespace BiblioMit.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<AppUser> _signInManager;
         private readonly ILogger<LogoutModel> _logger;
-
-        public LogoutModel(SignInManager<AppUser> signInManager, ILogger<LogoutModel> logger)
+        private readonly IStringLocalizer<LogoutModel> _localizer;
+        public LogoutModel(
+            SignInManager<AppUser> signInManager, 
+            ILogger<LogoutModel> logger,
+            IStringLocalizer<LogoutModel> localizer)
         {
+            _localizer = localizer;
             _signInManager = signInManager;
             _logger = logger;
         }
 
-        public void OnGet()
+        public static void OnGet()
         {
         }
 
-        public async Task<IActionResult> OnPost(string returnUrl = null)
+        public async Task<IActionResult> OnPost(Uri returnUrl = null)
         {
-            await _signInManager.SignOutAsync();
-            _logger.LogInformation("User logged out.");
+            await _signInManager.SignOutAsync().ConfigureAwait(false);
+            _logger.LogInformation(_localizer["User logged out."]);
             if (returnUrl != null)
             {
-                return LocalRedirect(returnUrl);
+                return LocalRedirect(returnUrl.AbsoluteUri);
             }
             else
             {

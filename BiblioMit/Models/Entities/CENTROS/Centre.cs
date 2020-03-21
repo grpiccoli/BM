@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -47,10 +48,10 @@ namespace BiblioMit.Models
         public int? FolioRNA { get; set; }
 
         [Display(Name = "Type")]
-        public CentreType Type { get; set; }
+        public CentreTypes Type { get; set; }
 
         [Display(Name = "Sitio web")]
-        public string Url { get; set; }
+        public Uri Url { get; set; }
 
         [Display(Name = "Address")]
         public string Address { get; set; }
@@ -62,26 +63,28 @@ namespace BiblioMit.Models
 
         //Childs
         [Display(Name = "Contacts")]
-        public virtual ICollection<Contact> Contacts { get; set; }
+        public virtual ICollection<Contact> Contacts { get; } = new List<Contact>();
 
         [Display(Name = "Coordinates")]
-        public virtual ICollection<Coordinate> Coordinates { get; set; }
+        public virtual ICollection<Coordinate> Coordinates { get; } = new List<Coordinate>();
 
         //[Display(Name = "Annual productions")]
         //public virtual ICollection<Production> Productions { get; set; }
 
-        public virtual ICollection<CentreProducto> Productos { get; set; }
+        public virtual ICollection<CentreProducto> Productos { get; } = new List<CentreProducto>();
 
         [Display(Name = "Samplings")]
-        public virtual ICollection<Sampling> Samplings { get; set; }
+        public virtual ICollection<Sampling> Samplings { get; } = new List<Sampling>();
 
-        public virtual ICollection<Planilla> Planillas { get; set; }
+        public virtual ICollection<Planilla> Planillas { get; } = new List<Planilla>();
 
-        public virtual ICollection<EnsayoFito> EnsayoFitos { get; set; }
+        public virtual ICollection<EnsayoFito> EnsayoFitos { get; } = new List<EnsayoFito>();
 
-        public virtual ICollection<Analysis> Analyses { get; set; }
+        public virtual ICollection<Analysis> Analyses { get; } = new List<Analysis>();
     }
-    public enum CentreType
+
+    [System.Flags]
+    public enum CentreTypes
     {
         [Display(Name = "Farm Concession")]
         Cultivo = 1,

@@ -2,9 +2,9 @@
 
 namespace BiblioMit.Data
 {
-    public class RoleData
+    public static class RoleData
     {
-        public static List<string> AppRoles { get; set; } = new List<string>
+        public static List<string> AppRoles { get; } = new List<string>
                                                             {
                                                                 "Administrador",
                                                                 "Editor",

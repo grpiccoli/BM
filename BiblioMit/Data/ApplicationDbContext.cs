@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using BiblioMit.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace BiblioMit.Data
 {
@@ -19,7 +19,7 @@ namespace BiblioMit.Data
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
 
-            builder.Entity<AppRole>()
+            builder?.Entity<AppRole>()
                 .HasMany(e => e.Users)
                 .WithOne()
                 .HasForeignKey(e => e.RoleId)
@@ -106,7 +106,7 @@ namespace BiblioMit.Data
         //public DbSet<Cosecha> Cosecha { get; set; }
         //public DbSet<MateriaPrima> MateriaPrima { get; set; }
         //public DbSet<Semilla> Semilla { get; set; }
-        public DbSet<Excel> Excel { get; set; }
+        public DbSet<ExcelFile> ExcelFile { get; set; }
         public DbSet<Columna> Columna { get; set; }
         //public DbSet<Entry> Entries { get; set; }
         public DbSet<ProdEntry> ProdEntry { get; set; }

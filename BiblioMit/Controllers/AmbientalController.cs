@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Dynamic;
+using Range = BiblioMit.Models.Range;
+using System.Threading.Tasks;
 
 namespace BiblioMit.Controllers
 {
@@ -83,7 +85,7 @@ namespace BiblioMit.Controllers
 
         [AllowAnonymous]
         // GET: Arrivals
-        public IActionResult PSMBList()
+        public async Task<IActionResult> PSMBList()
         {
             var areas = new List<object>
             {
@@ -113,35 +115,40 @@ namespace BiblioMit.Controllers
                 }
             };
 
-            areas.AddRange(
-                _context.Comuna
-                .Where(c => c.Polygons.Any() && c.Centres.Any(e => e.EnsayoFitos.Any()))
-                .GroupBy(c => c.Cuenca)
+            var areasList = await _context.Comuna
+            .Where(c => c.Polygons.Any() && c.Centres.Any(e => e.EnsayoFitos.Any()))
+            .GroupBy(c => c.Cuenca).ToListAsync().ConfigureAwait(false);
+
+            areas.AddRange(areasList
                 .Select(g => new
                 {
                     label = "Cuenca " + g.Key.Name,
                     id = g.Key.Id + 1,
                     choices = g.Select(i => new
                     {
-                        value = i.Id.ToString(),
+                        value = i.Id.ToString(CultureInfo.InvariantCulture),
                         label = $"{i.Name}"
                     })
                 }));
 
-            if (User.Identity.IsAuthenticated) areas.AddRange(
-                _context.PSMB
+            if (User.Identity.IsAuthenticated)
+            {
+                var psmbsList = await _context.PSMB
                 .Where(c => c.Coordinates.Any() && c.Centres.Any(e => e.EnsayoFitos.Any()))
-                .GroupBy(c => c.Comuna.Cuenca)
+                .GroupBy(c => c.Comuna.Cuenca).ToListAsync().ConfigureAwait(false);
+
+                areas.AddRange(psmbsList
                 .Select(g => new
                 {
-                    label = "Cuenca "+g.Key.Name,
+                    label = "Cuenca " + g.Key.Name,
                     id = g.Key.Id + 1,
                     choices = g.Select(i => new
                     {
-                        value = (i.Id * 100).ToString(),
+                        value = (i.Id * 100).ToString(CultureInfo.InvariantCulture),
                         label = $"{i.Id} {i.Name}, {i.Comuna.Name}"
                     })
                 }));
+            }
             return Json(areas);
         }
 
@@ -158,7 +165,7 @@ namespace BiblioMit.Controllers
             };
             fito.AddRange(_context.Groups.Select(p => new
             {
-                value = p.Id.ToString(),
+                value = p.Id.ToString(CultureInfo.InvariantCulture),
                 label = $"{p.Name} Total"
             }));
 
@@ -203,8 +210,8 @@ namespace BiblioMit.Controllers
             return Json(result);
         }
         public JsonResult TLData(int a, int psmb, int sp, int? t, int? l, int? rs, int? s, string start, string end) {
-            var i = Convert.ToDateTime(start);
-            var f = Convert.ToDateTime(end);
+            var i = Convert.ToDateTime(start, CultureInfo.InvariantCulture);
+            var f = Convert.ToDateTime(end, CultureInfo.InvariantCulture);
             IEnumerable<ExpandoObject> data = new List<ExpandoObject>() { };
             //a 1 semilla, 2 larva, 3 reproductor
             var psmbs = new Dictionary<int,int>{
@@ -243,7 +250,7 @@ namespace BiblioMit.Controllers
                         .Select(g =>
                         {
                             dynamic expando = new ExpandoObject();
-                            expando.date = g.Key.ToString("yyyy-MM-dd");
+                            expando.date = g.Key.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
                             var cs = g.Where(gg => gg.Id != 0).Select(m => m.Proportion);
                             ((IDictionary<string, object>)expando)
                             .Add($"{a}_{psmb}_{sp}_{t.Value}", cs.Any() ? (double?)Math.Round(cs.Average()) : null);
@@ -270,7 +277,7 @@ namespace BiblioMit.Controllers
                         .Select(g =>
                         {
                             dynamic expando = new ExpandoObject();
-                            expando.date = g.Key.ToString("yyyy-MM-dd");
+                            expando.date = g.Key.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
                             var cs = g.Where(gg => gg.Id != 0).Select(m => m.Count);
                             ((IDictionary<string, object>)expando)
                             .Add($"{a}_{psmb}_{sp}_{l.Value}", cs.Any() ? (double?)Math.Round(cs.Average()) : null);
@@ -294,7 +301,7 @@ namespace BiblioMit.Controllers
                         .Select(g =>
                         {
                             dynamic expando = new ExpandoObject();
-                            expando.date = g.Key.ToString("yyyy-MM-dd");
+                            expando.date = g.Key.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
                             var cs = g.Where(gg => gg.Id != 0).Select(m => s.Value == 70 ? m.FemaleIG : m.MaleIG);
                             ((IDictionary<string, object>)expando)
                             .Add($"{a}_{psmb}_{sp}_{s.Value}", cs.Any() ? (double?)Math.Round(cs.Average()) : null);
@@ -318,7 +325,7 @@ namespace BiblioMit.Controllers
                     .Select(g =>
                     {
                         dynamic expando = new ExpandoObject();
-                        expando.date = g.Key.ToString("yyyy-MM-dd");
+                        expando.date = g.Key.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
                         var cs = g.Where(gg => gg.Id != 0).Select(m => m.Capture);
                         ((IDictionary<string, object>)expando)
                         .Add($"{a}_{psmb}_{sp}", cs.Any() ? (double?)Math.Round(cs.Average()) : null);
@@ -342,7 +349,7 @@ namespace BiblioMit.Controllers
                         .Select(g =>
                         {
                             dynamic expando = new ExpandoObject();
-                            expando.date = g.Key.ToString("yyyy-MM-dd");
+                            expando.date = g.Key.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
                             var cs = g.Where(gg => gg.Id != 0).Select(m => m.Proportion);
                             ((IDictionary<string, object>)expando)
                             .Add($"{a}_{psmb}_{sp}_{rs.Value}", cs.Any() ? (double?)Math.Round(cs.Average()) : null);
@@ -366,7 +373,7 @@ namespace BiblioMit.Controllers
                         .Select(g =>
                         {
                             dynamic expando = new ExpandoObject();
-                            expando.date = g.Key.ToString("yyyy-MM-dd");
+                            expando.date = g.Key.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
                             var cs = g.Where(gg => gg.Id != 0).Select(m => s.Value == 70 ? m.FemaleProportion : m.MaleProportion);
                             ((IDictionary<string, object>)expando)
                             .Add($"{a}_{psmb}_{sp}_{s.Value}", cs.Any() ? (double?)Math.Round(cs.Average()) : null);
@@ -390,7 +397,7 @@ namespace BiblioMit.Controllers
                     .Select(g =>
                     {
                         dynamic expando = new ExpandoObject();
-                        expando.date = g.Key.ToString("yyyy-MM-dd");
+                        expando.date = g.Key.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
                         var cs = g.Where(gg => gg.Id != 0).Select(m => m.Proportion);
                         ((IDictionary<string, object>)expando)
                         .Add($"{a}_{psmb}_{sp}", cs.Any() ? (double?)Math.Round(cs.Average()) : null);
@@ -653,8 +660,8 @@ namespace BiblioMit.Controllers
         [AllowAnonymous]
         public IActionResult FitoData(int area, string var, string start, string end)
         {
-            var i = Convert.ToDateTime(start);
-            var f = Convert.ToDateTime(end);
+            var i = Convert.ToDateTime(start, CultureInfo.InvariantCulture);
+            var f = Convert.ToDateTime(end, CultureInfo.InvariantCulture);
             var date = Enumerable.Range(0, 1 + f.Subtract(i).Days)
                 .Select(offset => new EnsayoFito { FechaMuestreo = i.AddDays(offset) });
             IEnumerable<ExpandoObject> data = new List<ExpandoObject>() { };
@@ -691,7 +698,7 @@ namespace BiblioMit.Controllers
                     .Select(g =>
                     {
                         dynamic expando = new ExpandoObject();
-                        expando.date = g.Key.ToString("yyyy-MM-dd");
+                        expando.date = g.Key.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
                         var cs = g.Where(m => m.Fitoplanctons != null).SelectMany(m => m.Fitoplanctons.Select(p => p.C));
                         ((IDictionary<string, object>)expando)
                         .Add($"{var}_{area}", cs.Any() ? (double?)Math.Round(cs.Average(), 2) : null);
@@ -699,14 +706,14 @@ namespace BiblioMit.Controllers
                     });
                     break;
                 default:
-                    var id = Convert.ToInt16(var);
+                    var id = Convert.ToInt16(var, CultureInfo.InvariantCulture);
                     data = ensayos
                     .GroupBy(e => e.FechaMuestreo.Date)
                     .OrderBy(g => g.Key)
                     .Select(g =>
                     {
                         dynamic expando = new ExpandoObject();
-                        expando.date = g.Key.ToString("yyyy-MM-dd");
+                        expando.date = g.Key.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
                         var cs = g.Where(m => m.Fitoplanctons != null && m.Fitoplanctons.Any(p => p.GroupsId == id))
                         .SelectMany(m => m.Fitoplanctons.Where(p => p.GroupsId == id).Select(p => p.C));
                         ((IDictionary<string, object>)expando)
@@ -721,8 +728,8 @@ namespace BiblioMit.Controllers
         [AllowAnonymous]
         public IActionResult GraphData(int area, string var, string start, string end)
         {
-            var i = Convert.ToDateTime(start);
-            var f = Convert.ToDateTime(end);
+            var i = Convert.ToDateTime(start, CultureInfo.InvariantCulture);
+            var f = Convert.ToDateTime(end, CultureInfo.InvariantCulture);
             var date = Enumerable.Range(0, 1 + f.Subtract(i).Days)
                 .Select(offset => new EnsayoFito { FechaMuestreo = i.AddDays(offset) });
             var index = new Dictionary<string, string>
@@ -760,7 +767,7 @@ namespace BiblioMit.Controllers
             .Select(g =>
             {
                 dynamic expando = new ExpandoObject();
-                expando.date = g.Key.ToString("yyyy-MM-dd");
+                expando.date = g.Key.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
                 ((IDictionary<string, object>)expando)
                 .Add($"{var}_{area}", g.Any(m => m[index[var]] != null) ? (double?)Math.Round(g.Average(m => (double?)m[index[var]]).Value, 2) : null);
                 return (ExpandoObject)expando;
@@ -780,7 +787,7 @@ namespace BiblioMit.Controllers
 
             var centres = _context.PSMB
                 .Where(
-                a => a.Centres.Any(b => b.Type == (CentreType)1)
+                a => a.Centres.Any(b => b.Type == (CentreTypes)1)
                 && a.ComunaId != 0)
                 .Include(a => a.Coordinates)
                 .Where(
@@ -808,8 +815,8 @@ namespace BiblioMit.Controllers
         [AllowAnonymous]
         public IActionResult Graph()
         {
-            ViewData["start"] = _context.EnsayoFito.Min(e => e.FechaMuestreo).ToString("yyyy-MM-dd");
-            ViewData["end"] = _context.EnsayoFito.Max(e => e.FechaMuestreo).ToString("yyyy-MM-dd");
+            ViewData["start"] = _context.EnsayoFito.Min(e => e.FechaMuestreo).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+            ViewData["end"] = _context.EnsayoFito.Max(e => e.FechaMuestreo).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
 
             return View();
         }

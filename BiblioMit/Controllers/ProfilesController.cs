@@ -17,16 +17,13 @@ namespace BiblioMit.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly IAppUser _userService;
-        private readonly IUpload _uploadService;
 
         public ProfilesController(
             UserManager<AppUser> userManager,
-            IAppUser userService,
-            IUpload uploadService)
+            IAppUser userService)
         {
             _userManager = userManager;
             _userService = userService;
-            _uploadService = uploadService;
         }
 
         [Authorize(Roles = "Administrador", Policy = "Foros")]
@@ -71,7 +68,9 @@ namespace BiblioMit.Controllers
         }
 
         [HttpPost]
-        public IActionResult UploadProfileImage(IFormFile file)
+        public IActionResult UploadProfileImage(
+            //IFormFile file
+            )
         {
             var userId = _userManager.GetUserId(User);
 
@@ -80,9 +79,9 @@ namespace BiblioMit.Controllers
 
             //var client = new AmazonS3Client(accessKey, secretKey, Amazon.RegionEndpoint.SAEast1);
 
-            var filePath = Path.GetTempFileName();
+            //var filePath = Path.GetTempFileName();
 
-            var stream = new FileStream(filePath, FileMode.Create);
+            //var stream = new FileStream(filePath, FileMode.Create);
 
             //var request = new PutObjectRequest
             //{

@@ -12,6 +12,6 @@ namespace BiblioMit.Models.VM.NavVM
 
         public string Title { get; set; }
 
-        public Dictionary<string, string[][]> Sections { get; set; }
+        public Dictionary<string, string[][]> Sections { get; } = new Dictionary<string, string[][]>();
     }
 }

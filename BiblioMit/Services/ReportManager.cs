@@ -2,16 +2,12 @@
 using Google.Apis.AnalyticsReporting.v4.Data;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Services;
-using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BiblioMit.Services
 {
-    public class ReportManager
+    public static class ReportManager
     {
         /// <summary>
         /// Intializes and returns Analytics Reporting Service Instance using the parameters stored in key file
@@ -41,8 +37,10 @@ namespace BiblioMit.Services
         /// <returns></returns>
         public static GetReportsResponse GetReport(GetReportsRequest getReportsRequest)
         {
-            var analyticsService = GetAnalyticsReportingServiceInstance(ConfigurationManager.AppSettings["KeyFileName"]);
-            return analyticsService.Reports.BatchGet(getReportsRequest).Execute();
+            using (var analyticsService = GetAnalyticsReportingServiceInstance(ConfigurationManager.AppSettings["KeyFileName"]))
+            {
+                return analyticsService.Reports.BatchGet(getReportsRequest).Execute();
+            }
         }
     }
 }

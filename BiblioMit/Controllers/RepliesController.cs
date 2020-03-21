@@ -29,7 +29,7 @@ namespace BiblioMit.Controllers
         public async Task<IActionResult> Create(int id)
         {
             var post = _postService.GetById(id);
-            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var user = await _userManager.FindByNameAsync(User.Identity.Name).ConfigureAwait(false);
 
             var model = new PostReplyModel
             {
@@ -53,13 +53,14 @@ namespace BiblioMit.Controllers
         [HttpPost]
         public async Task<IActionResult> AddReply(PostReplyModel model)
         {
+            if (model == null) return NotFound();
             var userId = _userManager.GetUserId(User);
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByIdAsync(userId).ConfigureAwait(false);
 
             var reply = BuildReply(model, user) as PostReply;
 
-            await _postService.AddReply(reply);
-            await _userService.UpdateUserRating(userId, typeof(PostReply));
+            await _postService.AddReply(reply).ConfigureAwait(false);
+            await _userService.UpdateUserRating(userId, typeof(PostReply)).ConfigureAwait(false);
 
             return RedirectToAction("Index", "Post", new { id = model.PostId });
         }

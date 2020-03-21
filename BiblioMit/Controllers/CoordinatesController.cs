@@ -36,7 +36,7 @@ namespace BiblioMit.Controllers
                     coordinates = coordinates.OrderBy(c => c.Centre);
                     break;
             }
-            return View(await coordinates.AsNoTracking().ToListAsync());
+            return View(await coordinates.AsNoTracking().ToListAsync().ConfigureAwait(false));
         }
 
         // GET: Coordinates/Details/5
@@ -48,7 +48,7 @@ namespace BiblioMit.Controllers
             }
 
             var coordinate = await _context.Coordinate
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             if (coordinate == null)
             {
                 return NotFound();
@@ -87,10 +87,12 @@ namespace BiblioMit.Controllers
                 return RedirectToAction("AccessDenied", "Account");
             }
 
+            if (coordinate == null) return NotFound();
+
             if (ModelState.IsValid)
             {
                 _context.Add(coordinate);
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync().ConfigureAwait(false);
                 return RedirectToAction("Index");
             }
             ViewData["CentreId"] = new SelectList(_context.Centre, "Id", "Id", coordinate.CentreId);
@@ -113,7 +115,7 @@ namespace BiblioMit.Controllers
                 return NotFound();
             }
 
-            var coordinate = await _context.Coordinate.SingleOrDefaultAsync(m => m.Id == id);
+            var coordinate = await _context.Coordinate.SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             if (coordinate == null)
             {
                 return NotFound();
@@ -137,7 +139,7 @@ namespace BiblioMit.Controllers
                 return RedirectToAction("AccessDenied", "Account");
             }
 
-            if (id != coordinate.Id)
+            if (coordinate == null || id != coordinate.Id)
             {
                 return NotFound();
             }
@@ -147,7 +149,7 @@ namespace BiblioMit.Controllers
                 try
                 {
                     _context.Update(coordinate);
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -183,7 +185,7 @@ namespace BiblioMit.Controllers
             }
 
             var coordinate = await _context.Coordinate
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             if (coordinate == null)
             {
                 return NotFound();
@@ -205,9 +207,9 @@ namespace BiblioMit.Controllers
                 return RedirectToAction("AccessDenied", "Account");
             }
 
-            var coordinate = await _context.Coordinate.SingleOrDefaultAsync(m => m.Id == id);
+            var coordinate = await _context.Coordinate.SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             _context.Coordinate.Remove(coordinate);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
             return RedirectToAction("Index");
         }
 

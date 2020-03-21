@@ -23,7 +23,7 @@ namespace BiblioMit.Controllers
         public async Task<IActionResult> Index()
         {
             var ApplicationDbContext = _context.Soft.Include(s => s.Individual);
-            return View(await ApplicationDbContext.ToListAsync());
+            return View(await ApplicationDbContext.ToListAsync().ConfigureAwait(false));
         }
 
         // GET: Samplings/Details/5
@@ -36,7 +36,7 @@ namespace BiblioMit.Controllers
 
             var soft = await _context.Soft
                 .Include(s => s.Individual)
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             if (soft == null)
             {
                 return NotFound();
@@ -59,10 +59,11 @@ namespace BiblioMit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,IndividualId,SoftType,Tissue,Comment,Count,Degree")] Soft soft)
         {
+            if (soft == null) return NotFound();
             if (ModelState.IsValid)
             {
                 _context.Add(soft);
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync().ConfigureAwait(false);
                 return RedirectToAction("Index");
             }
             ViewData["IndividualId"] = new SelectList(_context.Individual, "Id", "Id", soft.IndividualId);
@@ -77,7 +78,7 @@ namespace BiblioMit.Controllers
                 return NotFound();
             }
 
-            var soft = await _context.Soft.SingleOrDefaultAsync(m => m.Id == id);
+            var soft = await _context.Soft.SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             if (soft == null)
             {
                 return NotFound();
@@ -93,7 +94,7 @@ namespace BiblioMit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,IndividualId,SoftType,Tissue,Comment,Count,Degree")] Soft soft)
         {
-            if (id != soft.Id)
+            if (soft == null || id != soft.Id)
             {
                 return NotFound();
             }
@@ -103,7 +104,7 @@ namespace BiblioMit.Controllers
                 try
                 {
                     _context.Update(soft);
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -132,7 +133,7 @@ namespace BiblioMit.Controllers
 
             var soft = await _context.Soft
                 .Include(s => s.Individual)
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             if (soft == null)
             {
                 return NotFound();
@@ -146,9 +147,9 @@ namespace BiblioMit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var soft = await _context.Soft.SingleOrDefaultAsync(m => m.Id == id);
+            var soft = await _context.Soft.SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             _context.Soft.Remove(soft);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
             return RedirectToAction("Index");
         }
 
@@ -156,7 +157,5 @@ namespace BiblioMit.Controllers
         {
             return _context.Soft.Any(e => e.Id == id);
         }
-
-
     }
 }

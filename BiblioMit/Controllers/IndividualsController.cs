@@ -15,23 +15,20 @@ namespace BiblioMit.Controllers
     public class IndividualsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly IStringLocalizer<HomeController> _localizer;
 
         public IndividualsController(
-            ApplicationDbContext context,
-            IStringLocalizer<HomeController> localizer)
+            ApplicationDbContext context)
         {
             _context = context;
-            _localizer = localizer;
         }
 
         // GET: Samplings
         public async Task<IActionResult> Index()
         {
             var feature = HttpContext.Features.Get<IRequestCultureFeature>();
-            ViewData["lang"] = feature.RequestCulture.Culture.TwoLetterISOLanguageName.ToLower();
+            ViewData["lang"] = feature.RequestCulture.Culture.TwoLetterISOLanguageName.ToUpperInvariant();
             var ApplicationDbContext = _context.Individual.Include(s => s.Sampling).ThenInclude(s => s.Centre);
-            return View(await ApplicationDbContext.ToListAsync());
+            return View(await ApplicationDbContext.ToListAsync().ConfigureAwait(false));
         }
 
         // GET: Samplings/Details/5
@@ -44,7 +41,7 @@ namespace BiblioMit.Controllers
 
             var individual = await _context.Individual
                 .Include(s => s.Sampling)
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             if (individual == null)
             {
                 return NotFound();
@@ -67,10 +64,11 @@ namespace BiblioMit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,SamplingId,Sex,Maturity")] Individual individual)
         {
+            if (individual == null) return NotFound();
             if (ModelState.IsValid)
             {
                 _context.Add(individual);
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync().ConfigureAwait(false);
                 return RedirectToAction("Index");
             }
             ViewData["SamplingId"] = new SelectList(_context.Sampling, "Id", "Id", individual.SamplingId);
@@ -85,7 +83,7 @@ namespace BiblioMit.Controllers
                 return NotFound();
             }
 
-            var individual = await _context.Individual.SingleOrDefaultAsync(m => m.Id == id);
+            var individual = await _context.Individual.SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             if (individual == null)
             {
                 return NotFound();
@@ -101,7 +99,7 @@ namespace BiblioMit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,SamplingId,Sex,Maturity")] Individual individual)
         {
-            if (id != individual.Id)
+            if (individual == null || id != individual.Id)
             {
                 return NotFound();
             }
@@ -111,7 +109,7 @@ namespace BiblioMit.Controllers
                 try
                 {
                     _context.Update(individual);
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -140,7 +138,7 @@ namespace BiblioMit.Controllers
 
             var individual = await _context.Individual
                 .Include(s => s.Sampling)
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             if (individual == null)
             {
                 return NotFound();
@@ -154,9 +152,9 @@ namespace BiblioMit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var individual = await _context.Individual.SingleOrDefaultAsync(m => m.Id == id);
+            var individual = await _context.Individual.SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             _context.Individual.Remove(individual);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
             return RedirectToAction("Index");
         }
 

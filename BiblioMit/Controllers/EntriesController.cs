@@ -128,10 +128,12 @@ namespace BiblioMit.Controllers
                     using (var stream = new StreamReader(qqfile.OpenReadStream(), Encoding.GetEncoding("Windows-1252"), true))
                     {
                         var html = stream.ReadToEnd();
-                        var temp = new TableToExcel();
-                        temp.Process(html, out ExcelPackage xlsx);
-                        //var package = new ExcelPackage(xlsx);
-                        error = await _import.Fito(xlsx, toskip).ConfigureAwait(false);
+                        using (var temp = new TableToExcel())
+                        {
+                            temp.Process(html, out ExcelPackage xlsx);
+                            //var package = new ExcelPackage(xlsx);
+                            error = await _import.Fito(xlsx, toskip).ConfigureAwait(false);
+                        }
                     }
                 }
                 catch (FileNotFoundException ex)

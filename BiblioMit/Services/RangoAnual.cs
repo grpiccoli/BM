@@ -16,7 +16,7 @@ namespace BiblioMit.Services
                 from int n in Enumerable.Range(0, 12 / i).ToArray()
                 select new
                 {
-                    Id = i == 1 ? (n + 1).ToString() : (n * i + 1) + "-" + (n * i + i),
+                    Id = i == 1 ? (n + 1).ToString(CultureInfo.InvariantCulture) : (n * i + 1) + "-" + (n * i + i),
                     Name = i == 1 ? meses[n] : meses[n * i] + "-" + meses[n * i + i - 1]
                 }, "Id", "Name");
         }

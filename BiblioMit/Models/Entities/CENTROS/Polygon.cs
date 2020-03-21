@@ -14,6 +14,6 @@ namespace BiblioMit.Models
         public Provincia Provincia { get; set; }
         public int? RegionId { get; set; }
         public Region Region { get; set; }
-        public virtual ICollection<Coordinate> Coordinates { get; set; }
+        public virtual ICollection<Coordinate> Coordinates { get; } = new List<Coordinate>();
     }
 }

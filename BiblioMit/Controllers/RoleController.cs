@@ -41,7 +41,7 @@ namespace BiblioMit.Controllers
             AppRoleViewModel model = new AppRoleViewModel();
             if (!string.IsNullOrEmpty(id))
             {
-                AppRole applicationRole = await _roleManager.FindByIdAsync(id);
+                AppRole applicationRole = await _roleManager.FindByIdAsync(id).ConfigureAwait(false);
                 if (applicationRole != null)
                 {
                     model.Id = applicationRole.Id;
@@ -55,10 +55,11 @@ namespace BiblioMit.Controllers
         [Authorize(Roles = "Editor,Administrator")]
         public async Task<IActionResult> AddEditAppRole(string id, AppRoleViewModel model)
         {
+            if (model == null) return NotFound();
             if (ModelState.IsValid)
             {
-                bool isExist = !String.IsNullOrEmpty(id);
-                AppRole applicationRole = isExist ? await _roleManager.FindByIdAsync(id) :
+                bool isExist = !string.IsNullOrEmpty(id);
+                AppRole applicationRole = isExist ? await _roleManager.FindByIdAsync(id).ConfigureAwait(false) :
                new AppRole
                {
                    CreatedDate = DateTime.UtcNow
@@ -66,8 +67,8 @@ namespace BiblioMit.Controllers
                 applicationRole.Name = model.RoleName;
                 applicationRole.Description = model.Description;
                 applicationRole.IPAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-                IdentityResult roleRuslt = isExist ? await _roleManager.UpdateAsync(applicationRole)
-                                                    : await _roleManager.CreateAsync(applicationRole);
+                IdentityResult roleRuslt = isExist ? await _roleManager.UpdateAsync(applicationRole).ConfigureAwait(false)
+                                                    : await _roleManager.CreateAsync(applicationRole).ConfigureAwait(false);
                 if (roleRuslt.Succeeded)
                 {
                     return RedirectToAction("Index");
@@ -83,7 +84,7 @@ namespace BiblioMit.Controllers
             string name = string.Empty;
             if (!String.IsNullOrEmpty(id))
             {
-                AppRole applicationRole = await _roleManager.FindByIdAsync(id);
+                AppRole applicationRole = await _roleManager.FindByIdAsync(id).ConfigureAwait(false);
                 if (applicationRole != null)
                 {
                     name = applicationRole.Name;
@@ -96,9 +97,9 @@ namespace BiblioMit.Controllers
         [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> DeleteAppRole(string id, IFormCollection form)
         {
-            if (!String.IsNullOrEmpty(id))
+            if (!string.IsNullOrEmpty(id) && form != null)
             {
-                AppRole applicationRole = await _roleManager.FindByIdAsync(id);
+                AppRole applicationRole = await _roleManager.FindByIdAsync(id).ConfigureAwait(false);
                 if (applicationRole != null)
                 {
                     IdentityResult roleRuslt = _roleManager.DeleteAsync(applicationRole).Result;

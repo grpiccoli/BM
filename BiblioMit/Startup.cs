@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using BiblioMit.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,11 +17,12 @@ using System.Globalization;
 using Microsoft.AspNetCore.Localization;
 using BiblioMit.Authorization;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using System.IO;
 using AspNetCore.IServiceCollection.AddIUrlHelper;
-//using PaulMiami.AspNetCore.Mvc.Recaptcha;
-using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
+using WebMarkupMin.AspNetCore2;
 
 namespace BiblioMit
 {
@@ -42,25 +42,34 @@ namespace BiblioMit
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString(_os + "Connection")));
+                    Configuration.GetConnectionString($"{_os}Connection"),
+                    sqlServerOptions => sqlServerOptions.CommandTimeout(10000)));
 
             services.AddHostedService<SeedBackground>();
             services.AddScoped<ISeed, SeedService>();
+            services.AddScoped<INodeService, NodeService>();
             services.AddScoped<IImport, Import>();
+
+            services.AddTransient<IEmailSender, EmailSender>();
+
+            services.AddScoped<IForum, ForumService>();
+            services.AddScoped<IPost, PostService>();
+            services.AddScoped<IAppUser, AppUserService>();
+
+            // Authorization handlers.
+            services.AddScoped<IAuthorizationHandler, ContactIsOwnerAuthorizationHandler>();
+
+            services.AddScoped<IAuthorizationHandler, ContactAdministratorsAuthorizationHandler>();
+
+            services.AddScoped<IAuthorizationHandler, ContactManagerAuthorizationHandler>();
+
+            services.AddScoped<IViewRenderService, ViewRenderService>();
 
             //services.AddRecaptcha(new RecaptchaOptions
             //{
             //    SiteKey = Configuration["6Ld3SGcUAAAAANRVkFCci9QZMf5fSbRzROLXEyZk"],
             //    SecretKey = Configuration["6Ld3SGcUAAAAAJdww1OzASUrSve3O8oZfLpfmGjy"]
             //});
-            services.AddIdentity<AppUser, AppRole>(config =>
-            {
-                config.SignIn.RequireConfirmedEmail = true;
-            })
-            .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddDefaultUI()
-            .AddDefaultTokenProviders()
-            .AddErrorDescriber<SpanishIdentityErrorDescriber>();
 
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -68,6 +77,25 @@ namespace BiblioMit
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+                options.Cookie.Name = "BiblioMit";
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                options.LoginPath = "/Identity/Account/Login";
+                // ReturnUrlParameter requires 
+                //using Microsoft.AspNetCore.Authentication.Cookies;
+                options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
+                options.SlidingExpiration = true;
+            });
+
+            services.AddIdentity<AppUser, AppRole>(options =>
+                options.SignIn.RequireConfirmedEmail = true)
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultUI()
+            .AddDefaultTokenProviders()
+            .AddErrorDescriber<SpanishIdentityErrorDescriber>();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(o =>
@@ -77,41 +105,25 @@ namespace BiblioMit
                     o.LogoutPath = new PathString("/logout");
                 });
 
-            services.AddTransient<IEmailSender, EmailSender>();
-
-            services.AddScoped<IForum, ForumService>();
-            services.AddScoped<IPost, PostService>();
-            services.AddScoped<IUpload, UploadService>();
-            services.AddScoped<IAppUser, AppUserService>();
-
             //services.AddScoped<ILibs, LibService>();
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 
             services.AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .SetCompatibilityVersion(CompatibilityVersion.Latest)
                 .AddViewLocalization()
-                .AddDataAnnotationsLocalization();
+                .AddDataAnnotationsLocalization()
+                .AddNewtonsoftJson();
 
-            //services.AddHsts(options =>
-            //{
-            //    options.Preload = true;
-            //    options.IncludeSubDomains = true;
-            //    options.MaxAge = TimeSpan.FromDays(60);
-            //    options.ExcludedHosts.Add("bibliomit.cl");
-            //    options.ExcludedHosts.Add("www.bibliomit.cl");
-            //});
-
-            //services.AddHttpsRedirection(options =>
-            //{
-            //    options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
-            //    options.HttpsPort = 443;
-            //});
-
-            services.AddNodeServices(o =>
+            services.AddHsts(options =>
             {
-                o.ProjectPath = "./";
+                options.Preload = true;
+                options.IncludeSubDomains = true;
+                options.MaxAge = TimeSpan.FromDays(60);
             });
+
+            services.AddHttpsRedirection(options =>
+                options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect);
 
             services.Configure<AuthMessageSenderOptions>(Configuration);
 
@@ -124,7 +136,7 @@ namespace BiblioMit
                         new CultureInfo("en")
                     };
 
-                    opts.DefaultRequestCulture = new RequestCulture("es");
+                    opts.DefaultRequestCulture = new RequestCulture(culture: "es", uiCulture: "es");
                     // Formatting numbers, dates, etc.
                     opts.SupportedCultures = supportedCultures;
                     // UI strings that we have localized.
@@ -141,19 +153,7 @@ namespace BiblioMit
 
             services.AddUrlHelper();
 
-            // Authorization handlers.
-            services.AddScoped<IAuthorizationHandler,
-                                  ContactIsOwnerAuthorizationHandler>();
-
-            services.AddScoped<IAuthorizationHandler,
-                                  ContactAdministratorsAuthorizationHandler>();
-
-            services.AddScoped<IAuthorizationHandler,
-                                  ContactManagerAuthorizationHandler>();
-
-            services.AddScoped<IViewRenderService, ViewRenderService>();
-
-            //services.AddCors();
+            services.AddCors();
 
             services.AddSignalR(options => {
                 options.EnableDetailedErrors = true;
@@ -168,37 +168,25 @@ namespace BiblioMit
             //    pipeline.MinifyHtmlFiles();
             //});
 
-            //services.AddWebMarkupMin(
-            //    options =>
-            //    {
-            //        options.AllowMinificationInDevelopmentEnvironment = false;
-            //        options.AllowCompressionInDevelopmentEnvironment = false;
-            //    })
-            //    .AddHtmlMinification(
-            //        options =>
-            //        {
-            //            options.MinificationSettings.RemoveRedundantAttributes = true;
-            //            options.MinificationSettings.RemoveHttpProtocolFromAttributes = true;
-            //            options.MinificationSettings.RemoveHttpsProtocolFromAttributes = true;
-            //        })
-            //    .AddHttpCompression();
+            services.AddWebMarkupMin()
+                .AddHtmlMinification(
+                    options =>
+                    {
+                        options.MinificationSettings.RemoveRedundantAttributes = true;
+                        options.MinificationSettings.RemoveHttpProtocolFromAttributes = true;
+                        options.MinificationSettings.RemoveHttpsProtocolFromAttributes = true;
+                    })
+                .AddXmlMinification()
+                .AddHttpCompression();
+
+            Libman.LoadJson();
+            Bundler.LoadJson();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseSitemapMiddleware();
-            //app.UseCors(o => o.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
-
-            app.UseDefaultFiles();
-
-            app.UseSignalR(routes =>
-            {
-                routes.MapHub<ChatHub>("/chatHub");
-                routes.MapHub<EntryHub>("/entryHub");
-                routes.MapHub<ProgressHub>("/progressHub");
-            });
-
+            if (app == null || env == null) return;
             if (env.IsDevelopment())
             {
                 //app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
@@ -212,8 +200,13 @@ namespace BiblioMit
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                //app.UseHsts();
+                app.UseHsts();
             }
+
+            app.UseSitemapMiddleware();
+            app.UseCors(o => o.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+
+            app.UseDefaultFiles();
 
             var path = new List<string> { "lib", "cldr-data", "main" };
 
@@ -228,9 +221,11 @@ namespace BiblioMit
                 SupportedUICultures = supportedCultures
             });
 
-            //app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
 
             //app.UseWebOptimizer();
+
+            app.UseDefaultFiles();
 
             app.UseStaticFiles();
 
@@ -245,15 +240,24 @@ namespace BiblioMit
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
 
-            app.UseAuthentication();
-            
-            //app.UseWebMarkupMin();
+            app.UseRouting();
 
-            app.UseMvc(routes =>
+            app.UseAuthentication();
+
+            app.UseAuthorization();
+
+            app.UseWebMarkupMin();
+
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
+                endpoints.MapRazorPages().RequireAuthorization();
+                endpoints.MapControllerRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}")
+                .RequireAuthorization();
+                endpoints.MapHub<ChatHub>("/chatHub");
+                endpoints.MapHub<EntryHub>("/entryHub");
+                endpoints.MapHub<ProgressHub>("/progressHub");
             });
         }
     }

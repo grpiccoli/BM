@@ -75,10 +75,9 @@ namespace BiblioMit.Services
 
     public static class BuilderExtensions
     {
-        public static IApplicationBuilder UseSitemapMiddleware(this IApplicationBuilder app,
-            string rootUrl = "https://www.bibliomit.cl")
+        public static IApplicationBuilder UseSitemapMiddleware(this IApplicationBuilder app)
         {
-            return app.UseMiddleware<SitemapMiddleware>(new[] { new Uri(rootUrl) });
+            return app.UseMiddleware<SitemapMiddleware>(new[] { new Uri("https://www.bibliomit.cl") });
         }
     }
 }

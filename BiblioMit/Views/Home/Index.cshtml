@@ -4,7 +4,7 @@
     ViewData["Title"] = "BiblioMit";
 }
 @* "signalr", "/chat.min"*@
-<partial name="_Libs" model='new List<string> { "/home.min" }' />
+<partial name="_LibsPg" model='new HashSet<string> { "home" }' />
 
 <div class="container-fluid">
     <div class="row">
@@ -39,7 +39,7 @@
                             @Localizer["Electronic Library and Platform for Digital Management of <i>Mytilus chilensis</i> Resource."]
                         </h3>
                         <p class="text-justify small">
-                            @Localizer["A Tool of"] <strong><a target="_blank" href="http://www.amichile.com/">AmiChile</a></strong>,
+                            @Localizer["A Tool of"] <strong><a target="_blank" href="https://www.amichile.com/">AmiChile</a></strong>,
                             @Localizer["financed by"] <strong><a target="_blank" href="https://www.corfo.cl/">CORFO</a></strong>.
                             @Localizer["as part of the regional strategic program of mussels"] <strong><a target="_blank" href="https://www.mejillondechile.cl/">PER</a></strong>
                             @Localizer["for"] <strong><a target="_blank" href="http://www.intemit.cl/">INTEMIT</a></strong>
@@ -51,7 +51,7 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12 col-sm-2 p-0">
-                        <a class="col-6 col-lg-12 p-0" href="http://www.amichile.com/" target="_blank">
+                        <a class="col-6 col-lg-12 p-0" href="https://www.amichile.com/" target="_blank">
                             <img src="~/images/ico/amichile.min.png" alt="AmiChile" class="logo-diapo" />
                         </a>
                         <a class="col-6 col-lg-12 p-0" href="http://www.intemit.cl/" target="_blank">
@@ -117,7 +117,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-sm-2 p-0 pt-2">
-                        <a class="col-6 col-md-12 p-0 m-0 logo-diapo" href="https://www.ust.cl/" target="_blank">
+                        <a class="col-6 col-md-12 p-0 m-0 logo-diapo" href="http://www.ust.cl/" target="_blank">
                             <img src="~/images/ico/ust_logo_firma.min.png" alt="Icono UST" class="logo-diapo" />
                         </a>
                         <a class="col-6 col-md-12 p-0 m-0 logo-diapo" href="http://www.capia.cl/" target="_blank">

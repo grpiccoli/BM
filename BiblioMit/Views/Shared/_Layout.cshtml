@@ -65,8 +65,8 @@
         <meta name="google-site-verification" content="g-pGvrm_POLRtvTDGYJTTkKtecLY11qo0zOeNVMY2Eg" />
     </environment>
     <partial name="_Favicons" />
-    <partial name="_Libs" model='new List<string> { "TOP", "jquery", "bootstrap", "@fortawesome/fontawesome-free", "/site.min", "/modal-action.min" }' />
-    @this.WriteBlocks("TOP_Styles")
+    <partial name="_Libs" model='(new HashSet<string> { "jquery", "bootstrap", "@fortawesome/fontawesome-free", "site", "modal-action" }, "TOP")' />
+    @this.WriteBlocks("TOPStyles")
     @this.WriteBlocks("Styles")
     @RenderSection("Styles", required: false)
 </head>
@@ -141,7 +141,7 @@
             </div>
         </div>
     </footer>
-    @this.WriteBlocks("TOP_Scripts")
+    @this.WriteBlocks("TOPScripts")
     @RenderSection("ScripTop", required: false)
     @this.WriteBlocks("Scripts")
     @RenderSection("Scripts", required: false)

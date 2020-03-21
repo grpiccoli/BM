@@ -13,7 +13,7 @@ namespace BiblioMit.Authorization
                                     OperationAuthorizationRequirement requirement, 
                                      Contact resource)
         {
-            if (context.User == null)
+            if (context?.User == null)
             {
                 return Task.FromResult(0);
             }

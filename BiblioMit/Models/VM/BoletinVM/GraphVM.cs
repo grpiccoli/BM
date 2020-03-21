@@ -5,11 +5,11 @@ namespace BiblioMit.Models.ViewModels
     public class GraphVM
     {
         public Dictionary<string,
-                        Dictionary<string, List<string>>> Graphs { get; set; }
+                        Dictionary<string, List<string>>> Graphs { get; } = new Dictionary<string, Dictionary<string, List<string>>>();
 
         public int Version { get; set; }
 
-        public string[] Reportes { get; set; }
+        public List<string> Reportes { get; } = new List<string>();
 
         public int Year { get; set; }
 

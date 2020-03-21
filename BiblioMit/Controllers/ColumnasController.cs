@@ -22,8 +22,13 @@ namespace BiblioMit.Controllers
             _context = context;
         }
 
+        public IActionResult Index(int? pg, int? rpp, string srt,
+            bool? asc, string[] val)
+        {
+            return RedirectToAction(nameof(Columnas), new { pg, rpp, srt, asc, val });
+        }
         // GET: Columnas
-        public async Task<IActionResult> Index(int? pg, int? rpp, string srt,
+        public async Task<IActionResult> Columnas(int? pg, int? rpp, string srt,
             bool? asc, string[] val)
         {
             if (pg == null) pg = 1;
@@ -49,12 +54,12 @@ namespace BiblioMit.Controllers
                 .Include(c => c.Excel);
 
             ViewData["ExcelId"] = new MultiSelectList(
-                from Excel e in _context.Excel
+                from ExcelFile e in _context.ExcelFile
                 select new
                 { e.Id, e.Name }, "Id", "Name", Filters.ContainsKey("ExcelId") ?
                 Filters["ExcelId"] : null);
 
-            return View(await applicationDbContext.ToListAsync());
+            return View(await applicationDbContext.ToListAsync().ConfigureAwait(false));
         }
 
         // GET: Columnas/Details/5
@@ -67,7 +72,7 @@ namespace BiblioMit.Controllers
 
             var columna = await _context.Columna
                 .Include(c => c.Excel)
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             if (columna == null)
             {
                 return NotFound();
@@ -79,7 +84,7 @@ namespace BiblioMit.Controllers
         // GET: Columnas/Create
         public IActionResult Create()
         {
-            ViewData["ExcelId"] = new SelectList(_context.Excel, "Id", "Id");
+            ViewData["ExcelId"] = new SelectList(_context.ExcelFile, "Id", "Id");
             return View();
         }
 
@@ -90,14 +95,18 @@ namespace BiblioMit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,ExcelId,Description")] Columna columna)
         {
-            if (ModelState.IsValid)
+            if(columna != null)
             {
-                _context.Add(columna);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    _context.Add(columna);
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
+                    return RedirectToAction(nameof(Index));
+                }
+                ViewData["ExcelId"] = new SelectList(_context.ExcelFile, "Id", "Id", columna.ExcelId);
+                return View(columna);
             }
-            ViewData["ExcelId"] = new SelectList(_context.Excel, "Id", "Id", columna.ExcelId);
-            return View(columna);
+            return NotFound();
         }
 
         // GET: Columnas/Edit/5
@@ -108,24 +117,24 @@ namespace BiblioMit.Controllers
                 return NotFound();
             }
 
-            var columna = await _context.Columna.SingleOrDefaultAsync(m => m.Id == id);
+            var columna = await _context.Columna.SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             if (columna == null)
             {
                 return NotFound();
             }
-            ViewData["ExcelId"] = new SelectList(_context.Excel, "Id", "Id", columna.ExcelId);
+            ViewData["ExcelId"] = new SelectList(_context.ExcelFile, "Id", "Id", columna.ExcelId);
             return View(columna);
         }
 
         [HttpPost]
         public async Task<JsonResult> Editar(string planilla, string atributo, string columna, string conversion)
         {
-            var model = await _context.Columna.SingleOrDefaultAsync(c => c.Excel.Name == planilla && c.Name == atributo);
-            model.Description = String.IsNullOrWhiteSpace(columna) ? null : columna;
-            model.Operation = String.IsNullOrWhiteSpace(conversion) ? null : conversion;
+            var model = await _context.Columna.SingleOrDefaultAsync(c => c.Excel.Name == planilla && c.Name == atributo).ConfigureAwait(false);
+            model.Description = string.IsNullOrWhiteSpace(columna) ? null : columna;
+            model.Operation = string.IsNullOrWhiteSpace(conversion) ? null : conversion;
 
             _context.Columna.Update(model);
-            var result = await _context.SaveChangesAsync();
+            var result = await _context.SaveChangesAsync().ConfigureAwait(false);
 
             return Json(result);
         }
@@ -137,7 +146,7 @@ namespace BiblioMit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,ExcelId,Description")] Columna columna)
         {
-            if (id != columna.Id)
+            if (columna == null || id != columna.Id)
             {
                 return NotFound();
             }
@@ -147,7 +156,7 @@ namespace BiblioMit.Controllers
                 try
                 {
                     _context.Update(columna);
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -162,7 +171,7 @@ namespace BiblioMit.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ExcelId"] = new SelectList(_context.Excel, "Id", "Id", columna.ExcelId);
+            ViewData["ExcelId"] = new SelectList(_context.ExcelFile, "Id", "Id", columna.ExcelId);
             return View(columna);
         }
 
@@ -176,7 +185,7 @@ namespace BiblioMit.Controllers
 
             var columna = await _context.Columna
                 .Include(c => c.Excel)
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             if (columna == null)
             {
                 return NotFound();
@@ -190,9 +199,9 @@ namespace BiblioMit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var columna = await _context.Columna.SingleOrDefaultAsync(m => m.Id == id);
+            var columna = await _context.Columna.SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             _context.Columna.Remove(columna);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
             return RedirectToAction(nameof(Index));
         }
 

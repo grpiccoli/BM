@@ -1,0 +1,88 @@
+﻿/** {
+    box-sizing: border-box;
+}
+
+body {
+    font: 14px/1 Arial, sans-serif;
+}*/
+.scrolltable {
+  overflow-x: scroll;
+  height: 100%;
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: column;
+  -webkit-flex-direction: column; }
+
+.scrolltable > .body {
+  /*noinspection CssInvalidPropertyValue*/
+  width: auto;
+  overflow-y: scroll;
+  flex: 1;
+  -webkit-flex: 1; }
+
+/* an outside constraint to react against */
+#constrainer {
+  width: 400px;
+  height: 180px; }
+
+#constrainer2 {
+  width: 100%;
+  overflow-x: scroll; }
+
+#constrainer2 tbody {
+  overflow-y: scroll;
+  display: block;
+  height: 50vh; }
+
+#constrainer2 thead {
+  display: table-row; }
+
+/* only styling below here */
+#constrainer, #constrainer2 {
+  border: 1px solid lightgrey; }
+
+#constrainer2 table {
+  border-collapse: collapse; }
+
+#constrainer2 th, #constrainer2 td {
+  border: 1px solid #bbb;
+  min-width: 260px;
+  padding: 8px 16px; }
+
+#constrainer2 th {
+  background-color: #f38b00;
+  border-width: 1px;
+  text-align: center; }
+
+#constrainer2 td {
+  border-width: 1px; }
+
+#constrainer2 tr:first-child td {
+  border-top-width: 0; }
+
+#constrainer2 tr:nth-child(even) {
+  background-color: #eee; }
+
+#constrainer2 table thead .sorting, #constrainer2 table thead .sorting_asc, #constrainer2 table thead .sorting_desc {
+  background-repeat: no-repeat;
+  background-position: right center;
+  cursor: pointer; }
+
+#constrainer2 table thead .sorting {
+  background-image: url("/images/sort/sort_both.png"); }
+
+#constrainer2 table thead .sorting_asc {
+  background-image: url("/images/sort/sort_asc.png"); }
+
+#constrainer2 table thead .sorting_desc {
+  background-image: url("/images/sort/sort_desc.png"); }
+
+.filter-sort {
+  line-height: 33px; }
+
+.bootstrap-select > .dropdown-toggle[title],
+.bootstrap-select > .dropdown-toggle[title]:hover,
+.bootstrap-select > .dropdown-toggle[title]:focus,
+.bootstrap-select > .dropdown-toggle[title]:active {
+  color: black;
+  font-weight: bold; }

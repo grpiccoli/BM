@@ -4,21 +4,21 @@ namespace BiblioMit.Authorization
 {
     public static class ContactOperations
     {
-        public static OperationAuthorizationRequirement Create =   
+        public readonly static OperationAuthorizationRequirement Create =   
           new OperationAuthorizationRequirement {Name=Constants.CreateOperationName};
-        public static OperationAuthorizationRequirement Read = 
+        public readonly static OperationAuthorizationRequirement Read = 
           new OperationAuthorizationRequirement {Name=Constants.ReadOperationName};  
-        public static OperationAuthorizationRequirement Update = 
+        public readonly static OperationAuthorizationRequirement Update = 
           new OperationAuthorizationRequirement {Name=Constants.UpdateOperationName}; 
-        public static OperationAuthorizationRequirement Delete = 
+        public readonly static OperationAuthorizationRequirement Delete = 
           new OperationAuthorizationRequirement {Name=Constants.DeleteOperationName};
-        public static OperationAuthorizationRequirement Approve = 
+        public readonly static OperationAuthorizationRequirement Approve = 
           new OperationAuthorizationRequirement {Name=Constants.ApproveOperationName};
-        public static OperationAuthorizationRequirement Reject = 
+        public readonly static OperationAuthorizationRequirement Reject = 
           new OperationAuthorizationRequirement {Name=Constants.RejectOperationName};
     }
 
-    public class Constants
+    public static class Constants
     {
         public static readonly string CreateOperationName = "Crear";
         public static readonly string ReadOperationName = "Leer";

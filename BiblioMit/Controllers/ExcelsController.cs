@@ -21,7 +21,7 @@ namespace BiblioMit.Controllers
         // GET: Excels
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Excel.Include(e => e.Columnas).ToListAsync());
+            return View(await _context.ExcelFile.Include(e => e.Columnas).ToListAsync().ConfigureAwait(false));
         }
 
         // GET: Excels/Details/5
@@ -32,8 +32,8 @@ namespace BiblioMit.Controllers
                 return NotFound();
             }
 
-            var excel = await _context.Excel
-                .SingleOrDefaultAsync(m => m.Id == id);
+            var excel = await _context.ExcelFile
+                .SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             if (excel == null)
             {
                 return NotFound();
@@ -53,12 +53,12 @@ namespace BiblioMit.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Excel excel)
+        public async Task<IActionResult> Create([Bind("Id,Name")] ExcelFile excel)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(excel);
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync().ConfigureAwait(false);
                 return RedirectToAction(nameof(Index));
             }
             return View(excel);
@@ -72,7 +72,7 @@ namespace BiblioMit.Controllers
                 return NotFound();
             }
 
-            var excel = await _context.Excel.SingleOrDefaultAsync(m => m.Id == id);
+            var excel = await _context.ExcelFile.SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             if (excel == null)
             {
                 return NotFound();
@@ -85,9 +85,9 @@ namespace BiblioMit.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Excel excel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] ExcelFile excel)
         {
-            if (id != excel.Id)
+            if (excel == null || id != excel.Id)
             {
                 return NotFound();
             }
@@ -97,7 +97,7 @@ namespace BiblioMit.Controllers
                 try
                 {
                     _context.Update(excel);
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -123,8 +123,8 @@ namespace BiblioMit.Controllers
                 return NotFound();
             }
 
-            var excel = await _context.Excel
-                .SingleOrDefaultAsync(m => m.Id == id);
+            var excel = await _context.ExcelFile
+                .SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             if (excel == null)
             {
                 return NotFound();
@@ -138,15 +138,15 @@ namespace BiblioMit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var excel = await _context.Excel.SingleOrDefaultAsync(m => m.Id == id);
-            _context.Excel.Remove(excel);
-            await _context.SaveChangesAsync();
+            var excel = await _context.ExcelFile.SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
+            _context.ExcelFile.Remove(excel);
+            await _context.SaveChangesAsync().ConfigureAwait(false);
             return RedirectToAction(nameof(Index));
         }
 
         private bool ExcelExists(int id)
         {
-            return _context.Excel.Any(e => e.Id == id);
+            return _context.ExcelFile.Any(e => e.Id == id);
         }
     }
 }

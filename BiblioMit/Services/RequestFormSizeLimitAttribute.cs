@@ -1,14 +1,12 @@
-﻿using Microsoft.AspNetCore.Http.Features;
+﻿using BiblioMit.Data;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BiblioMit.Services
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
-    public class RequestFormSizeLimitAttribute : Attribute, IAuthorizationFilter, IOrderedFilter
+    public sealed class RequestFormSizeLimitAttribute : Attribute, IAuthorizationFilter, IOrderedFilter
     {
         private readonly FormOptions _formOptions;
 
@@ -24,6 +22,7 @@ namespace BiblioMit.Services
 
         public void OnAuthorization(AuthorizationFilterContext context)
         {
+            if (context == null) throw new Exception();
             var features = context.HttpContext.Features;
             var formFeature = features.Get<IFormFeature>();
 

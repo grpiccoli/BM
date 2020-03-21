@@ -3,12 +3,30 @@
   "name": "bibliomit",
   "private": true,
   "description": "",
-  "repository": {
-    "private": true
-  },
-  "devDependencies": {},
   "dependencies": {
+    "@types/globalize": "^0.0.35",
+    "@types/jquery": "^3.3.31",
+    "@types/jquery-validation-unobtrusive": "^3.2.32",
+    "@types/jquery.validation": "^1.16.6",
+    "@types/node": "^12.12.25",
+    "@types/signalr": "2.2.36",
+    "@types/bootstrap": "4.3.1",
+    "@types/bootstrap-select": "1.11.1",
+    "@types/amcharts": "3.21.5",
+    "@types/bootstrap-datepicker": "0.0.14",
     "cldr-data-downloader": "^0.3.5",
     "google-translate-api": "^2.3.0"
-  }
+  },
+  "author": "EpicSolutions",
+  "license": "ISC",
+  "keywords": [],
+  "repository": {
+    "private": true,
+    "type": "git",
+    "url": "git+https://github.com/grpltda/bibliomit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/grpltda/bibliomit/issues"
+  },
+  "homepage": "https://github.com/grpltda/bibliomit#readme"
 }

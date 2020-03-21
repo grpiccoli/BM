@@ -1,4 +1,4 @@
-@model IEnumerable<BiblioMit.Models.Centre>
+﻿@model IEnumerable<BiblioMit.Models.Centre>
 @using BiblioMit.Authorization;
 @using BiblioMit.Models;
 @using BiblioMit.Models.VM.MapsVM;
@@ -9,7 +9,7 @@
 
 <h2>Centros de Investigación, Tecnología y desarrollo</h2>
 
-<partial name="_Libs" model='new List<string> { "bootstrap-select" }' />
+<partial name="_LibsPg" model='new HashSet<string> { "bootstrap-select" }' />
 
 <form asp-action="Research" method="get">
     <div class="input-group col-12 col-lg-9 mb-3">

@@ -19,6 +19,6 @@ namespace BiblioMit.Models
 
         public string Name { get; set; }
 
-        public virtual ICollection<Phytoplankton> Phytoplanktons { get; set; }
+        public virtual ICollection<Phytoplankton> Phytoplanktons { get; } = new List<Phytoplankton>();
     }
 }

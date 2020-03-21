@@ -26,8 +26,8 @@ namespace BiblioMit.Models
         [Display(Name = "Circunscripción Senatorial")]
         public int CS { get; set; }
 
-        public virtual ICollection<Centre> Centres { get; set; }
-        public virtual ICollection<PSMB> PSMBs { get; set; }
-        public virtual ICollection<Polygon> Polygons { get; set; }
+        public virtual ICollection<Centre> Centres { get; } = new List<Centre>();
+        public virtual ICollection<PSMB> PSMBs { get; } = new List<PSMB>();
+        public virtual ICollection<Polygon> Polygons { get; } = new List<Polygon>();
     }
 }

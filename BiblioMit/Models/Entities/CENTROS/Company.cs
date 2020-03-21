@@ -22,6 +22,6 @@ namespace BiblioMit.Models
         public string Address { get; set; }
 
         [Display(Name = "Farming Centres")]
-        public ICollection<Centre> Centres { get; set; }
+        public virtual ICollection<Centre> Centres { get; } = new List<Centre>();
     }
 }

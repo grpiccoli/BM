@@ -24,7 +24,7 @@ namespace BiblioMit.Models.ManageViewModels
 
         public string StatusMessage { get; set; }
 
-        public string ProfileImageUrl { get; set; }
+        public Uri ProfileImageUrl { get; set; }
 
         public DateTime MemberSince { get; set; }
 

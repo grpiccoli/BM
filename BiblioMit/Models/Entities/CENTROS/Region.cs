@@ -24,7 +24,7 @@ namespace BiblioMit.Models
         [Display(Name = "Nombre de Región")]
         public string Name { get; set; }
 
-        public ICollection<Provincia> Provincias { get; set; }
-        public ICollection<Polygon> Polygons { get; set; }
+        public virtual ICollection<Provincia> Provincias { get; } = new List<Provincia>();
+        public virtual ICollection<Polygon> Polygons { get; } = new List<Polygon>();
     }
 }

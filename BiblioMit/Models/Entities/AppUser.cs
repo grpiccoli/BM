@@ -15,7 +15,7 @@ namespace BiblioMit.Models
         public string Name { get; set; }
         public string Last { get; set; }
         public int Rating { get; set; }
-        public string ProfileImageUrl { get; set; }
+        public Uri ProfileImageUrl { get; set; }
         public DateTime MemberSince { get; set; }
         public bool IsActive { get; set; }
         /// <summary>
@@ -28,6 +28,6 @@ namespace BiblioMit.Models
         /// </summary>
         public virtual ICollection<IdentityUserClaim<string>> Claims { get; } = new List<IdentityUserClaim<string>>();
 
-        public virtual ICollection<PlataformaUser> Plataforma { get; set; }
+        public virtual ICollection<PlataformaUser> Plataforma { get; } = new List<PlataformaUser>();
     }
 }

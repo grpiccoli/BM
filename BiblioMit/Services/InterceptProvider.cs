@@ -26,13 +26,13 @@ namespace BiblioMit.Services
 
             //string numericString = obj.ToString();
 
-            if (obj is int && format.ToUpper().Equals("U"))
+            if (obj is int && format.Equals("U", StringComparison.InvariantCultureIgnoreCase))
             {
-                return string.Format("{0,9:N0}-{1}", obj, StringManipulations.GetDigit((int)obj));
+                return string.Format(CultureInfo.InvariantCulture, "{0,9:N0}-{1}", obj, StringManipulations.GetDigit((int)obj));
             }
 
             // If this is a byte and the "R" format string, format it with Roman numerals.
-            if (obj is int && format.ToUpper().Equals("R"))
+            if (obj is int && format.Equals("R", StringComparison.InvariantCultureIgnoreCase))
             {
                 return StringManipulations.ToRomanNumeral((int)obj);
             }
@@ -41,7 +41,7 @@ namespace BiblioMit.Services
             if (obj is IFormattable)
                 return ((IFormattable)obj).ToString(format, CultureInfo.CurrentCulture);
             else
-                return obj.ToString();
+                return obj?.ToString();
         }
     }
 }

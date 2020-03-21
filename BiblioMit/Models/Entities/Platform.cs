@@ -12,7 +12,7 @@ namespace BiblioMit.Models
 
         public Plataforma Plataforma { get; set; }
 
-        public virtual ICollection<PlataformaUser> PlataformaUser { get; set; }
+        public virtual ICollection<PlataformaUser> PlataformaUser { get; } = new List<PlataformaUser>();
     }
     public enum Plataforma
     {

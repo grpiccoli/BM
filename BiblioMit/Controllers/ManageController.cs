@@ -11,6 +11,8 @@ using Microsoft.Extensions.Logging;
 using BiblioMit.Models;
 using BiblioMit.Models.ManageViewModels;
 using BiblioMit.Services;
+using System.Globalization;
+using Microsoft.Extensions.Localization;
 
 namespace BiblioMit.Controllers
 {
@@ -23,6 +25,7 @@ namespace BiblioMit.Controllers
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
         private readonly UrlEncoder _urlEncoder;
+        private readonly IStringLocalizer<ManageController> _localizer;
 
         private const string AuthenicatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
 
@@ -31,13 +34,16 @@ namespace BiblioMit.Controllers
           SignInManager<AppUser> signInManager,
           IEmailSender emailSender,
           ILogger<ManageController> logger,
-          UrlEncoder urlEncoder)
+          UrlEncoder urlEncoder,
+          IStringLocalizer<ManageController> localizer
+            )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
             _urlEncoder = urlEncoder;
+            _localizer = localizer;
         }
 
         [TempData]
@@ -46,7 +52,7 @@ namespace BiblioMit.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(false);
             if (user == null)
             {
                 throw new ApplicationException($"No se puede cargar el usuario con Id '{_userManager.GetUserId(User)}'.");
@@ -71,12 +77,13 @@ namespace BiblioMit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(IndexViewModel model)
         {
+            if (model == null) return NotFound();
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(false);
             if (user == null)
             {
                 throw new ApplicationException($"Unable to load user with Id '{_userManager.GetUserId(User)}'.");
@@ -85,7 +92,7 @@ namespace BiblioMit.Controllers
             var email = user.Email;
             if (model.Email != email)
             {
-                var setEmailResult = await _userManager.SetEmailAsync(user, model.Email);
+                var setEmailResult = await _userManager.SetEmailAsync(user, model.Email).ConfigureAwait(false);
                 if (!setEmailResult.Succeeded)
                 {
                     throw new ApplicationException($"Unexpected error occurred setting email for user with Id '{user.Id}'.");
@@ -95,7 +102,7 @@ namespace BiblioMit.Controllers
             var phoneNumber = user.PhoneNumber;
             if (model.PhoneNumber != phoneNumber)
             {
-                var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, model.PhoneNumber);
+                var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, model.PhoneNumber).ConfigureAwait(false);
                 if (!setPhoneResult.Succeeded)
                 {
                     throw new ApplicationException($"Unexpected error occurred setting phone number for user with Id '{user.Id}'.");
@@ -115,16 +122,16 @@ namespace BiblioMit.Controllers
                 return View(model);
             }
 
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(false);
             if (user == null)
             {
                 throw new ApplicationException($"Unable to load user with Id '{_userManager.GetUserId(User)}'.");
             }
 
-            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user).ConfigureAwait(false);
             var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
             var email = user.Email;
-            await _emailSender.SendEmailConfirmationAsync(email, callbackUrl);
+            await _emailSender.SendEmailConfirmationAsync(email, callbackUrl).ConfigureAwait(false);
 
             StatusMessage = "Verification email sent. Please check your email.";
             return RedirectToAction(nameof(Index));
@@ -133,13 +140,13 @@ namespace BiblioMit.Controllers
         [HttpGet]
         public async Task<IActionResult> ChangePassword()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(false);
             if (user == null)
             {
                 throw new ApplicationException($"Unable to load user with Id '{_userManager.GetUserId(User)}'.");
             }
 
-            var hasPassword = await _userManager.HasPasswordAsync(user);
+            var hasPassword = await _userManager.HasPasswordAsync(user).ConfigureAwait(false);
             if (!hasPassword)
             {
                 return RedirectToAction(nameof(SetPassword));
@@ -153,26 +160,27 @@ namespace BiblioMit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
         {
+            if (model == null) return NotFound();
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(false);
             if (user == null)
             {
                 throw new ApplicationException($"Unable to load user with Id '{_userManager.GetUserId(User)}'.");
             }
 
-            var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+            var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword).ConfigureAwait(false);
             if (!changePasswordResult.Succeeded)
             {
                 AddErrors(changePasswordResult);
                 return View(model);
             }
 
-            await _signInManager.SignInAsync(user, isPersistent: false);
-            _logger.LogInformation("User changed their password successfully.");
+            await _signInManager.SignInAsync(user, isPersistent: false).ConfigureAwait(false);
+            _logger.LogInformation(_localizer["User changed their password successfully."]);
             StatusMessage = "Your password has been changed.";
 
             return RedirectToAction(nameof(ChangePassword));
@@ -181,13 +189,13 @@ namespace BiblioMit.Controllers
         [HttpGet]
         public async Task<IActionResult> SetPassword()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(false);
             if (user == null)
             {
                 throw new ApplicationException($"Unable to load user with Id '{_userManager.GetUserId(User)}'.");
             }
 
-            var hasPassword = await _userManager.HasPasswordAsync(user);
+            var hasPassword = await _userManager.HasPasswordAsync(user).ConfigureAwait(false);
 
             if (hasPassword)
             {
@@ -202,25 +210,26 @@ namespace BiblioMit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SetPassword(SetPasswordViewModel model)
         {
+            if (model == null) return NotFound();
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(false);
             if (user == null)
             {
                 throw new ApplicationException($"Unable to load user with Id '{_userManager.GetUserId(User)}'.");
             }
 
-            var addPasswordResult = await _userManager.AddPasswordAsync(user, model.NewPassword);
+            var addPasswordResult = await _userManager.AddPasswordAsync(user, model.NewPassword).ConfigureAwait(false);
             if (!addPasswordResult.Succeeded)
             {
                 AddErrors(addPasswordResult);
                 return View(model);
             }
 
-            await _signInManager.SignInAsync(user, isPersistent: false);
+            await _signInManager.SignInAsync(user, isPersistent: false).ConfigureAwait(false);
             StatusMessage = "Your password has been set.";
 
             return RedirectToAction(nameof(SetPassword));
@@ -229,17 +238,18 @@ namespace BiblioMit.Controllers
         [HttpGet]
         public async Task<IActionResult> ExternalLogins()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(false);
             if (user == null)
             {
                 throw new ApplicationException($"Unable to load user with Id '{_userManager.GetUserId(User)}'.");
             }
 
-            var model = new ExternalLoginsViewModel { CurrentLogins = await _userManager.GetLoginsAsync(user) };
-            model.OtherLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync())
+            var model = new ExternalLoginsViewModel();
+            model.CurrentLogins.AddRange(await _userManager.GetLoginsAsync(user).ConfigureAwait(false));
+            model.OtherLogins.AddRange((await _signInManager.GetExternalAuthenticationSchemesAsync().ConfigureAwait(false))
                 .Where(auth => model.CurrentLogins.All(ul => auth.Name != ul.LoginProvider))
-                .ToList();
-            model.ShowRemoveButton = await _userManager.HasPasswordAsync(user) || model.CurrentLogins.Count > 1;
+                .ToList());
+            model.ShowRemoveButton = await _userManager.HasPasswordAsync(user).ConfigureAwait(false) || model.CurrentLogins.Count > 1;
             model.StatusMessage = StatusMessage;
 
             return View(model);
@@ -250,7 +260,7 @@ namespace BiblioMit.Controllers
         public async Task<IActionResult> LinkLogin(string provider)
         {
             // Clear the existing external cookie to ensure a clean login process
-            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme).ConfigureAwait(false);
 
             // Request a redirect to the external login provider to link a login for the current user
             var redirectUrl = Url.Action(nameof(LinkLoginCallback));
@@ -261,26 +271,26 @@ namespace BiblioMit.Controllers
         [HttpGet]
         public async Task<IActionResult> LinkLoginCallback()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(false);
             if (user == null)
             {
                 throw new ApplicationException($"Unable to load user with Id '{_userManager.GetUserId(User)}'.");
             }
 
-            var info = await _signInManager.GetExternalLoginInfoAsync(user.Id);
+            var info = await _signInManager.GetExternalLoginInfoAsync(user.Id).ConfigureAwait(false);
             if (info == null)
             {
                 throw new ApplicationException($"Unexpected error occurred loading external login info for user with Id '{user.Id}'.");
             }
 
-            var result = await _userManager.AddLoginAsync(user, info);
+            var result = await _userManager.AddLoginAsync(user, info).ConfigureAwait(false);
             if (!result.Succeeded)
             {
                 throw new ApplicationException($"Unexpected error occurred adding external login for user with Id '{user.Id}'.");
             }
 
             // Clear the existing external cookie to ensure a clean login process
-            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme).ConfigureAwait(false);
 
             StatusMessage = "The external login was added.";
             return RedirectToAction(nameof(ExternalLogins));
@@ -290,19 +300,20 @@ namespace BiblioMit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveLogin(RemoveLoginViewModel model)
         {
-            var user = await _userManager.GetUserAsync(User);
+            if (model == null) return NotFound();
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(false);
             if (user == null)
             {
                 throw new ApplicationException($"Unable to load user with Id '{_userManager.GetUserId(User)}'.");
             }
 
-            var result = await _userManager.RemoveLoginAsync(user, model.LoginProvider, model.ProviderKey);
+            var result = await _userManager.RemoveLoginAsync(user, model.LoginProvider, model.ProviderKey).ConfigureAwait(false);
             if (!result.Succeeded)
             {
                 throw new ApplicationException($"Unexpected error occurred removing external login for user with Id '{user.Id}'.");
             }
 
-            await _signInManager.SignInAsync(user, isPersistent: false);
+            await _signInManager.SignInAsync(user, isPersistent: false).ConfigureAwait(false);
             StatusMessage = "The external login was removed.";
             return RedirectToAction(nameof(ExternalLogins));
         }
@@ -310,7 +321,7 @@ namespace BiblioMit.Controllers
         [HttpGet]
         public async Task<IActionResult> TwoFactorAuthentication()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(false);
             if (user == null)
             {
                 throw new ApplicationException($"Unable to load user with Id '{_userManager.GetUserId(User)}'.");
@@ -318,9 +329,9 @@ namespace BiblioMit.Controllers
 
             var model = new TwoFactorAuthenticationViewModel
             {
-                HasAuthenticator = await _userManager.GetAuthenticatorKeyAsync(user) != null,
+                HasAuthenticator = await _userManager.GetAuthenticatorKeyAsync(user).ConfigureAwait(false) != null,
                 Is2faEnabled = user.TwoFactorEnabled,
-                RecoveryCodesLeft = await _userManager.CountRecoveryCodesAsync(user),
+                RecoveryCodesLeft = await _userManager.CountRecoveryCodesAsync(user).ConfigureAwait(false),
             };
 
             return View(model);
@@ -329,7 +340,7 @@ namespace BiblioMit.Controllers
         [HttpGet]
         public async Task<IActionResult> Disable2faWarning()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(false);
             if (user == null)
             {
                 throw new ApplicationException($"Unable to load user with Id '{_userManager.GetUserId(User)}'.");
@@ -347,36 +358,36 @@ namespace BiblioMit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Disable2fa()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(false);
             if (user == null)
             {
                 throw new ApplicationException($"Unable to load user with Id '{_userManager.GetUserId(User)}'.");
             }
 
-            var disable2faResult = await _userManager.SetTwoFactorEnabledAsync(user, false);
+            var disable2faResult = await _userManager.SetTwoFactorEnabledAsync(user, false).ConfigureAwait(false);
             if (!disable2faResult.Succeeded)
             {
                 throw new ApplicationException($"Unexpected error occured disabling 2FA for user with Id '{user.Id}'.");
             }
 
-            _logger.LogInformation("User with Id {UserId} has disabled 2fa.", user.Id);
+            _logger.LogInformation(_localizer["User with Id {UserId} has disabled 2fa."], user.Id);
             return RedirectToAction(nameof(TwoFactorAuthentication));
         }
 
         [HttpGet]
         public async Task<IActionResult> EnableAuthenticator()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(false);
             if (user == null)
             {
                 throw new ApplicationException($"Unable to load user with Id '{_userManager.GetUserId(User)}'.");
             }
 
-            var unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
+            var unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user).ConfigureAwait(false);
             if (string.IsNullOrEmpty(unformattedKey))
             {
-                await _userManager.ResetAuthenticatorKeyAsync(user);
-                unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
+                await _userManager.ResetAuthenticatorKeyAsync(user).ConfigureAwait(false);
+                unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user).ConfigureAwait(false);
             }
 
             var model = new EnableAuthenticatorViewModel
@@ -392,22 +403,25 @@ namespace BiblioMit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EnableAuthenticator(EnableAuthenticatorViewModel model)
         {
+            if (model == null) return NotFound();
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(false);
             if (user == null)
             {
                 throw new ApplicationException($"Unable to load user with Id '{_userManager.GetUserId(User)}'.");
             }
 
             // Strip spaces and hypens
-            var verificationCode = model.Code.Replace(" ", string.Empty).Replace("-", string.Empty);
+            var verificationCode = model.Code
+                .Replace(" ", string.Empty, StringComparison.InvariantCultureIgnoreCase)
+                .Replace("-", string.Empty, StringComparison.InvariantCultureIgnoreCase);
 
             var is2faTokenValid = await _userManager.VerifyTwoFactorTokenAsync(
-                user, _userManager.Options.Tokens.AuthenticatorTokenProvider, verificationCode);
+                user, _userManager.Options.Tokens.AuthenticatorTokenProvider, verificationCode).ConfigureAwait(false);
 
             if (!is2faTokenValid)
             {
@@ -415,8 +429,8 @@ namespace BiblioMit.Controllers
                 return View(model);
             }
 
-            await _userManager.SetTwoFactorEnabledAsync(user, true);
-            _logger.LogInformation("User with Id {UserId} has enabled 2FA with an authenticator app.", user.Id);
+            await _userManager.SetTwoFactorEnabledAsync(user, true).ConfigureAwait(false);
+            _logger.LogInformation(_localizer["User with Id {UserId} has enabled 2FA with an authenticator app."], user.Id);
             return RedirectToAction(nameof(GenerateRecoveryCodes));
         }
 
@@ -430,15 +444,15 @@ namespace BiblioMit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetAuthenticator()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(false);
             if (user == null)
             {
                 throw new ApplicationException($"Unable to load user with Id '{_userManager.GetUserId(User)}'.");
             }
 
-            await _userManager.SetTwoFactorEnabledAsync(user, false);
-            await _userManager.ResetAuthenticatorKeyAsync(user);
-            _logger.LogInformation("User with id '{UserId}' has reset their authentication app key.", user.Id);
+            await _userManager.SetTwoFactorEnabledAsync(user, false).ConfigureAwait(false);
+            await _userManager.ResetAuthenticatorKeyAsync(user).ConfigureAwait(false);
+            _logger.LogInformation(_localizer["User with id '{UserId}' has reset their authentication app key."], user.Id);
 
             return RedirectToAction(nameof(EnableAuthenticator));
         }
@@ -446,7 +460,7 @@ namespace BiblioMit.Controllers
         [HttpGet]
         public async Task<IActionResult> GenerateRecoveryCodes()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(false);
             if (user == null)
             {
                 throw new ApplicationException($"Unable to load user with Id '{_userManager.GetUserId(User)}'.");
@@ -457,10 +471,11 @@ namespace BiblioMit.Controllers
                 throw new ApplicationException($"Cannot generate recovery codes for user with Id '{user.Id}' as they do not have 2FA enabled.");
             }
 
-            var recoveryCodes = await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10);
-            var model = new GenerateRecoveryCodesViewModel { RecoveryCodes = recoveryCodes.ToArray() };
+            var recoveryCodes = await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10).ConfigureAwait(false);
+            var model = new GenerateRecoveryCodesViewModel();
+            model.RecoveryCodes.AddRange(recoveryCodes);
 
-            _logger.LogInformation("User with Id {UserId} has generated new 2FA recovery codes.", user.Id);
+            _logger.LogInformation(_localizer["User with Id {UserId} has generated new 2FA recovery codes."], user.Id);
 
             return View(model);
         }
@@ -475,7 +490,7 @@ namespace BiblioMit.Controllers
             }
         }
 
-        private string FormatKey(string unformattedKey)
+        private static string FormatKey(string unformattedKey)
         {
             var result = new StringBuilder();
             int currentPosition = 0;
@@ -489,16 +504,17 @@ namespace BiblioMit.Controllers
                 result.Append(unformattedKey.Substring(currentPosition));
             }
 
-            return result.ToString().ToLowerInvariant();
+            return result.ToString().ToUpperInvariant();
         }
 
-        private string GenerateQrCodeUri(string email, string unformattedKey)
+        private Uri GenerateQrCodeUri(string email, string unformattedKey)
         {
-            return string.Format(
+            return new Uri(string.Format(
+                CultureInfo.InvariantCulture,
                 AuthenicatorUriFormat,
                 _urlEncoder.Encode("BiblioMit"),
                 _urlEncoder.Encode(email),
-                unformattedKey);
+                unformattedKey));
         }
 
         #endregion

@@ -76,10 +76,10 @@ namespace BiblioMit.Models
 
         //CHILD
         [Display(Name = "Valves")]
-        public ICollection<Valve> Valves { get; set; }
+        public virtual ICollection<Valve> Valves { get; } = new List<Valve>();
 
         [Display(Name = "Soft Tissue")]
-        public ICollection<Soft> Softs { get; set; }
+        public virtual ICollection<Soft> Softs { get; } = new List<Soft>();
     }
     public enum ADG
     {

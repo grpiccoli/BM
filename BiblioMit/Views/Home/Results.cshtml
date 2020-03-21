@@ -1,6 +1,6 @@
 ﻿@model BiblioMit.Models.HomeViewModels.SearchResultModel
 
-<partial name="_Libs" model='new List<string> { "/background.min" }' />
+<partial name="_LibsPg" model='new HashSet<string> { "background" }' />
 
 @{
     ViewData["Title"] = Model.SearchQuery;
@@ -41,7 +41,7 @@
                                     <div class="forumSubTitle">
                                         <div>
                                             Publicado por:
-                                            <span class="postAuthor">
+                                            <div class="postAuthor">
                                                 <a asp-controller="Profile" asp-action="Detail" asp-route-id="@post.AuthorId">
                                                     @post.AuthorName
                                                 </a>
@@ -52,7 +52,7 @@
                                                     <span class="star @(post.AuthorRating > 8 ? "on" : post.AuthorRating == 7 ? "half": "")"></span>
                                                     <span class="star @(post.AuthorRating > 10 ? "on" : post.AuthorRating == 9 ? "half": "")"></span>
                                                 </div>
-                                            </span>
+                                            </div>
                                             En:
                                             <span class="postForum">
                                                 <a asp-controller="Profile" asp-action="Detail" asp-route-id="@post.AuthorId">

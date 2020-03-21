@@ -1,0 +1,48 @@
+﻿@this.Block(@<script src="https://www.amcharts.com/lib/3/amcharts.js"></script>, "Scripts")
+@this.Block(@<script src="https://www.amcharts.com/lib/3/pie.js"></script>, "Scripts")
+@this.Block(@<script src="https://www.amcharts.com/lib/3/gauge.js"></script>, "Scripts")
+@this.Block(@<script src="https://www.amcharts.com/lib/3/plugins/export/export.js"></script>, "Scripts")
+@this.Block(@<script>
+    var chart;
+
+    var chartData = @Html.Raw(ViewData["chartData"]);
+
+    var titles = [
+        "@ViewData["all"] Total",
+        "@ViewData["artscnt"] Artículos",
+        "@ViewData["tesiscnt"] Tesis",
+        "@ViewData["projcnt"] Proyectos",
+        "@ViewData["patscnt"] Patentes"
+    ];
+
+    AmCharts.ready(function () {
+        chart = new AmCharts.AmPieChart();
+        chart.dataProvider = chartData[0];
+        chart.valueField = "resultados";
+        chart.titleField = "repositorio";
+        chart.colorField = "color";
+        chart.labelsEnabled = false;
+        chart.balloonText = "[[title]]<br><span style='font-size:10px'><b>[[value]]</b> ([[percents]]%)</span>";
+        chart.addTitle(titles[0]);
+        chart.autoMargins = false;
+        chart.marginTop = 0;
+        chart.marginBottom = 0;
+        chart.marginLeft = 0;
+        chart.marginRight = 0;
+        chart.pullOutRadius = 0;
+
+        legend = new AmCharts.AmLegend();
+        legend.divId = "legenddiv";
+        legend.markerType = "circle";
+        legend.position = "right";
+        chart.legend = legend;
+
+        chart.write("chartdiv");
+    });
+
+    function selectData(i) {
+        chart.dataProvider = chartData[i];
+        chart.validateData();
+        $("#chartdiv tspan").html(titles[i]);
+    }
+                    </script>, "Scripts")

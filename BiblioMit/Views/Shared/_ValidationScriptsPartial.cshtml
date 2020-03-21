@@ -1,8 +1,6 @@
-<partial name="_Libs" model='new List<string> { "jquery-validation", "jquery-validation-unobtrusive", 
-         "cldrjs", "globalize", "jquery-validation-unobtrusive-extensions" }' />
-@using System.IO
-@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment HostingEnvironment
-@{
+<partial name="_LibsPg" model='new HashSet<string> { "jquery-validation", "jquery-validation-unobtrusive", 
+         "cldrjs", "globalize", "jquery-validation-unobtrusive-extensions", "validation" }' />
+@*@{
     string GetDefaultLocale()
     {
         const string localePattern = "lib\\cldr-data\\main\\{0}";
@@ -39,6 +37,6 @@
             Globalize.locale(culture);
         });
     })(jQuery);
-</script>, "Scripts")
+</script>, "Scripts")*@
 
 @*<recaptcha-script />*@

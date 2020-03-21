@@ -13,7 +13,7 @@ namespace BiblioMit.Models
         public string Email { get; set; }
 
         [Display(Name = "Permisos de usuario")]
-        public List<SelectListItem> UserClaims { get; set; }
+        public List<SelectListItem> UserClaims { get; } = new List<SelectListItem>();
 
         [Display(Name = "Rol de usuario")]
         public string RoleName { get; set; }
@@ -23,6 +23,6 @@ namespace BiblioMit.Models
 
         public int UserRating { get; set; }
 
-        public string ProfileImageUrl { get; set; }
+        public Uri ProfileImageUrl { get; set; }
     }
 }

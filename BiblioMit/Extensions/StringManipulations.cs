@@ -12,6 +12,11 @@ namespace BiblioMit.Models
 {
     public static class StringManipulations
     {
+        private readonly static List<string> romanNumerals = 
+            new List<string> { "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I" };
+        private readonly static List<int> numerals = 
+            new List<int> { 1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1 };
+
         public static string CheckSRI(string local, Uri url)
         {
             var path = Directory.GetCurrentDirectory();
@@ -24,11 +29,11 @@ namespace BiblioMit.Models
                 Stream urlStream = req.GetResponse().GetResponseStream();
                 var urlHash = sha.ComputeHash(urlStream);
                 if (urlHash == localHash) return Convert.ToBase64String(localHash);
-                Console.WriteLine("Error: {0}", $"local and source hash differ in file {local}");
+                //Console.WriteLine("Error: {0}", $"local and source hash differ in file {local}");
                 return null;
             }
         }
-        public static string HtmlToPlainText(string html)
+        public static string HtmlToPlainText(this string html)
         {
             const string tagWhiteSpace = @"(>|$)(\W|\n|\r)+<";//matches one or more (white space or line breaks) between '>' and '<'
             const string stripFormatting = @"<[^>]*(>|$)";//match any character between '<' and '>', even when end tag is missing
@@ -36,7 +41,6 @@ namespace BiblioMit.Models
             var lineBreakRegex = new Regex(lineBreak, RegexOptions.Multiline);
             var stripFormattingRegex = new Regex(stripFormatting, RegexOptions.Multiline);
             var tagWhiteSpaceRegex = new Regex(tagWhiteSpace, RegexOptions.Multiline);
-
             var text = html;
             //Decode html specific characters
             text = System.Net.WebUtility.HtmlDecode(text);
@@ -46,17 +50,13 @@ namespace BiblioMit.Models
             text = lineBreakRegex.Replace(text, Environment.NewLine);
             //Strip formatting
             text = stripFormattingRegex.Replace(text, string.Empty);
-
             text = Regex.Replace(text, @"<[^>]+>|&nbsp;", "").Trim();
-
             text = Regex.Replace(text, @"\s{2,}", " ");
-
             text = Regex.Replace(text, @">", "");
-
             return text;
         }
 
-        public static string GetDigit(int Id)
+        public static string GetDigit(this int Id)
         {
             int Digito;
             int Contador;
@@ -94,7 +94,8 @@ namespace BiblioMit.Models
         public static List<int> AllIndexesOf(this string str, string value)
         {
             if (string.IsNullOrEmpty(value))
-                throw new ArgumentException("El texto a buscar no puede estar vacío", "value");
+                //throw new ArgumentException("El texto a buscar no puede estar vacío", nameof(value));
+                return null;
             List<int> indexes = new List<int>();
             for (int index = 0; ; index += value.Length)
             {
@@ -104,10 +105,7 @@ namespace BiblioMit.Models
                 indexes.Add(index);
             }
         }
-        readonly static List<string> romanNumerals = new List<string>() { "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I" };
-        readonly static List<int> numerals = new List<int>() { 1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1 };
-
-        public static string ToRomanNumeral(int number)
+        public static string ToRomanNumeral(this int number)
         {
             var romanNumeral = string.Empty;
             while (number > 0)
@@ -122,7 +120,7 @@ namespace BiblioMit.Models
             return romanNumeral;
         }
 
-        public static string GetSeason(DateTime Date)
+        public static string GetSeason(this DateTime Date)
         {
             float value = (float)Date.Month + (float)Date.Day / 100;
             if (value >= 12.21 || value <= 3.20) return "Summer"; //summer
@@ -133,8 +131,8 @@ namespace BiblioMit.Models
         }
 
         public static string TranslateText(
+            this string input,
             string targetLanguage,
-            string input,
             string languagePair)
         {
             //return Task.Run(() =>  
@@ -161,13 +159,10 @@ namespace BiblioMit.Models
                 HtmlDocument doc = new HtmlDocument() { OptionReadEncoding = true };
                 doc.Load(result.Content.ReadAsStreamAsync().Result);
                 string resultado = "bla";
-                try
+                var node = doc.DocumentNode.SelectSingleNode("//span[@id='result_box']/span");
+                if(node != null && !string.IsNullOrWhiteSpace(node.InnerHtml))
                 {
-                    resultado = HtmlToPlainText(doc.DocumentNode.SelectSingleNode("//span[@id='result_box']/span").InnerHtml);
-                }
-                catch 
-                {
-                
+                    resultado = HtmlToPlainText(node.InnerHtml);
                 }
                 return resultado;
             }

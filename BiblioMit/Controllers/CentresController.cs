@@ -1,4 +1,4 @@
-using BiblioMit.Authorization;
+ï»¿using BiblioMit.Authorization;
 using BiblioMit.Data;
 using BiblioMit.Models;
 using BiblioMit.Models.VM.MapsVM;
@@ -20,17 +20,10 @@ namespace BiblioMit.Controllers
     public class CentresController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly IAuthorizationService _authorizationService;
-        private readonly UserManager<AppUser> _userManager;
 
-        public CentresController(
-            ApplicationDbContext context,
-            IAuthorizationService authorizationService,
-            UserManager<AppUser> userManager)
+        public CentresController(ApplicationDbContext context)
         {
             _context = context;
-            _userManager = userManager;
-            _authorizationService = authorizationService;
         }
 
         // GET: Centres
@@ -42,7 +35,7 @@ namespace BiblioMit.Controllers
                 .Include(c => c.Comuna)
                     .ThenInclude(c => c.Provincia)
                     .ThenInclude(c => c.Region);
-            return View(await applicationDbContext.ToListAsync());
+            return View(await applicationDbContext.ToListAsync().ConfigureAwait(false));
         }
 
         // GET: Centres
@@ -53,7 +46,7 @@ namespace BiblioMit.Controllers
                 .Include(o => o.Provincia)
                     .ThenInclude(o => o.Region)
                 .Include(o => o.Centres)
-                .Where(o => o.Centres.Count() != 0 && o.Id != 0);
+                .Where(o => o.Centres.Any() && o.Id != 0);
             ViewData["comunas"] = comunas;
             var companies = r.Value ? 
                 _context.Company
@@ -65,7 +58,7 @@ namespace BiblioMit.Controllers
             ViewData["i"] = i;
             ViewData["r"] = r.Value;
             ViewData["Title"] = r.Value ? "Centros I+D" : "Productores";
-            ViewData["Main"] = r.Value ? "Centros de Investigación, Tecnología y desarrollo" : "Compañías Mitilicultoras";
+            ViewData["Main"] = r.Value ? "Centros de Investigaciï¿½n, Tecnologï¿½a y desarrollo" : "Compaï¿½ï¿½as Mitilicultoras";
             var model = await _context.Centre
                 .Include(o => o.Company)
                 .Include(o => o.Coordinates)
@@ -75,9 +68,11 @@ namespace BiblioMit.Controllers
                     .ThenInclude(o => o.Region)
                 .Where(o =>
                 o.Name == null &&
-                (c.Count() > 0) ? c.ToString().Contains(Convert.ToString(o.ComunaId)) : true &&
-                (i.Count() > 0) ? i.ToString().Contains(Convert.ToString(o.CompanyId)) : true)
-                .ToListAsync();
+                c.Any() ? c.ToString().Contains(Convert.ToString(o.ComunaId, CultureInfo.InvariantCulture),
+                StringComparison.InvariantCultureIgnoreCase) : true &&
+                i.Any() ? i.ToString().Contains(Convert.ToString(o.CompanyId, CultureInfo.InvariantCulture),
+                StringComparison.InvariantCultureIgnoreCase) : true)
+                .ToListAsync().ConfigureAwait(false);
 
             return View(model);
         }
@@ -89,7 +84,7 @@ namespace BiblioMit.Controllers
 
             ViewData["comunas"] = from Comuna u in _context.Comuna
                 .Where(a => a.Id != 0 &&
-                a.Centres.Any(b => b.Type == CentreType.Cultivo))
+                a.Centres.Any(b => b.Type == CentreTypes.Cultivo))
                 .Include(a => a.Centres)
                 .Include(a => a.Provincia)
                     .ThenInclude(a => a.Region)
@@ -113,7 +108,7 @@ namespace BiblioMit.Controllers
                                       Subtext =
                                       $"({u.Acronym}) {u.Id}-{StringManipulations.GetDigit(u.Id)}",
                                       Value = u.Id,
-                                      Text = textInfo.ToTitleCase(u.BsnssName.ToLower().Substring(0, Math.Min(u.BsnssName.Length, 50))),
+                                      Text = textInfo.ToTitleCase(textInfo.ToLower(u.BsnssName.Substring(0, Math.Min(u.BsnssName.Length, 50)))),
                                       Hellip = u.BsnssName.Length > 50
                                   };
 
@@ -122,7 +117,7 @@ namespace BiblioMit.Controllers
 
             var centres = _context.Centre
                 .Where(
-                a => a.Type == (CentreType)1 && a.CompanyId != 55555555)
+                a => a.Type == (CentreTypes)1 && a.CompanyId != 55555555)
                 .Include(a => a.Coordinates)
                 .Where(
                 a => a.Coordinates.Any()
@@ -147,7 +142,7 @@ namespace BiblioMit.Controllers
 
             ViewData["comunas"] = from Comuna u in _context.Comuna
                 .Where(a => a.Id != 0 && 
-                a.Centres.Any(b => b.Type == CentreType.Investigacion))
+                a.Centres.Any(b => b.Type == CentreTypes.Investigacion))
                 .Include(a => a.Centres)
                 .Include(a => a.Provincia)
                     .ThenInclude(a => a.Region)
@@ -170,7 +165,7 @@ namespace BiblioMit.Controllers
                                       Subtext =
                                       $"({u.Acronym}) {u.Id}-{StringManipulations.GetDigit(u.Id)}",
                                       Value = u.Id,
-                                      Text = textInfo.ToTitleCase(u.BsnssName.ToLower().Substring(0, Math.Min(u.BsnssName.Length, 50))),
+                                      Text = textInfo.ToTitleCase(textInfo.ToLower(u.BsnssName.Substring(0, Math.Min(u.BsnssName.Length, 50)))),
                                       Hellip = u.BsnssName.Length > 50
                                     };
 
@@ -179,7 +174,7 @@ namespace BiblioMit.Controllers
 
             var centres = _context.Centre
                 .Where(
-                a => a.Type == (CentreType)5 && a.CompanyId != 55555555)
+                a => a.Type == (CentreTypes)5 && a.CompanyId != 55555555)
                 .Include(a => a.Coordinates)
                 .Where(
                 a => a.Coordinates.Any()
@@ -219,7 +214,7 @@ namespace BiblioMit.Controllers
                 .Include(c => c.Company)
                 .Include(c => c.Coordinates)
                 .Include(c => c.Contacts)
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             if (centre == null)
             {
                 return NotFound();
@@ -239,7 +234,7 @@ namespace BiblioMit.Controllers
                 return RedirectToAction("AccessDenied", "Account");
             }
             ViewData["ComunaId"] = new SelectList(_context.Comuna, "Id", "Name");
-            var values = from CentreType e in Enum.GetValues(typeof(CentreType))
+            var values = from CentreTypes e in Enum.GetValues(typeof(CentreTypes))
                          select new { Id = e, Name = e.ToString() };
             ViewData["Type"] = new SelectList(values, "Id", "Name");
 
@@ -255,6 +250,8 @@ namespace BiblioMit.Controllers
         [Authorize(Roles = "Administrador", Policy = "Centros")]
         public async Task<IActionResult> Create([Bind("Id,ComunaId,Type,Url,Acronym,CompanyId,Name,Address")] Centre centre)
         {
+            if (centre == null) return NotFound();
+
             var isAuthorized = User.IsInRole(Constants.ContactAdministratorsRole);
 
             if(!isAuthorized)
@@ -265,7 +262,7 @@ namespace BiblioMit.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(centre);
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync().ConfigureAwait(false);
                 return RedirectToAction("Index");
             }
             ViewData["CompanyId"] = new SelectList(_context.Company, "Id", "Id", centre.CompanyId);
@@ -288,14 +285,14 @@ namespace BiblioMit.Controllers
                 return NotFound();
             }
 
-            var centre = await _context.Centre.SingleOrDefaultAsync(m => m.Id == id);
+            var centre = await _context.Centre.SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             if (centre == null)
             {
                 return NotFound();
             }
             ViewData["CompanyId"] = new SelectList(_context.Company, "Id", "Id", centre.CompanyId);
             ViewData["ComunaId"] = new SelectList(_context.Comuna, "Id", "Name", centre.ComunaId);
-            var values = from CentreType e in Enum.GetValues(typeof(CentreType))
+            var values = from CentreTypes e in Enum.GetValues(typeof(CentreTypes))
                          select new { Id = e, Name = e.ToString() };
             ViewData["Type"] = new SelectList(values, "Id", "Name", centre.Type);
             return View(centre);
@@ -316,7 +313,7 @@ namespace BiblioMit.Controllers
                 return RedirectToAction("AccessDenied", "Account");
             }
 
-            if (id != centre.Id)
+            if (centre == null || id != centre.Id)
             {
                 return NotFound();
             }
@@ -326,7 +323,7 @@ namespace BiblioMit.Controllers
                 try
                 {
                     _context.Update(centre);
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -366,7 +363,7 @@ namespace BiblioMit.Controllers
                 .Include(c => c.Comuna)
                     .ThenInclude(c => c.Provincia)
                     .ThenInclude(c => c.Region)
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             if (centre == null)
             {
                 return NotFound();
@@ -388,9 +385,9 @@ namespace BiblioMit.Controllers
                 return RedirectToAction("AccessDenied", "Account");
             }
 
-            var centre = await _context.Centre.SingleOrDefaultAsync(m => m.Id == id);
+            var centre = await _context.Centre.SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             _context.Centre.Remove(centre);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
             return RedirectToAction("Index");
         }
 

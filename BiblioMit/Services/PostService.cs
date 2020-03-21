@@ -20,13 +20,13 @@ namespace BiblioMit.Services
         public async Task Add(Post post)
         {
             _context.Add(post);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public async Task AddReply(PostReply reply)
         {
             _context.PostReply.Add(reply);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public Task Delete(int id)
@@ -45,7 +45,8 @@ namespace BiblioMit.Services
                 .Include(p => p.User)
                 .Include(p => p.Replies)
                     .ThenInclude(r => r.User)
-                .Include(p => p.Forum);
+                .Include(p => p.Forum)
+                .Where(p => p.UserId != null);
         }
 
         public Post GetById(int id)
@@ -62,16 +63,16 @@ namespace BiblioMit.Services
         public IEnumerable<Post> GetFilteredPosts(Forum forum, string searchQuery)
         {
             return string.IsNullOrEmpty(searchQuery) 
-                ? forum.Posts 
-                : forum.Posts
-                    .Where(p => p.Title.ToLower().Contains(searchQuery.ToLower())
-                    || p.Content.Contains(searchQuery));
+                ? forum?.Posts 
+                : forum?.Posts
+                    .Where(p => p.Title.Contains(searchQuery, StringComparison.InvariantCultureIgnoreCase)
+                    || p.Content.Contains(searchQuery, StringComparison.InvariantCultureIgnoreCase));
         }
 
         public IEnumerable<Post> GetFilteredPosts(string searchQuery)
         {
-            return GetAll().Where(p => p.Title.Contains(searchQuery)
-                    || p.Content.Contains(searchQuery));
+            return GetAll().Where(p => p.Title.Contains(searchQuery, StringComparison.InvariantCultureIgnoreCase)
+                    || p.Content.Contains(searchQuery, StringComparison.InvariantCultureIgnoreCase));
         }
 
         public IEnumerable<Post> GetLatestsPosts(int n)

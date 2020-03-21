@@ -18,6 +18,6 @@ namespace BiblioMit.Models.ManageViewModels
         [ReadOnly(true)]
         public string SharedKey { get; set; }
 
-        public string AuthenticatorUri { get; set; }
+        public Uri AuthenticatorUri { get; set; }
     }
 }

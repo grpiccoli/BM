@@ -28,14 +28,14 @@ namespace BiblioMit.Services
                 u => u.Id == id);
         }
 
-        public async Task UpdateUserRating(string id, System.Type type)
+        public async Task UpdateUserRating(string id, Type type)
         {
             var user = GetById(id);
             user.Rating = CalculateUserRating(type, user.Rating);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 
-        private int CalculateUserRating(System.Type type, int userRating)
+        private int CalculateUserRating(Type type, int userRating)
         {
             var inc = 0;
             if (type == typeof(Post))
@@ -50,9 +50,9 @@ namespace BiblioMit.Services
         public async Task SetProfileImage(string id, Uri uri)
         {
             var user = GetById(id);
-            user.ProfileImageUrl = uri.AbsoluteUri;
+            user.ProfileImageUrl = uri;
             _context.Update(user);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
         }
     }
 }

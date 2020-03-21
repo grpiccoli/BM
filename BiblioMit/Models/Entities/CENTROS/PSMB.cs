@@ -14,8 +14,8 @@ namespace BiblioMit.Models
 
         public string Name { get; set; }
 
-        public virtual ICollection<Centre> Centres { get; set; }
+        public virtual ICollection<Centre> Centres { get; } = new List<Centre>();
 
-        public virtual ICollection<Coordinate> Coordinates { get; set; }
+        public virtual ICollection<Coordinate> Coordinates { get; } = new List<Coordinate>();
     }
 }

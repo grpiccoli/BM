@@ -1,0 +1,82 @@
+﻿.chart {
+  /*position: absolute;*/
+  width: 100%;
+  height: 50vh;
+  /*overflow: visible;
+    text-align: left;*/ }
+
+@media screen and (max-width: 62em) {
+  #datos-panel {
+    display: none; }
+  #config-panel {
+    display: none; }
+  .body-content {
+    padding: 0;
+    padding-top: 4em; } }
+
+.report-table {
+  font-size: 13px; }
+
+.report-table tbody {
+  border-bottom: 1px solid #ddd; }
+
+.report-table tbody tr td {
+  border-top: 0;
+  text-align: right; }
+
+.table .divideColumnLeft {
+  border-left: 1px solid #ddd; }
+
+.table .divideColumnRight {
+  border-right: 1px solid #ddd; }
+
+.lds-dual-ring {
+  display: inline-block;
+  width: 64px;
+  height: 64px; }
+
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 46px;
+  height: 46px;
+  margin: 1px;
+  border-radius: 50%;
+  border: 5px solid #fff;
+  border-color: #fff transparent #fff transparent;
+  animation: lds-dual-ring 1.2s linear infinite; }
+
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg); }
+  100% {
+    transform: rotate(360deg); } }
+
+@media all {
+  .page-break {
+    display: none; } }
+
+@media print {
+  .tab-content > .tab-pane {
+    display: block;
+    opacity: 1;
+    visibility: visible; }
+  .page-break {
+    page-break-after: always;
+    page-break-inside: avoid;
+    clear: both; }
+  .page-break-before {
+    page-break-before: always;
+    page-break-inside: avoid;
+    clear: both; }
+  .col-print-12 {
+    width: 100%;
+    float: left; } }
+
+a[title="JavaScript charts"] {
+  display: none; }
+
+.category {
+  font-family: 'Segoe UI';
+  font-size: 2em;
+  font-weight: 100; }

@@ -1,0 +1,66 @@
+﻿[
+  {
+    "outputFile": "styles/site.css",
+    "inputFile": "styles/site.scss"
+  },
+  {
+    "outputFile": "styles/samplings.css",
+    "inputFile": "styles/samplings.scss"
+  },
+  {
+    "outputFile": "styles/graph.css",
+    "inputFile": "styles/graph.scss"
+  },
+  {
+    "outputFile": "styles/chart.css",
+    "inputFile": "styles/chart.scss"
+  },
+  {
+    "outputFile": "styles/chat.css",
+    "inputFile": "styles/chat.scss"
+  },
+  {
+    "outputFile": "styles/background.css",
+    "inputFile": "styles/background.scss"
+  },
+  {
+    "outputFile": "styles/boletin1.css",
+    "inputFile": "styles/boletin1.scss"
+  },
+  {
+    "outputFile": "styles/dinamicTableBoletin.css",
+    "inputFile": "styles/dinamicTableBoletin.scss"
+  },
+  {
+    "outputFile": "styles/dinamicTable.css",
+    "inputFile": "styles/dinamicTable.scss"
+  },
+  {
+    "outputFile": "styles/dragndrop.css",
+    "inputFile": "styles/dragndrop.scss"
+  },
+  {
+    "outputFile": "styles/dropzone.css",
+    "inputFile": "styles/dropzone.scss"
+  },
+  {
+    "outputFile": "styles/fonts.css",
+    "inputFile": "styles/fonts.scss"
+  },
+  {
+    "outputFile": "styles/gridPlanilla.css",
+    "inputFile": "styles/gridPlanilla.scss"
+  },
+  {
+    "outputFile": "styles/home.css",
+    "inputFile": "styles/home.scss"
+  },
+  {
+    "outputFile": "styles/prueba.css",
+    "inputFile": "styles/prueba.scss"
+  },
+  {
+    "outputFile": "styles/bibliomit.css",
+    "inputFile": "styles/bibliomit.scss"
+  }
+]

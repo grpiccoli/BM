@@ -8,7 +8,7 @@ namespace BiblioMit.Areas.Identity.Pages.Account
 {
     public class AccessDeniedModel : PageModel
     {
-        public void OnGet()
+        public static void OnGet()
         {
 
         }

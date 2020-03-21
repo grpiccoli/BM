@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Resources;
@@ -85,8 +86,8 @@ namespace BiblioMit.Extensions
                 case "es":
                     var rm = new ResourceManager(typeof(EnumResources));
                     var name = e.GetType().Name + "_" + e;
-                    var resourceDisplayName = rm.GetString(name);
-                    return string.IsNullOrWhiteSpace(resourceDisplayName) ? string.Format("{0}", e) : resourceDisplayName;
+                    var resourceDisplayName = rm.GetString(name, CultureInfo.InvariantCulture);
+                    return string.IsNullOrWhiteSpace(resourceDisplayName) ? string.Format(CultureInfo.InvariantCulture, "{0}", e) : resourceDisplayName;
             }
         }
         public static string GetAttrGroupName<TEnum>(this TEnum e)

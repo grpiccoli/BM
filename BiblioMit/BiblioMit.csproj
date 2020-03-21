@@ -1,46 +1,67 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>aspnet-BiblioMit-3E10FA62-82AF-4FA8-91A7-71A1040A7646</UserSecretsId>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
-    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
+    <ApplicationIcon>wwwroot\favicon.ico</ApplicationIcon>
+    <NeutralLanguage>es</NeutralLanguage>
+    <UICulture>es-CL</UICulture>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <PublishWithAspNetCoreTargetManifest>true</PublishWithAspNetCoreTargetManifest>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AngleSharp" Version="0.13.0" />
     <PackageReference Include="AspNetCore.IServiceCollection.AddIUrlHelper" Version="1.1.0" />
-    <PackageReference Include="Boxed.AspNetCore.TagHelpers" Version="3.2.0" />
+    <PackageReference Include="Boxed.AspNetCore.TagHelpers" Version="4.0.0" />
+    <PackageReference Include="BuildBundlerMinifier" Version="3.2.435" />
+    <PackageReference Include="BuildWebCompiler" Version="1.12.405" />
     <PackageReference Include="CoreCLR-NCalc" Version="2.2.70" />
-    <PackageReference Include="EPPlus" Version="4.5.3.2" />
-    <PackageReference Include="Google.Apis.AnalyticsReporting.v4" Version="1.43.0.1831" />
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.17" />
+    <PackageReference Include="EPPlus" Version="5.0.4" />
+    <PackageReference Include="Google.Apis.AnalyticsReporting.v4" Version="1.44.1.1871" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.22" />
     <PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.250" />
-    <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.AspNetCore.NodeServices" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="3.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="3.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.6">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.4" />
+    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="3.8.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
     <PackageReference Include="Pluralize.NET.Core" Version="1.0.0" />
-    <PackageReference Include="Schema.NET" Version="7.0.1" />
+    <PackageReference Include="Schema.NET" Version="7.1.0" />
     <!--<PackageReference Include="PaulMiami.AspNetCore.Mvc.Recaptcha" Version="1.2.1" />-->
-    <PackageReference Include="Sendgrid" Version="9.12.5" />
+    <PackageReference Include="Sendgrid" Version="9.13.1" />
     <PackageReference Include="System.CodeDom" Version="4.7.0" />
-    <PackageReference Include="WebMarkupMin.AspNetCore2" Version="2.7.0" />
-    <PackageReference Include="Z.EntityFramework.Extensions.EFCore" Version="2.7.38" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
+    <PackageReference Include="WebMarkupMin.AspNetCore2" Version="2.8.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <DotNetCliToolReference Include="BundlerMinifier.Core" Version="2.9.406" />
+    <DotNetCliToolReference Include="BundlerMinifier.Core" Version="3.2.435" />
   </ItemGroup>
   
   <ItemGroup>
@@ -48,10 +69,46 @@
   </ItemGroup>
   
   <ItemGroup>
-    <Compile Remove="Migrations\20190511002826_Initial.cs" />
-    <Compile Remove="Migrations\20190511002826_Initial.Designer.cs" />
-    <Compile Remove="Migrations\20190825163702_Initial.cs" />
-    <Compile Remove="Migrations\20190825163702_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200318045853_Initial.cs" />
+    <Compile Remove="Migrations\20200318045853_Initial.Designer.cs" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Remove="scripts\bibliomit.ts" />
+    <None Remove="scripts\charts.ts" />
+    <None Remove="scripts\chat.ts" />
+    <None Remove="scripts\dashboard.ts" />
+    <None Remove="scripts\dinamicTable.ts" />
+    <None Remove="scripts\dontSendFormOnEnter.ts" />
+    <None Remove="scripts\dragndrop.ts" />
+    <None Remove="scripts\entry.ts" />
+    <None Remove="scripts\format-phone.ts" />
+    <None Remove="scripts\get-sii-rut-data.ts" />
+    <None Remove="scripts\gmaps-address-autocomplete.ts" />
+    <None Remove="scripts\graph.ts" />
+    <None Remove="scripts\parseNumber.ts" />
+    <None Remove="scripts\piechart.ts" />
+    <None Remove="scripts\progress.ts" />
+    <None Remove="scripts\sendDisabledSelects.ts" />
+    <None Remove="scripts\translate.ts" />
+    <None Remove="scripts\types\am4charts\index.d.ts" />
+    <None Remove="scripts\types\signalr\index.d.ts" />
+    <None Remove="scripts\validate-localization.ts" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Content Include="scripts\entry.ts" />
+    <Content Include="scripts\parseNumber.ts" />
+    <Content Include="scripts\piechart.ts" />
+    <Content Include="scripts\progress.ts" />
+    <Content Include="scripts\sendDisabledSelects.ts" />
+    <Content Include="scripts\translate.ts" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <TypeScriptCompile Include="scripts\bibliomit.ts" />
+    <TypeScriptCompile Include="scripts\tablePopover.js" />
+    <TypeScriptCompile Include="scripts\validate-localization.ts" />
   </ItemGroup>
   
   <ItemGroup>
@@ -79,6 +136,17 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>EnumResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="scripts\types\amcharts\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Update="scripts\chat.ts">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </TypeScriptCompile>
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>

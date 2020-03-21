@@ -21,19 +21,13 @@ namespace BiblioMit.Controllers
     {
         private readonly IForum _forumService;
         private readonly IPost _postService;
-        private readonly IAppUser _userService;
-        private readonly UserManager<AppUser> _userManager;
 
         public ForaController(
             IForum forumService,
-            IPost postService,
-            IAppUser userService,
-            UserManager<AppUser> userManager)
+            IPost postService)
         {
             _forumService = forumService;
             _postService = postService;
-            _userService = userService;
-            _userManager = userManager;
         }
 
         [AllowAnonymous]
@@ -114,7 +108,7 @@ namespace BiblioMit.Controllers
                 Title = model.Title,
                 Description = model.Description,
                 Created = DateTime.Now,
-                ImageUrl = imageUri
+                ImageUrl = new Uri(imageUri)
             };
 
             await _forumService.Create(forum).ConfigureAwait(false);
@@ -122,18 +116,18 @@ namespace BiblioMit.Controllers
             return RedirectToAction("Index", "Fora");
         }
 
-        private string UploadForumImage(IFormFile file)
+        private static string UploadForumImage(IFormFile file)
         {
-            var userId = _userManager.GetUserId(User);
+            //var userId = _userManager.GetUserId(User);
+
+            //var filePath = Path.GetTempFileName();
+
+            //var stream = new FileStream(filePath, FileMode.Create);
 
             //var accessKey = "AKIAISMYGSV5LKLHP25A";
             //var secretKey = "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";
 
             //var client = new AmazonS3Client(accessKey, secretKey, Amazon.RegionEndpoint.SAEast1);
-
-            var filePath = Path.GetTempFileName();
-
-            var stream = new FileStream(filePath, FileMode.Create);
 
             //var request = new PutObjectRequest
             //{
@@ -149,10 +143,10 @@ namespace BiblioMit.Controllers
             //_userService.SetProfileImage(userId, new Uri(url));
 
             //return url;
-            return null;
+            return file.ToString();
         }
 
-        private ForumListingModel BuildForumListing(Post p)
+        private static ForumListingModel BuildForumListing(Post p)
         {
             var forum = p.Forum;
 

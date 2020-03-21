@@ -8,6 +8,6 @@ namespace BiblioMit.Models.ManageViewModels
 {
     public class GenerateRecoveryCodesViewModel
     {
-        public string[] RecoveryCodes { get; set; }
+        public List<string> RecoveryCodes { get; } = new List<string>();
     }
 }

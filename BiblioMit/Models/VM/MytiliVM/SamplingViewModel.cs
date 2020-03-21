@@ -29,6 +29,6 @@ namespace BiblioMit.Models.SamplingViewModels
         [Display(Name = "Dissolved Oxigen (mg/L)")] //oxigen level in mg/L
         public decimal O2 { get; set; }
 
-        public ICollection<IndividualViewModel> Individuals { get; set; }
+        public List<IndividualViewModel> Individuals { get; } = new List<IndividualViewModel>();
     }
 }

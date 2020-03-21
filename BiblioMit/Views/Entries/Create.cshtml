@@ -3,8 +3,7 @@
     ViewData["Title"] = "Create";
 }
 
-<partial name="_Libs" model='new List<string> { "bootstrap-select",
-    "/dragndrop.min", "smartwizard" }' />
+<partial name="_LibsPg" model='new HashSet<string> { "bootstrap-select", "dragndrop", "smartwizard" }' />
 
 <form id="formCreate" asp-action="Create" class="form-horizontal" method="post" enctype="multipart/form-data">
     <div id="smartwizard">

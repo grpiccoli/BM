@@ -7,6 +7,7 @@ using BiblioMit.Models;
 using Microsoft.AspNetCore.Authorization;
 using System;
 using BiblioMit.Services;
+using System.Globalization;
 
 namespace BiblioMit.Controllers
 {
@@ -29,7 +30,7 @@ namespace BiblioMit.Controllers
                     .ThenInclude(c => c.Coordinates)
                 .Include(c => c.Centres)
                 .AsNoTracking()
-                .ToListAsync());
+                .ToListAsync().ConfigureAwait(false));
         }
 
         // GET: Companies/Details/5
@@ -47,7 +48,7 @@ namespace BiblioMit.Controllers
                 .ThenInclude(c => c.Comuna)
                 .ThenInclude(c => c.Provincia)
                 .ThenInclude(c => c.Region)
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             if (company == null)
             {
                 return NotFound();
@@ -71,16 +72,17 @@ namespace BiblioMit.Controllers
         [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Create([Bind("Id,BsnssName,Acronym")] CompanyViewModel company)
         {
+            if (company == null) return NotFound();
             if (ModelState.IsValid)
             {
                 Company corp = new Company
                 {
-                    Id = Convert.ToInt32(string.Format(new InterceptProvider(), "{0:I}", company.RUT)),
+                    Id = Convert.ToInt32(string.Format(new InterceptProvider(), "{0:I}", company.RUT), CultureInfo.InvariantCulture),
                     BsnssName = company.BsnssName,
                     Acronym = company.Acronym
                 };
                 _context.Add(corp);
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync().ConfigureAwait(false);
                 return RedirectToAction("Index");
             }
             return View(company);
@@ -95,7 +97,7 @@ namespace BiblioMit.Controllers
                 return NotFound();
             }
 
-            var company = await _context.Company.SingleOrDefaultAsync(m => m.Id == id);
+            var company = await _context.Company.SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             if (company == null)
             {
                 return NotFound();
@@ -116,7 +118,7 @@ namespace BiblioMit.Controllers
         [Authorize(Roles = "Administrador,Editor")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,BsnssName,Acronym")] Company company)
         {
-            if (id != company.Id)
+            if (company == null || id != company.Id)
             {
                 return NotFound();
             }
@@ -126,7 +128,7 @@ namespace BiblioMit.Controllers
                 try
                 {
                     _context.Update(company);
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -154,7 +156,7 @@ namespace BiblioMit.Controllers
             }
 
             var company = await _context.Company
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             if (company == null)
             {
                 return NotFound();
@@ -169,9 +171,9 @@ namespace BiblioMit.Controllers
         [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var company = await _context.Company.SingleOrDefaultAsync(m => m.Id == id);
+            var company = await _context.Company.SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             _context.Company.Remove(company);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
             return RedirectToAction("Index");
         }
 

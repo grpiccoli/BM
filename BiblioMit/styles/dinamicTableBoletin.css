@@ -1,0 +1,21 @@
+﻿/* an outside constraint to react against */
+#constrainer2 {
+  width: 100%; }
+
+#constrainer2 tbody {
+  overflow-y: scroll;
+  display: block;
+  height: 35vh; }
+
+#constrainer2 thead {
+  display: table-row; }
+
+/* only styling below here */
+#constrainer2 table {
+  border-collapse: collapse; }
+
+#constrainer2 th, #constrainer2 td {
+  min-width: 14.2vw; }
+
+#constrainer2 tr:first-child td {
+  border-top-width: 0; }

@@ -20,6 +20,6 @@ namespace BiblioMit.Models
         public double MaleIG { get; set; }
         [Display(Description = "%")]
         public double FemaleIG { get; set; }
-        public virtual ICollection<RepStage> Stage { get; set; }
+        public virtual ICollection<RepStage> Stage { get; } = new List<RepStage>();
     }
 }

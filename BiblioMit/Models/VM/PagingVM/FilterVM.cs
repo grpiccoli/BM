@@ -1,4 +1,6 @@
-﻿namespace BiblioMit.Models.ViewModels
+﻿using System.Collections.Generic;
+
+namespace BiblioMit.Models.ViewModels
 {
     public class FilterVM
     {
@@ -12,6 +14,6 @@
 
         public string Srt { get; set; }
 
-        public string[] Val { get; set; }
+        public List<string> Val { get; } = new List<string>();
     }
 }

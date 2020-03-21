@@ -9,7 +9,7 @@ namespace BiblioMit.Authorization
     public class ContactIsOwnerAuthorizationHandler
                 : AuthorizationHandler<OperationAuthorizationRequirement, Contact>
     {
-        UserManager<AppUser> _userManager;
+        private readonly UserManager<AppUser> _userManager;
 
         public ContactIsOwnerAuthorizationHandler(UserManager<AppUser> 
             userManager)
@@ -22,14 +22,14 @@ namespace BiblioMit.Authorization
                                    OperationAuthorizationRequirement requirement,
                                    Contact resource)
         {
-            if (context.User == null || resource == null)
+            if (context?.User == null || resource == null)
             {
                 return Task.FromResult(0);
             }
 
             // If we're not asking for CRUD permission, return.
 
-            if (requirement.Name != Constants.CreateOperationName &&
+            if (requirement?.Name != Constants.CreateOperationName &&
                 requirement.Name != Constants.ReadOperationName   &&
                 requirement.Name != Constants.UpdateOperationName &&
                 requirement.Name != Constants.DeleteOperationName )

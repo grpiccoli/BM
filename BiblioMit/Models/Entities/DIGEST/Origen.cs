@@ -9,6 +9,6 @@ namespace BiblioMit.Models
         [InsertOff]
         public int Id { get; set; }
         public string Name { get; set; }
-        public virtual ICollection<Planilla> Planillas { get; set; }
+        public virtual ICollection<Planilla> Planillas { get; } = new List<Planilla>();
     }
 }

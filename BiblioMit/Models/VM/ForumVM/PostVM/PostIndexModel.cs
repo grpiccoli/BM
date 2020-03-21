@@ -12,7 +12,7 @@ namespace BiblioMit.Models.PostViewModels
         public string AuthorId { get; set; }
         public string AuthorName { get; set; }
         public string AuthorEmail { get; set; }
-        public string AuthorImageUrl { get; set; }
+        public Uri AuthorImageUrl { get; set; }
         public int AuthorRating { get; set; }
         [Display(Name = "Fecha")]
         [DataType(DataType.Date)]

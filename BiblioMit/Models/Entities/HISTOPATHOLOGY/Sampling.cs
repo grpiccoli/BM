@@ -38,6 +38,6 @@ namespace BiblioMit.Models
         public double? O2 { get; set; }
         //CHILDS
         [Display(Name = "Subjects")]
-        public ICollection<Individual> Individuals { get; set; }
+        public virtual ICollection<Individual> Individuals { get; } = new List<Individual>();
     }
 }

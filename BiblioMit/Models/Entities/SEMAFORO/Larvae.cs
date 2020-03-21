@@ -9,6 +9,6 @@ namespace BiblioMit.Models
         public int CentreId { get; set; }
         public virtual Centre Centre { get; set; }
         public DateTime Date { get; set; }
-        public ICollection<Larva> Larva { get; set; }
+        public virtual ICollection<Larva> Larva { get; } = new List<Larva>();
     }
 }

@@ -12,6 +12,8 @@ using Microsoft.Extensions.Localization;
 using BiblioMit.Services;
 using BiblioMit.Models.ViewModels;
 using System.Collections.Generic;
+using System.Globalization;
+using BiblioMit.Extensions;
 
 namespace BiblioMit.Controllers
 {
@@ -35,7 +37,7 @@ namespace BiblioMit.Controllers
             var ApplicationDbContext = _context.Sampling
                 .Include(s => s.Centre)
                     .ThenInclude(c => c.Company);
-            return View(await ApplicationDbContext.ToListAsync());
+            return View(await ApplicationDbContext.ToListAsync().ConfigureAwait(false));
         }
 
         // GET: Samplings/Details/5
@@ -47,7 +49,7 @@ namespace BiblioMit.Controllers
             }
 
             var feature = HttpContext.Features.Get<IRequestCultureFeature>();
-            ViewData["lang"] = feature.RequestCulture.Culture.TwoLetterISOLanguageName.ToLower();
+            ViewData["lang"] = feature.RequestCulture.Culture.TwoLetterISOLanguageName.ToUpperInvariant();
 
             ViewData["SampleId"] = id;
 
@@ -58,7 +60,7 @@ namespace BiblioMit.Controllers
                 .Include(s => s.Softs)
                 .Where(m => m.SamplingId == id)
                 .AsNoTracking()
-                .ToListAsync());
+                .ToListAsync().ConfigureAwait(false));
 
         }
 
@@ -76,10 +78,11 @@ namespace BiblioMit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,CentreId,Date,Salinity,Temp,O2")] Sampling sampling)
         {
+            if (sampling == null) return NotFound();
             if (ModelState.IsValid)
             {
                 _context.Add(sampling);
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync().ConfigureAwait(false);
                 return RedirectToAction("Index");
             }
             ViewData["CentreId"] = new SelectList(_context.Centre, "Id", "Id", sampling.CentreId);
@@ -96,7 +99,7 @@ namespace BiblioMit.Controllers
 
             var sampling = await _context
                 .Sampling
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             if (sampling == null)
             {
                 return NotFound();
@@ -110,7 +113,7 @@ namespace BiblioMit.Controllers
         {
             var sample = await _context.Sampling
                 .Include(i => i.Individuals)
-                .SingleOrDefaultAsync(s => s.Id == sampleId);
+                .SingleOrDefaultAsync(s => s.Id == sampleId).ConfigureAwait(false);
 
             Individual model = new Individual
             {
@@ -119,7 +122,7 @@ namespace BiblioMit.Controllers
             };
 
             var feature = HttpContext.Features.Get<IRequestCultureFeature>();
-            var lang = feature.RequestCulture.Culture.TwoLetterISOLanguageName.ToLower();
+            var lang = feature.RequestCulture.Culture.TwoLetterISOLanguageName.ToUpperInvariant();
 
             var sexes = from Sex e in Enum.GetValues(typeof(Sex))
                         select new { Id = e, Name = e.GetDisplayName(lang) };
@@ -136,9 +139,9 @@ namespace BiblioMit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddIndividual([Bind("Id,SamplingId,Sex,Maturity,Length,Comment,Number,Depth")] Individual individual)
         {
-            if (ModelState.IsValid)
+            if (individual != null && ModelState.IsValid)
             {
-                individual.Id = Convert.ToInt32(string.Format("{0}{1}", individual.SamplingId, individual.Number));
+                individual.Id = Convert.ToInt32(string.Format(CultureInfo.InvariantCulture, "{0}{1}", individual.SamplingId, individual.Number), CultureInfo.InvariantCulture);
                 if (_context.Individual.Any(i => i.Id == individual.Id))
                 {
                     string msg = _localizer["The Subject"] + " " + individual.Number + " " + _localizer["of the Sample"] + " " + individual.SamplingId + " " + _localizer["already exists."];
@@ -149,7 +152,7 @@ namespace BiblioMit.Controllers
                     return View("Error", model);
                 }
                 _context.Add(individual);
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync().ConfigureAwait(false);
                 return RedirectToAction("Details", "Samplings", new { Id = individual.SamplingId });
             }
             return RedirectToAction("_AddIndividual");
@@ -164,7 +167,7 @@ namespace BiblioMit.Controllers
                 .Where(m => m.IndividualId == id && m.SoftType == softType);
 
             var feature = HttpContext.Features.Get<IRequestCultureFeature>();
-            var lang = feature.RequestCulture.Culture.TwoLetterISOLanguageName.ToLower();
+            var lang = feature.RequestCulture.Culture.TwoLetterISOLanguageName.ToUpperInvariant();
             ViewData["lang"] = lang;
 
             var degrees = from Degree e in Enum.GetValues(typeof(Degree))
@@ -176,18 +179,20 @@ namespace BiblioMit.Controllers
                 Id = id,
                 SamplingId = sample,
                 SoftType = softType,
-                Check = softs.Count() > 0,
-                Configs = new Dictionary<string, bool>
+                Check = softs.Any(),
+            };
+
+            model.Configs.AddRangeOverride(new Dictionary<string, bool>
                 {
                     { "tissue", tissue },
                     { "count", count },
                     { "degree", degree }
-                }
-            };
+                });
+
 
             if (tissue)
             {
-                model.Tissues = Enum.GetValues(typeof(Tissue))
+                model.Tissues.AddRange(Enum.GetValues(typeof(Tissue))
                     .Cast<Tissue>()
                     .Select(t => new TissueView
                     {
@@ -195,8 +200,8 @@ namespace BiblioMit.Controllers
                         Count = softs.Any(s => s.Tissue == t) ? softs.FirstOrDefault(s => s.Tissue == t).Count : null,
                         Degree = softs.Any(s => s.Tissue == t) ? softs.FirstOrDefault(s => s.Tissue == t).Degree : null,
                         Text = t.GetDisplayName(lang),
-                        Value = ((int)t).ToString(),
-                    }).ToList();
+                        Value = ((int)t).ToString(CultureInfo.InvariantCulture),
+                    }).ToList());
             }
 
             if (count && !tissue)
@@ -211,7 +216,7 @@ namespace BiblioMit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditSoft([Bind("Id,SamplingId,SoftType,Tissues,Count,Configs,Check")] IndividualSoftTissueViewModel individual)
         {
-            if (ModelState.IsValid)
+            if (individual != null && ModelState.IsValid)
             {
                 try
                 {
@@ -228,7 +233,7 @@ namespace BiblioMit.Controllers
                             {
                                 Count = softs.Any(s => s.Tissue == t) ? softs.FirstOrDefault(s => s.Tissue == t).Count : null
                             }).ToList();
-                            for (int i = 0; i < Options.Count(); i++)
+                            for (int i = 0; i < Options.Count; i++)
                             {
                                 if (Options[i].Count != individual.Tissues[i].Count)
                                 {
@@ -238,7 +243,7 @@ namespace BiblioMit.Controllers
                                                                 .SingleOrDefaultAsync(s =>
                                                                 s.IndividualId == individual.Id
                                                                 && s.SoftType == individual.SoftType
-                                                                && s.Tissue == (Tissue)i);
+                                                                && s.Tissue == (Tissue)i).ConfigureAwait(false);
                                         _context.Soft.Remove(soft);
                                     }
                                     else
@@ -274,7 +279,7 @@ namespace BiblioMit.Controllers
                                 {
                                     Degree = softs.Any(s => s.Tissue == t) ? softs.FirstOrDefault(s => s.Tissue == t).Degree : null
                                 }).ToList();
-                                for (int c = 0; c < Options.Count(); c++)
+                                for (int c = 0; c < Options.Count; c++)
                                 {
                                     if (individual.Tissues[c].Degree == Degree.d0)
                                     {
@@ -288,7 +293,7 @@ namespace BiblioMit.Controllers
                                                             .SingleOrDefaultAsync(s =>
                                                             s.IndividualId == individual.Id
                                                             && s.SoftType == individual.SoftType
-                                                            && s.Tissue == (Tissue)c);
+                                                            && s.Tissue == (Tissue)c).ConfigureAwait(false);
                                             _context.Soft.Remove(soft);
                                         }
                                     }
@@ -319,7 +324,7 @@ namespace BiblioMit.Controllers
                                 {
                                     Check = softs.Any(s => s.Tissue == t)
                                 }).ToList();
-                                for (int i = 0; i < Options.Count(); i++)
+                                for (int i = 0; i < Options.Count; i++)
                                 {
                                     if (Options[i].Check != individual.Tissues[i].Check)
                                     {
@@ -339,7 +344,7 @@ namespace BiblioMit.Controllers
                                                                     .SingleOrDefaultAsync(s =>
                                                                     s.IndividualId == individual.Id
                                                                     && s.SoftType == individual.SoftType
-                                                                    && s.Tissue == (Tissue)i);
+                                                                    && s.Tissue == (Tissue)i).ConfigureAwait(false);
                                             _context.Soft.Remove(soft);
                                         }
                                     }
@@ -400,7 +405,7 @@ namespace BiblioMit.Controllers
                             }
                         }
                     }
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
 
                     return RedirectToAction("Details", "Samplings", new { Id = individual.SamplingId });
                 }
@@ -428,14 +433,14 @@ namespace BiblioMit.Controllers
                 return NotFound();
             }
 
-            var individual = await _context.Individual.SingleOrDefaultAsync(m => m.Id == id);
+            var individual = await _context.Individual.SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             if (individual == null)
             {
                 return NotFound();
             }
 
             var feature = HttpContext.Features.Get<IRequestCultureFeature>();
-            var lang = feature.RequestCulture.Culture.TwoLetterISOLanguageName.ToLower();
+            var lang = feature.RequestCulture.Culture.TwoLetterISOLanguageName.ToUpperInvariant();
 
             var sexes = from Sex e in Enum.GetValues(typeof(Sex))
                         select new { Id = e, Name = e.GetDisplayName(lang) };
@@ -452,7 +457,7 @@ namespace BiblioMit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditIndividual(int id, [Bind("Id,SamplingId,Sex,Maturity,Length,Comment")] Individual individual)
         {
-            if (id != individual.Id)
+            if (individual == null || id != individual.Id)
             {
                 return NotFound();
             }
@@ -462,7 +467,7 @@ namespace BiblioMit.Controllers
                 try
                 {
                     _context.Update(individual);
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -488,7 +493,7 @@ namespace BiblioMit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,CentreId,Date,Salinity,Temp,O2")] Sampling sampling)
         {
-            if (id != sampling.Id)
+            if (sampling == null || id != sampling.Id)
             {
                 return NotFound();
             }
@@ -498,7 +503,7 @@ namespace BiblioMit.Controllers
                 try
                 {
                     _context.Update(sampling);
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -527,7 +532,7 @@ namespace BiblioMit.Controllers
 
             var sampling = await _context.Sampling
                 .Include(s => s.Centre)
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             if (sampling == null)
             {
                 return NotFound();
@@ -541,9 +546,9 @@ namespace BiblioMit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var sampling = await _context.Sampling.SingleOrDefaultAsync(m => m.Id == id);
+            var sampling = await _context.Sampling.SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             _context.Sampling.Remove(sampling);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
             return RedirectToAction("Index");
         }
 

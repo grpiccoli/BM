@@ -15,13 +15,13 @@ namespace BiblioMit.Models.ViewModels
         public SoftType SoftType { get; set; }
 
         [Display(Name = "Tissues")]
-        public List<TissueView> Tissues { get; set; }
+        public List<TissueView> Tissues { get; } = new List<TissueView>();
 
         [Display(Name = "Count")]
         [Range(1, 1000, ErrorMessage = "This value must be between {0} and {1}")]
         public int? Count { get; set; }
 
-        public Dictionary<string,bool> Configs { get; set; }
+        public Dictionary<string,bool> Configs { get; } = new Dictionary<string, bool>();
 
         [Display(Name = "Presence")]
         public bool Check { get; set; }

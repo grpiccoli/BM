@@ -23,7 +23,7 @@ namespace BiblioMit.Controllers
         public async Task<IActionResult> Index()
         {
             var ApplicationDbContext = _context.Valve.Include(s => s.Individual);
-            return View(await ApplicationDbContext.ToListAsync());
+            return View(await ApplicationDbContext.ToListAsync().ConfigureAwait(false));
         }
 
         // GET: Samplings/Details/5
@@ -36,7 +36,7 @@ namespace BiblioMit.Controllers
 
             var valve = await _context.Valve
                 .Include(s => s.Individual)
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             if (valve == null)
             {
                 return NotFound();
@@ -59,14 +59,18 @@ namespace BiblioMit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,IndividualId,ValveType,Species,Comment")] Valve valve)
         {
-            if (ModelState.IsValid)
+            if(valve != null)
             {
-                _context.Add(valve);
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    _context.Add(valve);
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
+                    return RedirectToAction("Index");
+                }
+                ViewData["IndividualId"] = new SelectList(_context.Individual, "Id", "Id", valve.IndividualId);
+                return View(valve);
             }
-            ViewData["IndividualId"] = new SelectList(_context.Individual, "Id", "Id", valve.IndividualId);
-            return View(valve);
+            return NotFound();
         }
 
         // GET: Samplings/Edit/5
@@ -77,7 +81,7 @@ namespace BiblioMit.Controllers
                 return NotFound();
             }
 
-            var valve = await _context.Valve.SingleOrDefaultAsync(m => m.Id == id);
+            var valve = await _context.Valve.SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             if (valve == null)
             {
                 return NotFound();
@@ -93,7 +97,7 @@ namespace BiblioMit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,IndividualId,ValveType,Species,Comment")] Valve valve)
         {
-            if (id != valve.Id)
+            if (valve == null || id != valve.Id)
             {
                 return NotFound();
             }
@@ -103,7 +107,7 @@ namespace BiblioMit.Controllers
                 try
                 {
                     _context.Update(valve);
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -132,7 +136,7 @@ namespace BiblioMit.Controllers
 
             var valve = await _context.Valve
                 .Include(s => s.Individual)
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             if (valve == null)
             {
                 return NotFound();
@@ -146,9 +150,9 @@ namespace BiblioMit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var valve = await _context.Valve.SingleOrDefaultAsync(m => m.Id == id);
+            var valve = await _context.Valve.SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             _context.Valve.Remove(valve);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
             return RedirectToAction("Index");
         }
 

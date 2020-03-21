@@ -13,6 +13,6 @@ namespace BiblioMit.Models
         public int Capture { get; set; }
         [Range(0,100)]
         public double Proportion { get; set; }
-        public ICollection<Talla> Tallas { get; set; }
+        public virtual ICollection<Talla> Tallas { get; } = new List<Talla>();
     }
 }

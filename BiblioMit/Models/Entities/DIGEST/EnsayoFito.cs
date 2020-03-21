@@ -41,6 +41,6 @@ namespace BiblioMit.Models
         public double? Oxigeno { get; set; }
         public double? Ph { get; set; }
         public double? Salinidad { get; set; }
-        public virtual ICollection<Phytoplankton> Fitoplanctons { get; set; }
+        public virtual ICollection<Phytoplankton> Fitoplanctons { get; } = new List<Phytoplankton>();
     }
 }

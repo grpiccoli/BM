@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace BiblioMit.Models.ViewModels
 {
-    public class SoftTissuesData
+    public static class SoftTissuesData
     {
-        public static List<Tissue> Tissues { get; set; } = new List<Tissue>
+        public static List<Tissue> Tissues { get; } = new List<Tissue>
                                                             {
                                                                 Tissue.DigestiveGland,
                                                                 Tissue.Foot,

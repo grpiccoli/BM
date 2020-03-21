@@ -20,14 +20,14 @@ namespace BiblioMit.Services
         public async Task Create(Forum forum)
         {
             _context.Add(forum);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public async Task Delete(int forumId)
         {
             var forum = GetbyId(forumId);
             _context.Remove(forum);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public IEnumerable<AppUser> GetActiveUsers(int id)

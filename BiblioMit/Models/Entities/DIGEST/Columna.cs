@@ -11,7 +11,7 @@ namespace BiblioMit.Models
 
         [Display(Name = "Planilla")]
         public int ExcelId { get; set; }
-        public virtual Excel Excel { get; set; }
+        public virtual ExcelFile Excel { get; set; }
 
         [Display(Name = "Nombre columna")]
         public string Description { get; set; }

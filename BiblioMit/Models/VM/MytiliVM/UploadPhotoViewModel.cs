@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace BiblioMit.Models.ViewModels
@@ -20,7 +21,7 @@ namespace BiblioMit.Models.ViewModels
         public int SampleId { get; set; }
 
         [Display(Name = "Image Url")]
-        public string Url { get; set; }
+        public Uri Url { get; set; }
 
         [Display(Name = "Image Thumbnail")]
         public string Thumb { get; set; }

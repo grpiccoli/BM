@@ -11,6 +11,6 @@ namespace BiblioMit.Models
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
 
-        public virtual ICollection<AreaCodeProvincia> AreaCodeProvincias { get; set; }
+        public virtual ICollection<AreaCodeProvincia> AreaCodeProvincias { get; } = new List<AreaCodeProvincia>();
     }
 }

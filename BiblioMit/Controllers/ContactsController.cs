@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -46,9 +47,11 @@ namespace BiblioMit.Controllers
             ViewData["comunas"] = comuna;
             string[] temp = q["c"];
             ViewData["c"] = temp;
-            if (q["c"].Count() > 0)
+            if (q["c"].Any())
             {
-                contacts = contacts.Where(c => q["c"].ToString().Contains(Convert.ToString(c.Centre.ComunaId)));
+                contacts = contacts.Where(c => q["c"].ToString()
+                .Contains(Convert.ToString(c.Centre.ComunaId, CultureInfo.InvariantCulture),
+                    StringComparison.InvariantCultureIgnoreCase));
             }
 
             var isAuthorized = User.IsInRole("Administrador") && 
@@ -64,7 +67,7 @@ namespace BiblioMit.Controllers
                                             || c.OwnerId == currentUserId);
             }
 
-            return View(await contacts.ToListAsync());
+            return View(await contacts.ToListAsync().ConfigureAwait(false));
         }
 
         // GET: Contacts/Details/5
@@ -76,7 +79,7 @@ namespace BiblioMit.Controllers
             }
 
             var contact = await _context.Contact
-                .SingleOrDefaultAsync(m => m.ContactId == id);
+                .SingleOrDefaultAsync(m => m.ContactId == id).ConfigureAwait(false);
             if (contact == null)
             {
                 return NotFound();
@@ -84,11 +87,11 @@ namespace BiblioMit.Controllers
 
             var isAuthorizedRead = await _authorizationService.AuthorizeAsync(
                                                        User, contact,
-                                                       ContactOperations.Read);
+                                                       ContactOperations.Read).ConfigureAwait(false);
 
             var isAuthorizedApprove = await _authorizationService.AuthorizeAsync(
                                            User, contact,
-                                           ContactOperations.Approve);
+                                           ContactOperations.Approve).ConfigureAwait(false);
 
             if (contact.Status != ContactStatus.Aprobado &&   // Not approved.
                                   !isAuthorizedRead.Succeeded &&        // Don't own it.
@@ -114,8 +117,8 @@ namespace BiblioMit.Controllers
                 Position = Position.Direccion,
                 Description = "Descripción",
                 Phone = 56912345678,
-                OpenHr = Convert.ToDateTime("9:00"),
-				CloseHr = Convert.ToDateTime("18:00")
+                OpenHr = Convert.ToDateTime("9:00", CultureInfo.InvariantCulture),
+				CloseHr = Convert.ToDateTime("18:00", CultureInfo.InvariantCulture)
             });
         }
 
@@ -127,25 +130,26 @@ namespace BiblioMit.Controllers
         [Authorize(Roles = "Administrador",Policy ="Contactos")]
         public async Task<IActionResult> Create(ContactEditViewModel editModel)
         {
+            if (editModel == null) return NotFound();
             if (!ModelState.IsValid)
             {
                 return View(editModel);
             }
 
-            var contact = ViewModel_to_model(new Contact(), editModel);
+            var contact = ViewModelToModel(new Contact(), editModel);
 
             contact.OwnerId = _userManager.GetUserId(User);
 
             var isAuthorized = await _authorizationService.AuthorizeAsync(
                                                         User, contact,
-                                                        ContactOperations.Create);
+                                                        ContactOperations.Create).ConfigureAwait(false);
             if (!isAuthorized.Succeeded)
             {
                 return new ChallengeResult();
             }
 
             _context.Add(contact);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
             return RedirectToAction("Index");
         }
 
@@ -158,7 +162,7 @@ namespace BiblioMit.Controllers
                 return NotFound();
             }
 
-            var contact = await _context.Contact.SingleOrDefaultAsync(m => m.ContactId == id);
+            var contact = await _context.Contact.SingleOrDefaultAsync(m => m.ContactId == id).ConfigureAwait(false);
             if (contact == null)
             {
                 return NotFound();
@@ -166,13 +170,13 @@ namespace BiblioMit.Controllers
 
             var isAuthorized = await _authorizationService.AuthorizeAsync(
                                                         User, contact,
-                                                        ContactOperations.Update);
+                                                        ContactOperations.Update).ConfigureAwait(false);
             if (!isAuthorized.Succeeded)
             {
                 return new ChallengeResult();
             }
 
-            var editModel = Model_to_viewModel(contact);
+            var editModel = ModelToViewModel(contact);
 
             return View(editModel);
         }
@@ -191,33 +195,33 @@ namespace BiblioMit.Controllers
             }
 
             // Fetch Contact from DB to get OwnerId.
-            var contact = await _context.Contact.SingleOrDefaultAsync(m => m.ContactId == id);
-            if (contact == null)
+            var contact = await _context.Contact.SingleOrDefaultAsync(m => m.ContactId == id).ConfigureAwait(false);
+            if (editModel == null || contact == null)
             {
                 return NotFound();
             }
 
             var isAuthorized = await _authorizationService.AuthorizeAsync(User, contact,
-                                                                ContactOperations.Update);
+                                                                ContactOperations.Update).ConfigureAwait(false);
             if (!isAuthorized.Succeeded)
             {
                 return new ChallengeResult();
             }
 
-            contact = ViewModel_to_model(contact, editModel);
+            contact = ViewModelToModel(contact, editModel);
 
             if (contact.Status == ContactStatus.Aprobado)
             {
                 // If the contact is updated after approval, 
                 // and the user cannot approve set the status back to submitted
                 var canApprove = await _authorizationService.AuthorizeAsync(User, contact,
-                                        ContactOperations.Approve);
+                                        ContactOperations.Approve).ConfigureAwait(false);
 
                 if (!canApprove.Succeeded) contact.Status = ContactStatus.Ingresado;
             }
 
             _context.Update(contact);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
 
             return RedirectToAction("Index");
         }
@@ -232,14 +236,14 @@ namespace BiblioMit.Controllers
             }
 
             var contact = await _context.Contact
-                .SingleOrDefaultAsync(m => m.ContactId == id);
+                .SingleOrDefaultAsync(m => m.ContactId == id).ConfigureAwait(false);
             if (contact == null)
             {
                 return NotFound();
             }
 
             var isAuthorized = await _authorizationService.AuthorizeAsync(User, contact,
-                                        ContactOperations.Delete);
+                                        ContactOperations.Delete).ConfigureAwait(false);
             if (!isAuthorized.Succeeded)
             {
                 return new ChallengeResult();
@@ -254,17 +258,17 @@ namespace BiblioMit.Controllers
         [Authorize(Roles = "Administrador",Policy = "Contactos")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var contact = await _context.Contact.SingleOrDefaultAsync(m => m.ContactId == id);
+            var contact = await _context.Contact.SingleOrDefaultAsync(m => m.ContactId == id).ConfigureAwait(false);
 
             var isAuthorized = await _authorizationService.AuthorizeAsync(User, contact,
-                                        ContactOperations.Delete);
+                                        ContactOperations.Delete).ConfigureAwait(false);
             if (!isAuthorized.Succeeded)
             {
                 return new ChallengeResult();
             }
 
             _context.Contact.Remove(contact);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
             return RedirectToAction("Index");
         }
 
@@ -273,29 +277,29 @@ namespace BiblioMit.Controllers
         [Authorize(Roles = "Administrador",Policy = "Contactos")]
         public async Task<IActionResult> SetStatus(int id, ContactStatus status)
         {
-            var contact = await _context.Contact.SingleOrDefaultAsync(m => m.ContactId == id);
+            var contact = await _context.Contact.SingleOrDefaultAsync(m => m.ContactId == id).ConfigureAwait(false);
 
             var contactOperation = (status == ContactStatus.Aprobado) ? ContactOperations.Approve
                                                                       : ContactOperations.Reject;
 
             var isAuthorized = await _authorizationService.AuthorizeAsync(User, contact,
-                                        contactOperation);
+                                        contactOperation).ConfigureAwait(false);
             if (!isAuthorized.Succeeded)
             {
                 return new ChallengeResult();
             }
             contact.Status = status;
             _context.Contact.Update(contact);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
             return RedirectToAction("Index");
         }
 
-        private bool ContactExists(int id)
-        {
-            return _context.Contact.Any(e => e.ContactId == id);
-        }
+        //private bool ContactExists(int id)
+        //{
+        //    return _context.Contact.Any(e => e.ContactId == id);
+        //}
 
-        private Contact ViewModel_to_model(Contact contact, ContactEditViewModel editModel)
+        private static Contact ViewModelToModel(Contact contact, ContactEditViewModel editModel)
         {
             contact.Last = editModel.Last;
             contact.Email = editModel.Email;
@@ -310,7 +314,7 @@ namespace BiblioMit.Controllers
         }
 
         [Authorize(Roles = "Administrador",Policy = "Contactos")]
-        private ContactEditViewModel Model_to_viewModel(Contact contact)
+        private static ContactEditViewModel ModelToViewModel(Contact contact)
         {
             var editModel = new ContactEditViewModel()
             {

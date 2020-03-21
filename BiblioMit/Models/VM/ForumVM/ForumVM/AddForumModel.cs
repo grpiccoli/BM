@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using System;
 
 namespace BiblioMit.Models.ForumViewModels
 {
@@ -6,8 +7,7 @@ namespace BiblioMit.Models.ForumViewModels
     {
         public string Title { get; set; }
         public string Description { get; set; }
-        public string ImageUrl { get; set; }
-
+        public Uri ImageUrl { get; set; }
         public IFormFile ImageUpload { get; set; }
     }
 }

@@ -1,0 +1,61 @@
+﻿table {
+  border-collapse: collapse;
+  border: 1px solid #FF0000;
+  width: 100%; }
+
+table th, td {
+  border: 1px solid #ddd;
+  font-size: smaller;
+  padding: 8px; }
+
+table tr:nth-child(even) {
+  background-color: #f2f2f2; }
+
+table tr:hover {
+  background-color: #ddd; }
+
+table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: lightblue;
+  color: black; }
+
+.descriptionArea {
+  vertical-align: top; }
+
+.descriptionArea span.nameArea {
+  display: block;
+  text-align: left;
+  font-size: 12px; }
+
+.descriptionArea span.buttonArea {
+  display: block;
+  text-align: right; }
+
+.modal {
+  overflow: visible;
+  /*max-width: 100vw;*/ }
+
+.modal-body {
+  overflow-y: visible !important; }
+
+.modal-content {
+  /* Bootstrap sets the size of the modal in the modal-dialog class, we need to inherit it */
+  width: inherit;
+  height: inherit;
+  /* To center horizontally */
+  margin: 0 auto; }
+
+body.modal-open {
+  overflow: hidden;
+  position: fixed; }
+
+.bootstrap-select.btn-group .dropdown-menu {
+  z-index: 2000; }
+
+.bootstrap-select.btn-group .dropdown-menu.inner {
+  position: static; }
+
+.checkArea {
+  text-align: center; }

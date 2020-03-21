@@ -4,9 +4,10 @@
         Action = (string)ViewData["action"],
         Srt = (string)ViewData["srt"],
         Asc = (bool)ViewData["asc"],
-        Rpp = (int)ViewData["rpp"],
-        Val = (string[])ViewData["val"]
-    };}
+        Rpp = (int)ViewData["rpp"]
+    };
+    Model.Val.AddRange((string[])ViewData["val"]);
+}
 
 @this.Block(@<script>
     function filter(v) {

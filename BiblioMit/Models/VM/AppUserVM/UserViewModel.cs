@@ -27,9 +27,9 @@ namespace BiblioMit.Models
         public string Email { get; set; }
 
         [Display(Name = "Permisos de usuario")]
-        public List<SelectListItem> UserClaims { get; set; }
+        public List<SelectListItem> UserClaims { get; } = new List<SelectListItem>();
 
-        public List<SelectListItem> AppRoles { get; set; }
+        public List<SelectListItem> AppRoles { get; } = new List<SelectListItem>();
 
         [Display(Name = "Rol")]
         public string AppRoleId { get; set; }

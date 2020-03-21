@@ -51,13 +51,13 @@ namespace BiblioMit.Views
             var reg = 10;
             var yr_1 = year - 1;
             var feature = HttpContext.Features.Get<IRequestCultureFeature>();
-            var lang = feature.RequestCulture.Culture.TwoLetterISOLanguageName.ToLower();
+            var lang = feature.RequestCulture.Culture.TwoLetterISOLanguageName.ToUpperInvariant();
             DateTime.TryParseExact($"{start} {year}", "M yyyy", CultureInfo.GetCultureInfo("en-GB"), DateTimeStyles.None, out var start_dt);
             DateTime.TryParseExact($"{DateTime.DaysInMonth(year, end)} {end} {year}", "d M yyyy", CultureInfo.GetCultureInfo("en-GB"), DateTimeStyles.None, out var end_dt);
             DateTime.TryParseExact($"{start} {yr_1}", "M yyyy", CultureInfo.GetCultureInfo("en-GB"), DateTimeStyles.None, out var start_dt_1);
             DateTime.TryParseExact($"{DateTime.DaysInMonth(yr_1, end)} {end} {yr_1}", "d M yyyy", CultureInfo.GetCultureInfo("en-GB"), DateTimeStyles.None, out var end_dt_1);
 
-            var pre = $"Total {start_dt.ToString("MMM")}-{end_dt.ToString("MMM")}";
+            var pre = $"Total {start_dt.ToString("MMM", CultureInfo.InvariantCulture)}-{end_dt.ToString("MMM", CultureInfo.InvariantCulture)}";
             var co = "Comuna";
             var pro = "Provincia";
 
@@ -165,7 +165,7 @@ namespace BiblioMit.Views
             var reg = 10;
             var yr_1 = year - 1;
             var feature = HttpContext.Features.Get<IRequestCultureFeature>();
-            var lang = feature.RequestCulture.Culture.TwoLetterISOLanguageName.ToLower();
+            var lang = feature.RequestCulture.Culture.TwoLetterISOLanguageName.ToUpperInvariant();
             DateTime.TryParseExact($"{start} {year}", "M yyyy", CultureInfo.GetCultureInfo("en-GB"), DateTimeStyles.None, out var start_dt);
             DateTime.TryParseExact($"{DateTime.DaysInMonth(year, end)} {end} {year}", "d M yyyy", CultureInfo.GetCultureInfo("en-GB"), DateTimeStyles.None, out var end_dt);
             DateTime.TryParseExact($"{start} {yr_1}", "M yyyy", CultureInfo.GetCultureInfo("en-GB"), DateTimeStyles.None, out var start_dt_1);
@@ -304,7 +304,7 @@ namespace BiblioMit.Views
         {
             var reg = 10;
             var feature = HttpContext.Features.Get<IRequestCultureFeature>();
-            var lang = feature.RequestCulture.Culture.TwoLetterISOLanguageName.ToLower();
+            var lang = feature.RequestCulture.Culture.TwoLetterISOLanguageName.ToUpperInvariant();
             DateTime.TryParseExact($"{start} {year}", "M yyyy", CultureInfo.GetCultureInfo("en-GB"), DateTimeStyles.None, out var start_dt);
             DateTime.TryParseExact($"{DateTime.DaysInMonth(year, end)} {end} {year}", "d M yyyy", CultureInfo.GetCultureInfo("en-GB"), DateTimeStyles.None, out var end_dt);
 
@@ -404,7 +404,7 @@ namespace BiblioMit.Views
         {
             var reg = 10;
             var feature = HttpContext.Features.Get<IRequestCultureFeature>();
-            var lang = feature.RequestCulture.Culture.TwoLetterISOLanguageName.ToLower();
+            var lang = feature.RequestCulture.Culture.TwoLetterISOLanguageName.ToUpperInvariant();
             DateTime.TryParseExact($"{start} {year}", "M yyyy", CultureInfo.GetCultureInfo("en-GB"), DateTimeStyles.None, out var start_dt);
             DateTime.TryParseExact($"{DateTime.DaysInMonth(year, end)} {end} {year}", "d M yyyy",
                 CultureInfo.GetCultureInfo("en-GB"), DateTimeStyles.None, out var end_dt);
@@ -522,9 +522,15 @@ namespace BiblioMit.Views
             return Json(graphs);
         }
 
-        // GET: Boletin
         [AllowAnonymous]
         public ActionResult Index(int? yr, int? start, int? end, int? reg, int? ver, int? tp)
+        {
+            return RedirectToAction(nameof(Boletin), new { yr, start, end, reg, ver, tp });
+        }
+
+        // GET: Boletin
+        [AllowAnonymous]
+        public ActionResult Boletin(int? yr, int? start, int? end, int? reg, int? ver, int? tp)
         {
             if (!reg.HasValue) reg = 10;
             if (!ver.HasValue) ver = 3;
@@ -550,11 +556,11 @@ namespace BiblioMit.Views
 
             ViewData["Start"] = new List<SelectListItem>(
                 from int m in all
-                select new SelectListItem { Text = meses[m - 1], Value = m.ToString(), Disabled = !months.Contains(m), Selected = m == start.Value });
+                select new SelectListItem { Text = meses[m - 1], Value = m.ToString(CultureInfo.InvariantCulture), Disabled = !months.Contains(m), Selected = m == start.Value });
 
             ViewData["End"] = new List<SelectListItem>(
                 from int m in all
-                select new SelectListItem { Text = meses[m - 1], Value = m.ToString(), Disabled = !months.Contains(m) || start.Value >= m, Selected = m == end.Value });
+                select new SelectListItem { Text = meses[m - 1], Value = m.ToString(CultureInfo.InvariantCulture), Disabled = !months.Contains(m) || start.Value >= m, Selected = m == end.Value });
 
             ViewData["Tp"] = new SelectList(
                 from Tipo m in Enum.GetValues(typeof(Tipo))
@@ -568,7 +574,7 @@ namespace BiblioMit.Views
             var centros = _context.Centre
                 .Include(c => c.Comuna)
                 .ThenInclude(c => c.Provincia)
-                .Where(c => c.Planillas.Count() > 0 && c.Comuna.Provincia.RegionId == reg)
+                .Where(c => c.Planillas.Count > 0 && c.Comuna.Provincia.RegionId == reg)
                 .Select(c => c.Comuna).Distinct();
 
             ViewData["Comunas"] = centros.OrderBy(c => c.Provincia.Name).ThenBy(c => c.Name)
@@ -611,11 +617,11 @@ namespace BiblioMit.Views
 
             var strt = new List<SelectListItem>(
                 from int m in all
-                select new SelectListItem { Text = meses[m - 1], Value = m.ToString(), Disabled = !months.Contains(m), Selected = m == start });
+                select new SelectListItem { Text = meses[m - 1], Value = m.ToString(CultureInfo.InvariantCulture), Disabled = !months.Contains(m), Selected = m == start });
 
             var nd = new List<SelectListItem>(
                 from int m in all
-                select new SelectListItem { Text = meses[m - 1], Value = m.ToString(), Disabled = !months.Contains(m), Selected = m == end });
+                select new SelectListItem { Text = meses[m - 1], Value = m.ToString(CultureInfo.InvariantCulture), Disabled = !months.Contains(m), Selected = m == end });
 
             return Json(new { start, end });
         }
@@ -623,7 +629,7 @@ namespace BiblioMit.Views
         // GET: Boletin/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            return View(id);
         }
 
         // GET: Boletin/Create
@@ -633,81 +639,72 @@ namespace BiblioMit.Views
         }
 
         // POST: Boletin/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            if (collection == null)
-            {
-                throw new ArgumentNullException(nameof(collection));
-            }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Create(IFormCollection collection)
+        //{
+        //    if (collection == null)
+        //    {
+        //        throw new ArgumentNullException(nameof(collection));
+        //    }
 
-            try
-            {
-                // TODO: Add insert logic here
+        //    try
+        //    {
+        //        // TODO: Add insert logic here
 
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
 
         // GET: Boletin/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            return View(id);
         }
 
         // POST: Boletin/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            if (collection == null)
-            {
-                throw new ArgumentNullException(nameof(collection));
-            }
-
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Edit(int id, IFormCollection collection)
+        //{
+        //    if (collection == null)
+        //    {
+        //        throw new ArgumentNullException(nameof(collection));
+        //    }
+        //    // TODO: Add update logic here
+        //    return RedirectToAction(nameof(Index));
+        //}
 
         // GET: Boletin/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            return View(id);
         }
 
         // POST: Boletin/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            if (collection == null)
-            {
-                throw new ArgumentNullException(nameof(collection));
-            }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Delete(int id, IFormCollection collection)
+        //{
+        //    if (collection == null)
+        //    {
+        //        throw new ArgumentNullException(nameof(collection));
+        //    }
 
-            try
-            {
-                // TODO: Add delete logic here
+        //    try
+        //    {
+        //        // TODO: Add delete logic here
 
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
     }
 }

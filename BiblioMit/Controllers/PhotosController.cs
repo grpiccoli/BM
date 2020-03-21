@@ -24,23 +24,19 @@ namespace BiblioMit.Controllers
     [Authorize]
     public class PhotosController : Controller
     {
-        private readonly IHostingEnvironment _hostingEnvironment;
         private readonly ApplicationDbContext _context;
         //private readonly string _accessKey;
         //private readonly string _secretKey;
         //private readonly string _bucket;
-        private readonly IConfiguration Configuration;
 
-        public PhotosController(ApplicationDbContext context, IHostingEnvironment hostingEnvironment, IConfiguration configuration)
+        public PhotosController(ApplicationDbContext context)
         {
             _context = context;
-            _hostingEnvironment = hostingEnvironment;
             //_accessKey = configuration.GetValue<string>("S3_Id");
             //_secretKey = configuration.GetValue<string>("S3_KEY");
             //_accessKey = configuration["Authentication:AWS:S3:Id"];
             //_secretKey = configuration["Authentication:AWS:S3:Key"];
             //_bucket = "mytilidb";
-            Configuration = configuration;
         }
 
         [AllowAnonymous]
@@ -55,7 +51,7 @@ namespace BiblioMit.Controllers
             return Redirect(builder.Uri.ToString());
         }
 
-        public IActionResult GetImg(string f, string d, bool th)
+        public IActionResult GetImg(string f, string d)
         {
             var name = Regex.Replace(f, ".*/", "");
 
@@ -66,23 +62,23 @@ namespace BiblioMit.Controllers
         }
 
         // GET: Photos
-        public async Task <IActionResult> Index([FromServices] Microsoft.AspNetCore.NodeServices.INodeServices nodeServices)
+        public async Task <IActionResult> Index()
         {
             var photos = await _context.Photo
                             .Include(p => p.Individual)
                             .OrderBy(p => p.Individual.SamplingId)
                             .AsNoTracking()
-                            .ToListAsync();
+                            .ToListAsync().ConfigureAwait(false);
 
             //var client = new AmazonS3Client(_accessKey, _secretKey, Amazon.RegionEndpoint.SAEast1);
 
             var photosView = new List<UploadPhotoViewModel>();
 
-            for (int i = 0; i < photos.Count(); i++)
+            for (int i = 0; i < photos.Count; i++)
             {
-                var url = Url.Action("GetImg", "Photos",
+                var url = new Uri (Url.Action("GetImg", "Photos",
                     new { f = photos[i].Key, d = "DB", th = false },
-                    HttpContext.Request.Scheme);
+                    HttpContext.Request.Scheme));
                 //var url = client.GetPreSignedURL(new GetPreSignedUrlRequest
                 //{
                 //    BucketName = _bucket,
@@ -102,7 +98,7 @@ namespace BiblioMit.Controllers
                 HttpContext.Request.Scheme);
 
                 var feature = HttpContext.Features.Get<IRequestCultureFeature>();
-                var lang = feature.RequestCulture.Culture.TwoLetterISOLanguageName.ToLower();
+                var lang = feature.RequestCulture.Culture.TwoLetterISOLanguageName.ToUpperInvariant();
 
                 string comment;
 
@@ -141,7 +137,7 @@ namespace BiblioMit.Controllers
             }
 
             var photo = await _context.Photo
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             if (photo == null)
             {
                 return NotFound();
@@ -154,7 +150,7 @@ namespace BiblioMit.Controllers
         public IActionResult Create()
         {
             var feature = HttpContext.Features.Get<IRequestCultureFeature>();
-            var lang = feature.RequestCulture.Culture.TwoLetterISOLanguageName.ToLower();
+            var lang = feature.RequestCulture.Culture.TwoLetterISOLanguageName.ToUpperInvariant();
 
             ViewData["IndividualId"] = _context.Individual.GroupBy(i => i.SamplingId);
 
@@ -172,6 +168,7 @@ namespace BiblioMit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IndividualId,File,Comment,Magnification")] UploadPhotoViewModel uploadPhoto)
         {
+            if (uploadPhoto == null) return NotFound();
             //var client = new AmazonS3Client(_accessKey, _secretKey, Amazon.RegionEndpoint.SAEast1);
 
             //var contentDisposition = ContentDispositionHeaderValue.Parse(uploadPhoto.File.ContentDisposition);
@@ -183,7 +180,7 @@ namespace BiblioMit.Controllers
             using (var stream = new FileStream(Path.Combine(Directory.GetCurrentDirectory(),
                         "DB", uploadPhoto.File.FileName), FileMode.Create))
             {
-                await uploadPhoto.File.CopyToAsync(stream);
+                await uploadPhoto.File.CopyToAsync(stream).ConfigureAwait(false);
             }
 
             //var request = new PutObjectRequest
@@ -207,7 +204,7 @@ namespace BiblioMit.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(photo);
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync().ConfigureAwait(false);
                 return RedirectToAction("Index");
             }
             return View(photo);
@@ -245,7 +242,7 @@ namespace BiblioMit.Controllers
                 return NotFound();
             }
 
-            var photo = await _context.Photo.SingleOrDefaultAsync(m => m.Id == id);
+            var photo = await _context.Photo.SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             if (photo == null)
             {
                 return NotFound();
@@ -261,7 +258,7 @@ namespace BiblioMit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,IndividualId,Comment,Magnification,Key")] Photo photo)
         {
-            if (id != photo.Id)
+            if (photo == null || id != photo.Id)
             {
                 return NotFound();
             }
@@ -271,7 +268,7 @@ namespace BiblioMit.Controllers
                 try
                 {
                     _context.Update(photo);
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -299,7 +296,7 @@ namespace BiblioMit.Controllers
             }
 
             var photo = await _context.Photo
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             if (photo == null)
             {
                 return NotFound();
@@ -313,9 +310,9 @@ namespace BiblioMit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var photo = await _context.Photo.SingleOrDefaultAsync(m => m.Id == id);
+            var photo = await _context.Photo.SingleOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             _context.Photo.Remove(photo);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
             return RedirectToAction("Index");
         }
 

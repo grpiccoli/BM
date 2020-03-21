@@ -192,30 +192,72 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarApps">
         <ul class="navbar-nav mr-auto">
-            <partial name="_NavDDwn" model='new NavDDwnVM {
-    Controller = "Home", Action = "Forum",Logo = "comments",Title = Localizer["Forums"].Value,
-    Sections = foro}' />
-            <partial name="_NavDDwn" model='new NavDDwnVM {
-    Controller = "Publications", Action = "Index", Logo = "search", Title = Localizer["Searches"].Value,
-    Sections = search }' />
-            <partial name="_NavDDwn" model='new NavDDwnVM {
-    Controller = "Centres", Action = "Producers", Logo = "map-marker-alt", Title = Localizer["Maps"].Value,
-    Sections = maps}' />
-            <partial name="_NavDDwn" model='new NavDDwnVM {
-    Controller = "Photos", Action = "Gallery", Logo = "camera-retro", Title = Localizer["Images"].Value,
-    Sections = image}' />
-            <partial name="_NavDDwn" model='new NavDDwnVM {
-    Controller = "Boletin", Action = "Index", Logo = "chart-line", Title = Localizer["Digest"].Value,
-    Sections = digest}' />
+            @{ 
+                var forum = new NavDDwnVM
+                {
+                    Controller = "Home",
+                    Action = "Forum",
+                    Logo = "comments",
+                    Title = Localizer["Forums"].Value
+                };
+                forum.Sections.AddRangeOverride(foro);
+
+                var publications = new NavDDwnVM
+                {
+                    Controller = "Publications",
+                    Action = "Index",
+                    Logo = "search",
+                    Title = Localizer["Searches"].Value
+                };
+                publications.Sections.AddRangeOverride(search);
+
+                var producers = new NavDDwnVM
+                {
+                    Controller = "Centres",
+                    Action = "Producers",
+                    Logo = "map-marker-alt",
+                    Title = Localizer["Maps"].Value
+                };
+                producers.Sections.AddRangeOverride(maps);
+
+                var gallery = new NavDDwnVM
+                {
+                    Controller = "Photos",
+                    Action = "Gallery",
+                    Logo = "camera-retro",
+                    Title = Localizer["Images"].Value
+                };
+                gallery.Sections.AddRangeOverride(image);
+
+                var boletin = new NavDDwnVM 
+                {
+                    Controller = "Boletin", 
+                    Action = "Index", 
+                    Logo = "chart-line", 
+                    Title = Localizer["Digest"].Value
+                };
+                boletin.Sections.AddRangeOverride(digest);
+            }
+            <partial name="_NavDDwn" model='forum' />
+            <partial name="_NavDDwn" model='publications' />
+            <partial name="_NavDDwn" model='producers' />
+            <partial name="_NavDDwn" model='gallery' />
+            <partial name="_NavDDwn" model='boletin' />
             @if (admin)
             {
-                <partial name="_NavDDwn" model='new NavDDwnVM {
-    Controller = "User", Action = "Index", Logo = "wrench", Title = Localizer["Administration"].Value,
-    Sections = tools}' />
+                var adminTools = new NavDDwnVM 
+                {
+                    Controller = "User", 
+                    Action = "Index", 
+                    Logo = "wrench", 
+                    Title = Localizer["Administration"].Value
+                };
+                adminTools.Sections.AddRangeOverride(tools);
+                <partial name="_NavDDwn" model='adminTools' />
             }
         </ul>
         <ul class="navbar-nav ml-auto">
-            <partial name="_LoginPartial" model="new LoginViewModel { }" />
+            <partial name="_LoginPartial" model="new LoginViewModel()" />
         </ul>
     </div>
 </nav>

@@ -7,6 +7,6 @@ namespace BiblioMit.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Sp { get; set; }
-        public ICollection<SpecieSeed> SpecieSeeds { get; set; }
+        public virtual ICollection<SpecieSeed> SpecieSeeds { get; } = new List<SpecieSeed>();
     }
 }

@@ -15,7 +15,7 @@ namespace BiblioMit.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
+                .HasAnnotation("ProductVersion", "3.1.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -23,11 +23,14 @@ namespace BiblioMit.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CentreId");
+                    b.Property<int>("CentreId")
+                        .HasColumnType("int");
 
-                    b.Property<DateTime>("Date");
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -39,21 +42,27 @@ namespace BiblioMit.Migrations
             modelBuilder.Entity("BiblioMit.Models.AppRole", b =>
                 {
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken();
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
 
-                    b.Property<string>("Description");
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("IPAddress");
+                    b.Property<string>("IPAddress")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
                     b.Property<string>("NormalizedName")
+                        .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
                     b.HasKey("Id");
@@ -69,51 +78,71 @@ namespace BiblioMit.Migrations
             modelBuilder.Entity("BiblioMit.Models.AppUser", b =>
                 {
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("AccessFailedCount");
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken();
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
+                        .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
-                    b.Property<bool>("EmailConfirmed");
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
 
-                    b.Property<bool>("IsActive");
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
-                    b.Property<string>("Last");
+                    b.Property<string>("Last")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("LockoutEnabled");
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
 
-                    b.Property<DateTimeOffset?>("LockoutEnd");
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
 
-                    b.Property<DateTime>("MemberSince");
+                    b.Property<DateTime>("MemberSince")
+                        .HasColumnType("datetime2");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
+                        .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
                     b.Property<string>("NormalizedUserName")
+                        .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
-                    b.Property<string>("PasswordHash");
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PhoneNumber");
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("PhoneNumberConfirmed");
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
 
-                    b.Property<string>("ProfileImageUrl");
+                    b.Property<string>("ProfileImageUrl")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Rating");
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
 
-                    b.Property<string>("SecurityStamp");
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("TwoFactorEnabled");
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
 
                     b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
                     b.HasKey("Id");
@@ -131,7 +160,8 @@ namespace BiblioMit.Migrations
 
             modelBuilder.Entity("BiblioMit.Models.AreaCode", b =>
                 {
-                    b.Property<int>("Id");
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -140,9 +170,11 @@ namespace BiblioMit.Migrations
 
             modelBuilder.Entity("BiblioMit.Models.AreaCodeProvincia", b =>
                 {
-                    b.Property<int>("AreaCodeId");
+                    b.Property<int>("AreaCodeId")
+                        .HasColumnType("int");
 
-                    b.Property<int>("ProvinciaId");
+                    b.Property<int>("ProvinciaId")
+                        .HasColumnType("int");
 
                     b.HasKey("AreaCodeId", "ProvinciaId");
 
@@ -153,29 +185,41 @@ namespace BiblioMit.Migrations
 
             modelBuilder.Entity("BiblioMit.Models.Centre", b =>
                 {
-                    b.Property<int>("Id");
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Acronym");
+                    b.Property<string>("Acronym")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Address");
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("Certificable");
+                    b.Property<bool?>("Certificable")
+                        .HasColumnType("bit");
 
-                    b.Property<int>("CompanyId");
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
 
-                    b.Property<int?>("ComunaId");
+                    b.Property<int?>("ComunaId")
+                        .HasColumnType("int");
 
-                    b.Property<int?>("CuerpoAgua");
+                    b.Property<int?>("CuerpoAgua")
+                        .HasColumnType("int");
 
-                    b.Property<int?>("FolioRNA");
+                    b.Property<int?>("FolioRNA")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PSMBId");
+                    b.Property<int?>("PSMBId")
+                        .HasColumnType("int");
 
-                    b.Property<int>("Type");
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Url");
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -190,9 +234,11 @@ namespace BiblioMit.Migrations
 
             modelBuilder.Entity("BiblioMit.Models.CentreProducto", b =>
                 {
-                    b.Property<int>("CentreId");
+                    b.Property<int>("CentreId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("ProductoId");
+                    b.Property<string>("ProductoId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("CentreId", "ProductoId");
 
@@ -205,15 +251,20 @@ namespace BiblioMit.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Description");
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ExcelId");
+                    b.Property<int>("ExcelId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Operation");
+                    b.Property<string>("Operation")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -224,13 +275,17 @@ namespace BiblioMit.Migrations
 
             modelBuilder.Entity("BiblioMit.Models.Company", b =>
                 {
-                    b.Property<int>("Id");
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Acronym");
+                    b.Property<string>("Acronym")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Address");
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("BsnssName");
+                    b.Property<string>("BsnssName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -239,17 +294,23 @@ namespace BiblioMit.Migrations
 
             modelBuilder.Entity("BiblioMit.Models.Comuna", b =>
                 {
-                    b.Property<int>("Id");
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
-                    b.Property<int>("CS");
+                    b.Property<int>("CS")
+                        .HasColumnType("int");
 
-                    b.Property<int>("CuencaId");
+                    b.Property<int>("CuencaId")
+                        .HasColumnType("int");
 
-                    b.Property<int>("DE");
+                    b.Property<int>("DE")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ProvinciaId");
+                    b.Property<int>("ProvinciaId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -264,29 +325,41 @@ namespace BiblioMit.Migrations
                 {
                     b.Property<int>("ContactId")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CentreId");
+                    b.Property<int>("CentreId")
+                        .HasColumnType("int");
 
-                    b.Property<DateTime>("CloseHr");
+                    b.Property<DateTime>("CloseHr")
+                        .HasColumnType("datetime2");
 
-                    b.Property<string>("Description");
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Email");
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Last");
+                    b.Property<string>("Last")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("OpenHr");
+                    b.Property<DateTime>("OpenHr")
+                        .HasColumnType("datetime2");
 
-                    b.Property<string>("OwnerId");
+                    b.Property<string>("OwnerId")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("Phone");
+                    b.Property<long>("Phone")
+                        .HasColumnType("bigint");
 
-                    b.Property<int>("Position");
+                    b.Property<int>("Position")
+                        .HasColumnType("int");
 
-                    b.Property<int>("Status");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.HasKey("ContactId");
 
@@ -299,21 +372,29 @@ namespace BiblioMit.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CentreId");
+                    b.Property<int?>("CentreId")
+                        .HasColumnType("int");
 
-                    b.Property<int?>("CuencaId");
+                    b.Property<int?>("CuencaId")
+                        .HasColumnType("int");
 
-                    b.Property<double>("Latitude");
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float");
 
-                    b.Property<double>("Longitude");
+                    b.Property<double>("Longitude")
+                        .HasColumnType("float");
 
-                    b.Property<int?>("PSMBId");
+                    b.Property<int?>("PSMBId")
+                        .HasColumnType("int");
 
-                    b.Property<int?>("PolygonId");
+                    b.Property<int?>("PolygonId")
+                        .HasColumnType("int");
 
-                    b.Property<int>("Vertex");
+                    b.Property<int>("Vertex")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -330,9 +411,11 @@ namespace BiblioMit.Migrations
 
             modelBuilder.Entity("BiblioMit.Models.Cuenca", b =>
                 {
-                    b.Property<int>("Id");
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -341,43 +424,62 @@ namespace BiblioMit.Migrations
 
             modelBuilder.Entity("BiblioMit.Models.EnsayoFito", b =>
                 {
-                    b.Property<int>("Id");
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Analista");
+                    b.Property<string>("Analista")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("CentreId");
+                    b.Property<int?>("CentreId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Email");
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("EntidadMuestreadora");
+                    b.Property<string>("EntidadMuestreadora")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Estacion");
+                    b.Property<string>("Estacion")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("FechaEnvio");
+                    b.Property<DateTime>("FechaEnvio")
+                        .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("FechaMuestreo");
+                    b.Property<DateTime>("FechaMuestreo")
+                        .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("FinAnalisis");
+                    b.Property<DateTime>("FinAnalisis")
+                        .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("InicioAnalisis");
+                    b.Property<DateTime>("InicioAnalisis")
+                        .HasColumnType("datetime2");
 
-                    b.Property<string>("Laboratorio");
+                    b.Property<string>("Laboratorio")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Muestras");
+                    b.Property<int>("Muestras")
+                        .HasColumnType("int");
 
-                    b.Property<double?>("Oxigeno");
+                    b.Property<double?>("Oxigeno")
+                        .HasColumnType("float");
 
-                    b.Property<int>("PSMBId");
+                    b.Property<int>("PSMBId")
+                        .HasColumnType("int");
 
-                    b.Property<double?>("Ph");
+                    b.Property<double?>("Ph")
+                        .HasColumnType("float");
 
-                    b.Property<DateTime>("Recepcion");
+                    b.Property<DateTime>("Recepcion")
+                        .HasColumnType("datetime2");
 
-                    b.Property<double?>("Salinidad");
+                    b.Property<double?>("Salinidad")
+                        .HasColumnType("float");
 
-                    b.Property<string>("Telefono");
+                    b.Property<string>("Telefono")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<double?>("Temperatura");
+                    b.Property<double?>("Temperatura")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
@@ -388,30 +490,37 @@ namespace BiblioMit.Migrations
                     b.ToTable("EnsayoFito");
                 });
 
-            modelBuilder.Entity("BiblioMit.Models.Excel", b =>
+            modelBuilder.Entity("BiblioMit.Models.ExcelFile", b =>
                 {
-                    b.Property<int>("Id");
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Excel");
+                    b.ToTable("ExcelFile");
                 });
 
             modelBuilder.Entity("BiblioMit.Models.Forum", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("Created");
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
 
-                    b.Property<string>("Description");
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImageUrl");
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Title");
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -420,9 +529,11 @@ namespace BiblioMit.Migrations
 
             modelBuilder.Entity("BiblioMit.Models.Groups", b =>
                 {
-                    b.Property<int>("Id");
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -431,25 +542,35 @@ namespace BiblioMit.Migrations
 
             modelBuilder.Entity("BiblioMit.Models.Individual", b =>
                 {
-                    b.Property<int>("Id");
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
-                    b.Property<int?>("ADG");
+                    b.Property<int?>("ADG")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Comment");
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Depth");
+                    b.Property<int?>("Depth")
+                        .HasColumnType("int");
 
-                    b.Property<int>("Length");
+                    b.Property<int>("Length")
+                        .HasColumnType("int");
 
-                    b.Property<int>("Maturity");
+                    b.Property<int>("Maturity")
+                        .HasColumnType("int");
 
-                    b.Property<int>("Number");
+                    b.Property<int>("Number")
+                        .HasColumnType("int");
 
-                    b.Property<int>("SamplingId");
+                    b.Property<int>("SamplingId")
+                        .HasColumnType("int");
 
-                    b.Property<int>("Sex");
+                    b.Property<int>("Sex")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Tag");
+                    b.Property<string>("Tag")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -462,15 +583,20 @@ namespace BiblioMit.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<double>("Count");
+                    b.Property<double>("Count")
+                        .HasColumnType("float");
 
-                    b.Property<int>("LarvaType");
+                    b.Property<int>("LarvaType")
+                        .HasColumnType("int");
 
-                    b.Property<int>("LarvaeId");
+                    b.Property<int>("LarvaeId")
+                        .HasColumnType("int");
 
-                    b.Property<int>("SpecieId");
+                    b.Property<int>("SpecieId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -485,11 +611,14 @@ namespace BiblioMit.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CentreId");
+                    b.Property<int>("CentreId")
+                        .HasColumnType("int");
 
-                    b.Property<DateTime>("Date");
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -500,9 +629,11 @@ namespace BiblioMit.Migrations
 
             modelBuilder.Entity("BiblioMit.Models.Origen", b =>
                 {
-                    b.Property<int>("Id");
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -511,11 +642,14 @@ namespace BiblioMit.Migrations
 
             modelBuilder.Entity("BiblioMit.Models.PSMB", b =>
                 {
-                    b.Property<int>("Id");
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
-                    b.Property<int>("ComunaId");
+                    b.Property<int>("ComunaId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -528,19 +662,26 @@ namespace BiblioMit.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Comment");
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("IndividualId");
+                    b.Property<int>("IndividualId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Key");
+                    b.Property<string>("Key")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Magnification");
+                    b.Property<int>("Magnification")
+                        .HasColumnType("int");
 
-                    b.Property<int?>("SoftId");
+                    b.Property<int?>("SoftId")
+                        .HasColumnType("int");
 
-                    b.Property<int?>("ValveId");
+                    b.Property<int?>("ValveId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -557,17 +698,23 @@ namespace BiblioMit.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<double>("C");
+                    b.Property<double>("C")
+                        .HasColumnType("float");
 
-                    b.Property<int?>("EAR");
+                    b.Property<int?>("EAR")
+                        .HasColumnType("int");
 
-                    b.Property<int>("EnsayoFitoId");
+                    b.Property<int>("EnsayoFitoId")
+                        .HasColumnType("int");
 
-                    b.Property<int>("GroupsId");
+                    b.Property<int>("GroupsId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Species");
+                    b.Property<string>("Species")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -580,23 +727,32 @@ namespace BiblioMit.Migrations
 
             modelBuilder.Entity("BiblioMit.Models.Planilla", b =>
                 {
-                    b.Property<long>("Id");
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
 
-                    b.Property<int>("CentreId");
+                    b.Property<int>("CentreId")
+                        .HasColumnType("int");
 
-                    b.Property<int>("Dato");
+                    b.Property<int>("Dato")
+                        .HasColumnType("int");
 
-                    b.Property<int>("Declaracion");
+                    b.Property<int>("Declaracion")
+                        .HasColumnType("int");
 
-                    b.Property<DateTime>("Fecha");
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime2");
 
-                    b.Property<int?>("OrigenId");
+                    b.Property<int?>("OrigenId")
+                        .HasColumnType("int");
 
-                    b.Property<double>("Peso");
+                    b.Property<double>("Peso")
+                        .HasColumnType("float");
 
-                    b.Property<int?>("TipoItemProduccion");
+                    b.Property<int?>("TipoItemProduccion")
+                        .HasColumnType("int");
 
-                    b.Property<int?>("TipoProduccion");
+                    b.Property<int?>("TipoProduccion")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -609,9 +765,11 @@ namespace BiblioMit.Migrations
 
             modelBuilder.Entity("BiblioMit.Models.PlataformaUser", b =>
                 {
-                    b.Property<string>("AppUserId");
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("PlataformId");
+                    b.Property<int>("PlataformId")
+                        .HasColumnType("int");
 
                     b.HasKey("AppUserId", "PlataformId");
 
@@ -624,9 +782,11 @@ namespace BiblioMit.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Plataforma");
+                    b.Property<int>("Plataforma")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -635,13 +795,17 @@ namespace BiblioMit.Migrations
 
             modelBuilder.Entity("BiblioMit.Models.Polygon", b =>
                 {
-                    b.Property<int>("Id");
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
-                    b.Property<int?>("ComunaId");
+                    b.Property<int?>("ComunaId")
+                        .HasColumnType("int");
 
-                    b.Property<int?>("ProvinciaId");
+                    b.Property<int?>("ProvinciaId")
+                        .HasColumnType("int");
 
-                    b.Property<int?>("RegionId");
+                    b.Property<int?>("RegionId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -658,17 +822,23 @@ namespace BiblioMit.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Content");
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Created");
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
 
-                    b.Property<int>("ForumId");
+                    b.Property<int>("ForumId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Title");
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -683,15 +853,20 @@ namespace BiblioMit.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Content");
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Created");
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
 
-                    b.Property<int?>("PostId");
+                    b.Property<int?>("PostId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("UserId");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -706,31 +881,44 @@ namespace BiblioMit.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Actualizadas");
+                    b.Property<int>("Actualizadas")
+                        .HasColumnType("int");
 
-                    b.Property<int>("Agregadas");
+                    b.Property<int>("Agregadas")
+                        .HasColumnType("int");
 
-                    b.Property<string>("AppUserId");
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("Date");
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
 
-                    b.Property<string>("FileName");
+                    b.Property<string>("FileName")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("IP");
+                    b.Property<string>("IP")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Max");
+                    b.Property<DateTime>("Max")
+                        .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("Min");
+                    b.Property<DateTime>("Min")
+                        .HasColumnType("datetime2");
 
-                    b.Property<int>("Observaciones");
+                    b.Property<int>("Observaciones")
+                        .HasColumnType("int");
 
-                    b.Property<string>("OutPut");
+                    b.Property<string>("OutPut")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Reportes");
+                    b.Property<int>("Reportes")
+                        .HasColumnType("int");
 
-                    b.Property<bool>("Success");
+                    b.Property<bool>("Success")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -741,7 +929,8 @@ namespace BiblioMit.Migrations
 
             modelBuilder.Entity("BiblioMit.Models.Producto", b =>
                 {
-                    b.Property<string>("Id");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -750,15 +939,20 @@ namespace BiblioMit.Migrations
 
             modelBuilder.Entity("BiblioMit.Models.Provincia", b =>
                 {
-                    b.Property<int>("Id");
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Population");
+                    b.Property<int>("Population")
+                        .HasColumnType("int");
 
-                    b.Property<int>("RegionId");
+                    b.Property<int>("RegionId")
+                        .HasColumnType("int");
 
-                    b.Property<int>("Surface");
+                    b.Property<int>("Surface")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -769,15 +963,20 @@ namespace BiblioMit.Migrations
 
             modelBuilder.Entity("BiblioMit.Models.Region", b =>
                 {
-                    b.Property<int>("Id");
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Pop2002");
+                    b.Property<int>("Pop2002")
+                        .HasColumnType("int");
 
-                    b.Property<int>("Pop2010");
+                    b.Property<int>("Pop2010")
+                        .HasColumnType("int");
 
-                    b.Property<int>("Surface");
+                    b.Property<int>("Surface")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -788,13 +987,17 @@ namespace BiblioMit.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Proportion");
+                    b.Property<int>("Proportion")
+                        .HasColumnType("int");
 
-                    b.Property<int>("SpawningId");
+                    b.Property<int>("SpawningId")
+                        .HasColumnType("int");
 
-                    b.Property<int>("Stage");
+                    b.Property<int>("Stage")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -805,17 +1008,23 @@ namespace BiblioMit.Migrations
 
             modelBuilder.Entity("BiblioMit.Models.Sampling", b =>
                 {
-                    b.Property<int>("Id");
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
-                    b.Property<int>("CentreId");
+                    b.Property<int>("CentreId")
+                        .HasColumnType("int");
 
-                    b.Property<DateTime>("Date");
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
 
-                    b.Property<double?>("O2");
+                    b.Property<double?>("O2")
+                        .HasColumnType("float");
 
-                    b.Property<int?>("Salinity");
+                    b.Property<int?>("Salinity")
+                        .HasColumnType("int");
 
-                    b.Property<double?>("Temp");
+                    b.Property<double?>("Temp")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
@@ -828,13 +1037,17 @@ namespace BiblioMit.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CentreId");
+                    b.Property<int>("CentreId")
+                        .HasColumnType("int");
 
-                    b.Property<DateTime>("Date");
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("DateCuelga");
+                    b.Property<DateTime>("DateCuelga")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -847,17 +1060,23 @@ namespace BiblioMit.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("Count");
+                    b.Property<int?>("Count")
+                        .HasColumnType("int");
 
-                    b.Property<int?>("Degree");
+                    b.Property<int?>("Degree")
+                        .HasColumnType("int");
 
-                    b.Property<int>("IndividualId");
+                    b.Property<int>("IndividualId")
+                        .HasColumnType("int");
 
-                    b.Property<int>("SoftType");
+                    b.Property<int>("SoftType")
+                        .HasColumnType("int");
 
-                    b.Property<int>("Tissue");
+                    b.Property<int>("Tissue")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -870,19 +1089,26 @@ namespace BiblioMit.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CentreId");
+                    b.Property<int>("CentreId")
+                        .HasColumnType("int");
 
-                    b.Property<DateTime>("Date");
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
 
-                    b.Property<double>("FemaleIG");
+                    b.Property<double>("FemaleIG")
+                        .HasColumnType("float");
 
-                    b.Property<int>("FemaleProportion");
+                    b.Property<int>("FemaleProportion")
+                        .HasColumnType("int");
 
-                    b.Property<double>("MaleIG");
+                    b.Property<double>("MaleIG")
+                        .HasColumnType("float");
 
-                    b.Property<int>("MaleProportion");
+                    b.Property<int>("MaleProportion")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -895,11 +1121,14 @@ namespace BiblioMit.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Sp");
+                    b.Property<string>("Sp")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -910,15 +1139,20 @@ namespace BiblioMit.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Capture");
+                    b.Property<int>("Capture")
+                        .HasColumnType("int");
 
-                    b.Property<double>("Proportion");
+                    b.Property<double>("Proportion")
+                        .HasColumnType("float");
 
-                    b.Property<int>("SeedId");
+                    b.Property<int>("SeedId")
+                        .HasColumnType("int");
 
-                    b.Property<int>("SpecieId");
+                    b.Property<int>("SpecieId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -933,13 +1167,17 @@ namespace BiblioMit.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<double>("Proportion");
+                    b.Property<double>("Proportion")
+                        .HasColumnType("float");
 
-                    b.Property<int>("Range");
+                    b.Property<int>("Range")
+                        .HasColumnType("int");
 
-                    b.Property<int>("SpecieSeedId");
+                    b.Property<int>("SpecieSeedId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -950,15 +1188,20 @@ namespace BiblioMit.Migrations
 
             modelBuilder.Entity("BiblioMit.Models.Valve", b =>
                 {
-                    b.Property<int>("Id");
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Comment");
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("IndividualId");
+                    b.Property<int>("IndividualId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Species");
+                    b.Property<string>("Species")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ValveType");
+                    b.Property<int>("ValveType")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -971,14 +1214,18 @@ namespace BiblioMit.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ClaimType");
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ClaimValue");
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RoleId")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -991,16 +1238,21 @@ namespace BiblioMit.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AppRoleId");
+                    b.Property<string>("AppRoleId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("ClaimType");
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ClaimValue");
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -1013,14 +1265,18 @@ namespace BiblioMit.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.Property<string>("LoginProvider");
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("ProviderKey");
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("ProviderDisplayName");
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -1031,12 +1287,15 @@ namespace BiblioMit.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.Property<string>("UserId");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("RoleId");
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Discriminator")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -1049,13 +1308,17 @@ namespace BiblioMit.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.Property<string>("UserId");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("LoginProvider");
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Value");
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
@@ -1066,7 +1329,8 @@ namespace BiblioMit.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUserRole<string>");
 
-                    b.Property<string>("RoleAssigner");
+                    b.Property<string>("RoleAssigner")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasDiscriminator().HasValue("AppUserRole");
                 });
@@ -1076,7 +1340,8 @@ namespace BiblioMit.Migrations
                     b.HasOne("BiblioMit.Models.Centre", "Centre")
                         .WithMany("Analyses")
                         .HasForeignKey("CentreId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BiblioMit.Models.AreaCodeProvincia", b =>
@@ -1084,12 +1349,14 @@ namespace BiblioMit.Migrations
                     b.HasOne("BiblioMit.Models.AreaCode", "AreaCode")
                         .WithMany("AreaCodeProvincias")
                         .HasForeignKey("AreaCodeId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("BiblioMit.Models.Provincia", "Provincia")
                         .WithMany("AreaCodeProvincias")
                         .HasForeignKey("ProvinciaId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BiblioMit.Models.Centre", b =>
@@ -1097,7 +1364,8 @@ namespace BiblioMit.Migrations
                     b.HasOne("BiblioMit.Models.Company", "Company")
                         .WithMany("Centres")
                         .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("BiblioMit.Models.Comuna", "Comuna")
                         .WithMany("Centres")
@@ -1113,20 +1381,23 @@ namespace BiblioMit.Migrations
                     b.HasOne("BiblioMit.Models.Centre", "Planta")
                         .WithMany("Productos")
                         .HasForeignKey("CentreId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("BiblioMit.Models.Producto", "Producto")
                         .WithMany("Plantas")
                         .HasForeignKey("ProductoId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BiblioMit.Models.Columna", b =>
                 {
-                    b.HasOne("BiblioMit.Models.Excel", "Excel")
+                    b.HasOne("BiblioMit.Models.ExcelFile", "Excel")
                         .WithMany("Columnas")
                         .HasForeignKey("ExcelId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BiblioMit.Models.Comuna", b =>
@@ -1134,12 +1405,14 @@ namespace BiblioMit.Migrations
                     b.HasOne("BiblioMit.Models.Cuenca", "Cuenca")
                         .WithMany("Comunas")
                         .HasForeignKey("CuencaId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("BiblioMit.Models.Provincia", "Provincia")
                         .WithMany("Comunas")
                         .HasForeignKey("ProvinciaId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BiblioMit.Models.Contact", b =>
@@ -1147,7 +1420,8 @@ namespace BiblioMit.Migrations
                     b.HasOne("BiblioMit.Models.Centre", "Centre")
                         .WithMany("Contacts")
                         .HasForeignKey("CentreId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BiblioMit.Models.Coordinate", b =>
@@ -1178,7 +1452,8 @@ namespace BiblioMit.Migrations
                     b.HasOne("BiblioMit.Models.PSMB", "PSMB")
                         .WithMany()
                         .HasForeignKey("PSMBId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BiblioMit.Models.Individual", b =>
@@ -1186,7 +1461,8 @@ namespace BiblioMit.Migrations
                     b.HasOne("BiblioMit.Models.Sampling", "Sampling")
                         .WithMany("Individuals")
                         .HasForeignKey("SamplingId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BiblioMit.Models.Larva", b =>
@@ -1194,12 +1470,14 @@ namespace BiblioMit.Migrations
                     b.HasOne("BiblioMit.Models.Larvae", "Larvae")
                         .WithMany("Larva")
                         .HasForeignKey("LarvaeId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("BiblioMit.Models.Specie", "Specie")
                         .WithMany()
                         .HasForeignKey("SpecieId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BiblioMit.Models.Larvae", b =>
@@ -1207,7 +1485,8 @@ namespace BiblioMit.Migrations
                     b.HasOne("BiblioMit.Models.Centre", "Centre")
                         .WithMany()
                         .HasForeignKey("CentreId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BiblioMit.Models.PSMB", b =>
@@ -1215,7 +1494,8 @@ namespace BiblioMit.Migrations
                     b.HasOne("BiblioMit.Models.Comuna", "Comuna")
                         .WithMany("PSMBs")
                         .HasForeignKey("ComunaId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BiblioMit.Models.Photo", b =>
@@ -1223,13 +1503,14 @@ namespace BiblioMit.Migrations
                     b.HasOne("BiblioMit.Models.Individual", "Individual")
                         .WithMany()
                         .HasForeignKey("IndividualId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("BiblioMit.Models.Soft")
+                    b.HasOne("BiblioMit.Models.Soft", null)
                         .WithMany("Photos")
                         .HasForeignKey("SoftId");
 
-                    b.HasOne("BiblioMit.Models.Valve")
+                    b.HasOne("BiblioMit.Models.Valve", null)
                         .WithMany("Photos")
                         .HasForeignKey("ValveId");
                 });
@@ -1239,12 +1520,14 @@ namespace BiblioMit.Migrations
                     b.HasOne("BiblioMit.Models.EnsayoFito", "EnsayoFito")
                         .WithMany("Fitoplanctons")
                         .HasForeignKey("EnsayoFitoId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("BiblioMit.Models.Groups", "Groups")
                         .WithMany("Phytoplanktons")
                         .HasForeignKey("GroupsId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BiblioMit.Models.Planilla", b =>
@@ -1252,7 +1535,8 @@ namespace BiblioMit.Migrations
                     b.HasOne("BiblioMit.Models.Centre", "Centre")
                         .WithMany("Planillas")
                         .HasForeignKey("CentreId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("BiblioMit.Models.Origen", "Origin")
                         .WithMany("Planillas")
@@ -1264,12 +1548,14 @@ namespace BiblioMit.Migrations
                     b.HasOne("BiblioMit.Models.AppUser", "AppUser")
                         .WithMany("Plataforma")
                         .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("BiblioMit.Models.Platform", "Plataform")
                         .WithMany("PlataformaUser")
                         .HasForeignKey("PlataformId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BiblioMit.Models.Polygon", b =>
@@ -1292,7 +1578,8 @@ namespace BiblioMit.Migrations
                     b.HasOne("BiblioMit.Models.Forum", "Forum")
                         .WithMany("Posts")
                         .HasForeignKey("ForumId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("BiblioMit.Models.AppUser", "User")
                         .WithMany()
@@ -1322,7 +1609,8 @@ namespace BiblioMit.Migrations
                     b.HasOne("BiblioMit.Models.Region", "Region")
                         .WithMany("Provincias")
                         .HasForeignKey("RegionId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BiblioMit.Models.RepStage", b =>
@@ -1330,7 +1618,8 @@ namespace BiblioMit.Migrations
                     b.HasOne("BiblioMit.Models.Spawning", "Spawning")
                         .WithMany("Stage")
                         .HasForeignKey("SpawningId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BiblioMit.Models.Sampling", b =>
@@ -1338,7 +1627,8 @@ namespace BiblioMit.Migrations
                     b.HasOne("BiblioMit.Models.Centre", "Centre")
                         .WithMany("Samplings")
                         .HasForeignKey("CentreId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BiblioMit.Models.Seed", b =>
@@ -1346,7 +1636,8 @@ namespace BiblioMit.Migrations
                     b.HasOne("BiblioMit.Models.Centre", "Centre")
                         .WithMany()
                         .HasForeignKey("CentreId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BiblioMit.Models.Soft", b =>
@@ -1354,7 +1645,8 @@ namespace BiblioMit.Migrations
                     b.HasOne("BiblioMit.Models.Individual", "Individual")
                         .WithMany("Softs")
                         .HasForeignKey("IndividualId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BiblioMit.Models.Spawning", b =>
@@ -1362,7 +1654,8 @@ namespace BiblioMit.Migrations
                     b.HasOne("BiblioMit.Models.Centre", "Centre")
                         .WithMany()
                         .HasForeignKey("CentreId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BiblioMit.Models.SpecieSeed", b =>
@@ -1370,12 +1663,14 @@ namespace BiblioMit.Migrations
                     b.HasOne("BiblioMit.Models.Seed", "Seed")
                         .WithMany("Specie")
                         .HasForeignKey("SeedId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("BiblioMit.Models.Specie", "Specie")
                         .WithMany("SpecieSeeds")
                         .HasForeignKey("SpecieId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BiblioMit.Models.Talla", b =>
@@ -1383,7 +1678,8 @@ namespace BiblioMit.Migrations
                     b.HasOne("BiblioMit.Models.SpecieSeed", "SpecieSeed")
                         .WithMany("Tallas")
                         .HasForeignKey("SpecieSeedId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BiblioMit.Models.Valve", b =>
@@ -1391,56 +1687,63 @@ namespace BiblioMit.Migrations
                     b.HasOne("BiblioMit.Models.Individual", "Individual")
                         .WithMany("Valves")
                         .HasForeignKey("IndividualId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("BiblioMit.Models.AppRole")
+                    b.HasOne("BiblioMit.Models.AppRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("BiblioMit.Models.AppRole")
+                    b.HasOne("BiblioMit.Models.AppRole", null)
                         .WithMany("Claims")
                         .HasForeignKey("AppRoleId");
 
-                    b.HasOne("BiblioMit.Models.AppUser")
+                    b.HasOne("BiblioMit.Models.AppUser", null)
                         .WithMany("Claims")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("BiblioMit.Models.AppUser")
+                    b.HasOne("BiblioMit.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.HasOne("BiblioMit.Models.AppRole")
+                    b.HasOne("BiblioMit.Models.AppRole", null)
                         .WithMany("Users")
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("BiblioMit.Models.AppUser")
+                    b.HasOne("BiblioMit.Models.AppUser", null)
                         .WithMany("Roles")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("BiblioMit.Models.AppUser")
+                    b.HasOne("BiblioMit.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

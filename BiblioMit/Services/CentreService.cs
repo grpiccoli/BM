@@ -23,9 +23,9 @@ namespace BiblioMit.Services
             {
                 return( _context.Centre
                     .Where(c =>
-                    c.Address.Contains(searchQuery) ||
-                    c.Company.BsnssName.Contains(searchQuery) ||
-                    c.Comuna.Name.Contains(searchQuery))
+                    c.Address.Contains(searchQuery, StringComparison.InvariantCultureIgnoreCase) ||
+                    c.Company.BsnssName.Contains(searchQuery, StringComparison.InvariantCultureIgnoreCase) ||
+                    c.Comuna.Name.Contains(searchQuery, StringComparison.InvariantCultureIgnoreCase))
                     .OrderBy(c => c.Id)
                     .ToList()
                     .GetRange(page*rpp-1,rpp) );

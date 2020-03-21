@@ -11,6 +11,6 @@ namespace BiblioMit.Models
         [InsertOff]
         public string Id { get; set; }
 
-        public virtual ICollection<CentreProducto> Plantas { get; set; }
+        public virtual ICollection<CentreProducto> Plantas { get; } = new List<CentreProducto>();
     }
 }

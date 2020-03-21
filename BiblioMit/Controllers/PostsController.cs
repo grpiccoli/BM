@@ -75,18 +75,19 @@ namespace BiblioMit.Controllers
         [Authorize]
         public async Task<IActionResult> AddPost(NewPostModel model)
         {
+            if (model == null) return NotFound();
             var userId = _userManager.GetUserId(User);
             var user = _userManager.FindByIdAsync(userId).Result;
             var post = BuildPost(model, user);
 
-            await _postService.Add(post);
+            await _postService.Add(post).ConfigureAwait(false);
 
-            await _userService.UpdateUserRating(userId, typeof(Post));
+            await _userService.UpdateUserRating(userId, typeof(Post)).ConfigureAwait(false);
 
             return RedirectToAction("Index", "Posts", new { id = post.Id } );
         }
 
-        private Post BuildPost(NewPostModel model, AppUser user)
+        private static Post BuildPost(NewPostModel model, AppUser user)
         {
             return new Post
             {
@@ -98,7 +99,7 @@ namespace BiblioMit.Controllers
             };
         }
 
-        private IEnumerable<PostReplyModel> BuildPostReplies(IEnumerable<PostReply> replies)
+        private static IEnumerable<PostReplyModel> BuildPostReplies(IEnumerable<PostReply> replies)
         {
             return replies.Select(r => new PostReplyModel
             {
