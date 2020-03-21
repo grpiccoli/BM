@@ -37,10 +37,8 @@ namespace BiblioMit.Services
         /// <returns></returns>
         public static GetReportsResponse GetReport(GetReportsRequest getReportsRequest)
         {
-            using (var analyticsService = GetAnalyticsReportingServiceInstance(ConfigurationManager.AppSettings["KeyFileName"]))
-            {
-                return analyticsService.Reports.BatchGet(getReportsRequest).Execute();
-            }
+            using var analyticsService = GetAnalyticsReportingServiceInstance(ConfigurationManager.AppSettings["KeyFileName"]);
+            return analyticsService.Reports.BatchGet(getReportsRequest).Execute();
         }
     }
 }

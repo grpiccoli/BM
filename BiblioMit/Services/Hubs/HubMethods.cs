@@ -8,7 +8,7 @@ namespace BiblioMit.Services
 {
     public class HubMethods<THub> where THub : Hub
     {
-        private IHubContext<THub> _hubContext;
+        private readonly IHubContext<THub> _hubContext;
         public HubMethods(IHubContext<THub> hubContext)
         {
             _hubContext = hubContext;

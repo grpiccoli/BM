@@ -60,13 +60,11 @@ namespace BiblioMit.Services
                     }
                 }
                 sitemapContent += "</urlset>";
-                using (var memoryStream = new MemoryStream())
-                {
-                    var bytes = Encoding.UTF8.GetBytes(sitemapContent);
-                    memoryStream.Write(bytes, 0, bytes.Length);
-                    memoryStream.Seek(0, SeekOrigin.Begin);
-                    await memoryStream.CopyToAsync(stream, bytes.Length).ConfigureAwait(false);
-                }
+                using var memoryStream = new MemoryStream();
+                var bytes = Encoding.UTF8.GetBytes(sitemapContent);
+                memoryStream.Write(bytes, 0, bytes.Length);
+                memoryStream.Seek(0, SeekOrigin.Begin);
+                await memoryStream.CopyToAsync(stream, bytes.Length).ConfigureAwait(false);
             }
             else
                 await _next(context).ConfigureAwait(false);

@@ -6,7 +6,7 @@ namespace BiblioMit.Services
     {
         public string Run(string script, string[] args)
         {
-            using (var process = new Process
+            using var process = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
@@ -16,19 +16,17 @@ namespace BiblioMit.Services
                     RedirectStandardOutput = true,
                     RedirectStandardError = true
                 }
-            })
-            {
-                var s = string.Empty;
-                var e = string.Empty;
-                process.OutputDataReceived += (sender, data) => s += data.Data;
-                process.ErrorDataReceived += (sender, data) => e += data.Data;
-                process.Start();
-                process.BeginOutputReadLine();
-                process.BeginErrorReadLine();
-                process.WaitForExit();
-                process.Close();
-                return s;
-            }
+            };
+            var s = string.Empty;
+            var e = string.Empty;
+            process.OutputDataReceived += (sender, data) => s += data.Data;
+            process.ErrorDataReceived += (sender, data) => e += data.Data;
+            process.Start();
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
+            process.WaitForExit();
+            process.Close();
+            return s;
         }
     }
 }
