@@ -142,6 +142,7 @@
 
   <ItemGroup>
     <Folder Include="scripts\types\amcharts\" />
+    <Folder Include="wwwroot\js\" />
   </ItemGroup>
 
   <ItemGroup>

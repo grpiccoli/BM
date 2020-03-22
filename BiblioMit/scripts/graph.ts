@@ -54,7 +54,7 @@ function loadData(values: any, event: any, boolpsmb: any) {
         var d = $.Deferred();
         requests.push(d.promise());
         var url = "/ambiental/" + x[4] + "data?area=" + x[1] + "&var=" + x[0] + "&start=" + start + "&end=" + end;
-        console.log(url);
+        //console.log(url);
         $.getJSON(url, (data) => {
             temps.push(data);
             d.resolve();
@@ -217,7 +217,7 @@ etl.addEventListener('addItem', (event: any) => {
                                     requests.push(d.promise());
                                     var url = "/ambiental/tldata?a=" + a + "&psmb=" + psmb.value + "&sp=" + sp.value +
                                         "&t=" + t.value.slice(1, 2) + "&start=" + start + "&end=" + end;
-                                    console.log(url);
+                                    //console.log(url);
                                     $.getJSON(url, (data) => {
                                         temps.push(data);
                                         d.resolve();
@@ -355,8 +355,8 @@ etl.addEventListener('addItem', (event: any) => {
             $.when.apply(null, requests).done(() => {
                 if (temps.length !== 0)
                     temp = temps;
-                console.log(temps);
-                console.log(tags[0]);
+                //console.log(temps);
+                //console.log(tags[0]);
                 $.each(chart4.data, (j) => {
                     for (var i = 0; i < temps.length; i++) {
                         chart4.data[j][tags[i]] = temps[i][j][tags[i]];

@@ -10,6 +10,7 @@ using System;
 using System.Dynamic;
 using Range = BiblioMit.Models.Range;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace BiblioMit.Controllers
 {
@@ -116,15 +117,21 @@ namespace BiblioMit.Controllers
             };
 
             var areasList = await _context.Comuna
-            .Where(c => c.Polygons.Any() && c.Centres.Any(e => e.EnsayoFitos.Any()))
-            .GroupBy(c => c.Cuenca).ToListAsync().ConfigureAwait(false);
+                .Include(c => c.Cuenca)
+                //.Include(c => c.Polygons)
+                //.Include(c => c.Centres)
+                //    .ThenInclude(c => c.EnsayoFitos)
+                //.Where(c => c.Polygons.Any() && c.Centres.Any(e => e.EnsayoFitos.Any()))
+                .ToListAsync().ConfigureAwait(false);
 
             areas.AddRange(areasList
+                .GroupBy(c => c.CuencaId)
                 .Select(g => new
                 {
-                    label = "Cuenca " + g.Key.Name,
-                    id = g.Key.Id + 1,
-                    choices = g.Select(i => new
+                    label = "Cuenca " + g.First().Cuenca.Name,
+                    id = g.Key + 1,
+                    choices = g
+                    .Select(i => new
                     {
                         value = i.Id.ToString(CultureInfo.InvariantCulture),
                         label = $"{i.Name}"
@@ -134,15 +141,22 @@ namespace BiblioMit.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 var psmbsList = await _context.PSMB
-                .Where(c => c.Coordinates.Any() && c.Centres.Any(e => e.EnsayoFitos.Any()))
-                .GroupBy(c => c.Comuna.Cuenca).ToListAsync().ConfigureAwait(false);
+                    .Include(p => p.Comuna)
+                        .ThenInclude(c => c.Cuenca)
+                    //.Include(p => p.Coordinates)
+                    //.Include(p => p.Centres)
+                    //    .ThenInclude(c => c.EnsayoFitos)
+                    //.Where(c => c.Coordinates.Any() && c.Centres.Any(e => e.EnsayoFitos.Any()))
+                .ToListAsync().ConfigureAwait(false);
 
                 areas.AddRange(psmbsList
+                .GroupBy(c => c.Comuna.CuencaId)
                 .Select(g => new
                 {
-                    label = "Cuenca " + g.Key.Name,
-                    id = g.Key.Id + 1,
-                    choices = g.Select(i => new
+                    label = "Cuenca " + g.First().Comuna.Cuenca.Name,
+                    id = g.Key + 1,
+                    choices = g
+                    .Select(i => new
                     {
                         value = (i.Id * 100).ToString(CultureInfo.InvariantCulture),
                         label = $"{i.Id} {i.Name}, {i.Comuna.Name}"

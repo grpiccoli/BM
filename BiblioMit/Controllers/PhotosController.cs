@@ -42,13 +42,7 @@ namespace BiblioMit.Controllers
         [AllowAnonymous]
         public IActionResult Gallery()
         {
-            var builder = new UriBuilder
-            {
-                Scheme = Request.Scheme,
-                Host = Request.Host.Value,
-                Path = "colecci-n-virtual/index.html"
-            };
-            return Redirect(builder.Uri.ToString());
+            return Redirect($"{Request.Scheme}://{Request.Host.Value}/colecci-n-virtual/index.html");
         }
 
         public IActionResult GetImg(string f, string d)

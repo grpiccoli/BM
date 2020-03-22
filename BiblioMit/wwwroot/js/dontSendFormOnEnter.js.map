@@ -1,0 +1,1 @@
+{"version":3,"file":"dontSendFormOnEnter.js","sourceRoot":"scripts/","sources":["dontSendFormOnEnter.ts"],"names":[],"mappings":"AAAA,CAAC,CAAC,YAAY,CAAC,CAAC,EAAE,CAAC,gBAAgB,EAAE,UAAC,CAAC;IACnC,IAAI,OAAO,GAAG,CAAC,CAAC,OAAO,IAAI,CAAC,CAAC,KAAK,CAAC;IACnC,IAAI,OAAO,IAAI,EAAE,EAAE;QACf,CAAC,CAAC,cAAc,EAAE,CAAC;KACtB;AACL,CAAC,CAAC,CAAC"}

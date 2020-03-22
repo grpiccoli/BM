@@ -23,6 +23,8 @@ using System.IO;
 using AspNetCore.IServiceCollection.AddIUrlHelper;
 using Microsoft.EntityFrameworkCore;
 using WebMarkupMin.AspNetCore2;
+using Microsoft.AspNetCore.CookiePolicy;
+using System.Diagnostics.CodeAnalysis;
 
 namespace BiblioMit
 {
@@ -35,7 +37,7 @@ namespace BiblioMit
             _os = Environment.OSVersion.Platform.ToString();
         }
 
-    public IConfiguration Configuration { get; }
+        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -72,11 +74,8 @@ namespace BiblioMit
             //});
 
             services.Configure<CookiePolicyOptions>(options =>
-            {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
+                options.CheckConsentNeeded = context => true);
             services.ConfigureApplicationCookie(options =>
             {
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
@@ -114,6 +113,8 @@ namespace BiblioMit
                 .AddViewLocalization()
                 .AddDataAnnotationsLocalization()
                 .AddNewtonsoftJson();
+
+            services.ConfigureNonBreakingSameSiteCookies();
 
             services.AddHsts(options =>
             {

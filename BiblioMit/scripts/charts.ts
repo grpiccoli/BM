@@ -3,7 +3,7 @@ function Chart(type: any, selector: any, data: any, options: any): any {
     var _selector = selector;
     var _data = data;
     var _options = options;
-    var _chart: AmCharts.AmChart = null;
+    var _chart: AmCharts.AmChart;
 
     var _config : any = {
             // disable init animation

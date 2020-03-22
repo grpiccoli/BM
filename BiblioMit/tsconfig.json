@@ -1,17 +1,26 @@
 {
   "compilerOptions": {
     "lib": [
-      "es2015",
-      "es6",
-      "dom"
+      "ES2015",
+      "ES5",
+      "DOM"
     ],
     "module": "commonjs",
     "noEmitOnError": true,
     "noImplicitAny": true,
     "baseUrl": "./",
+    //"alwaysStrict": true,
+    "outDir": "wwwroot/js",
+    "sourceRoot": "scripts/",
+    "rootDir": "scripts/",
+    //"strict": true,
+    //"strictBindCallApply": true,
+    //"strictFunctionTypes": true,
+    //"strictNullChecks": true,
+    //"strictPropertyInitialization": true,
     "removeComments": true,
     "sourceMap": true,
-    "target": "es6"
+    "target": "ES5"
   },
   "exclude": [
     "node_modules",

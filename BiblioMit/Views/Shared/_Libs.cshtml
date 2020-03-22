@@ -15,39 +15,42 @@
     {
         var bundles = Bundler.GetBundles(lib);
         var continuar = false;
-        if (bundles != null) { foreach (var bundle in bundles)
-        {
-            var file = bundle.OutputFileName.Replace("wwwroot", "~");
-            if (file.Contains(".css"))
+        if (bundles != null) 
+        { 
+            foreach (var bundle in bundles)
             {
-                if (dev)
+                var file = bundle.OutputFileName.Replace("wwwroot", "~");
+                if (file.Contains(".css"))
                 {
-                    foreach (var input in bundle.InputFiles)
+                    if (dev)
                     {
-                        this.Block(@<link href="@input.Insert(0, "~/")" rel="stylesheet" asp-append-version="true" />, style);
+                        foreach (var input in bundle.InputFiles)
+                        {
+                            this.Block(@<link href="@input.Insert(0, "~/")" rel="stylesheet" asp-append-version="true" />, style);
+                        }
+                    }
+                    else
+                    {
+                        this.Block(@<link href="@file" rel="stylesheet" asp-append-version="true" />, style);
                     }
                 }
                 else
                 {
-                    this.Block(@<link href="@file" rel="stylesheet" asp-append-version="true" />, style);
-                }
-            }
-            else
-            {
-                if (dev)
-                {
-                    foreach (var input in bundle.InputFiles)
+                    if (dev)
                     {
-                        this.Block(@<script src="@input.Insert(0, "~/")" asp-append-version="true"></script>, script);
+                        foreach (var input in bundle.InputFiles)
+                        {
+                            this.Block(@<script src="@input.Insert(0, "~/")" asp-append-version="true"></script>, script);
+                        }
+                    }
+                    else
+                    {
+                        this.Block(@<script src="@file" asp-append-version="true"></script>, script);
                     }
                 }
-                else
-                {
-                    this.Block(@<script src="@file" asp-append-version="true"></script>, script);
-                }
+                continuar = true;
             }
-            continuar = true;
-        }}
+        }
         if (continuar) { continue;}
         var l = Libman.GetLibs(lib);
         if (l != null) { foreach (var file in l.Files)

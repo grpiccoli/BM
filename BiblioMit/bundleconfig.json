@@ -27,27 +27,19 @@
   },
   {
     "outputFileName": "wwwroot/css/icomoon.min.css",
-    "inputFiles": [
-      "styles/icomoon/style.css"
-    ]
+    "inputFiles": [ "styles/icomoon/style.css" ]
   },
   {
     "outputFileName": "wwwroot/js/bibliomit.min.js",
-    "inputFiles": [
-      "scripts/bibliomit.js"
-    ]
+    "inputFiles": [ "scripts/bibliomit.js" ]
   },
   {
     "outputFileName": "wwwroot/css/background.min.css",
-    "inputFiles": [
-      "styles/background.css"
-    ]
+    "inputFiles": [ "styles/background.css" ]
   },
   {
     "outputFileName": "wwwroot/css/chart.min.css",
-    "inputFiles": [
-      "styles/chart.css"
-    ]
+    "inputFiles": [ "styles/chart.css" ]
   },
   {
     "outputFileName": "wwwroot/css/boletin.min.css",
@@ -59,15 +51,11 @@
   },
   {
     "outputFileName": "wwwroot/css/bibico.min.css",
-    "inputFiles": [
-      "styles/bibico/style.css"
-    ]
+    "inputFiles": [ "styles/bibico/style.css" ]
   },
   {
     "outputFileName": "wwwroot/css/bibmono.min.css",
-    "inputFiles": [
-      "styles/bibmono/style.css"
-    ]
+    "inputFiles": [ "styles/bibmono/style.css" ]
   },
   {
     "outputFileName": "wwwroot/css/dinamicTable.min.css",
@@ -174,8 +162,6 @@
   },
   {
     "outputFileName": "wwwroot/js/validation.min.js",
-    "inputFiles": [
-      "scripts/validate-localization.js"
-    ]
+    "inputFiles": [ "scripts/validate-localization.js" ]
   }
 ]
