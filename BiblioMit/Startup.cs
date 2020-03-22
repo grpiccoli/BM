@@ -257,8 +257,8 @@ namespace BiblioMit
                     pattern: "{controller=Home}/{action=Index}/{id?}")
                 .RequireAuthorization();
                 endpoints.MapHub<ChatHub>("/chatHub");
-                endpoints.MapHub<EntryHub>("/entryHub");
-                endpoints.MapHub<ProgressHub>("/progressHub");
+                endpoints.MapHub<EntryHub>("/entryHub").RequireAuthorization();
+                endpoints.MapHub<ProgressHub>("/progressHub").RequireAuthorization();
             });
         }
     }
