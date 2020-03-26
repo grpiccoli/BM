@@ -10,6 +10,12 @@ namespace BiblioMit.Extensions
             dicToAdd.ForEach(x => dic[x.Key] = x.Value);
         }
 
+        public static void AddRangeOverride<TKey>(this IList<TKey> list, IList<TKey> listToAdd)
+        {
+            list?.Clear();
+            listToAdd.ForEach(x => list.Add(x));
+        }
+
         public static void AddRangeNewOnly<TKey, TValue>(this IDictionary<TKey, TValue> dic, IDictionary<TKey, TValue> dicToAdd)
         {
             dicToAdd.ForEach(x => { if (!dic.ContainsKey(x.Key)) dic.Add(x.Key, x.Value); });

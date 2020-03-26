@@ -11,6 +11,7 @@ using System.Dynamic;
 using Range = BiblioMit.Models.Range;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Http;
 
 namespace BiblioMit.Controllers
 {
@@ -226,7 +227,7 @@ namespace BiblioMit.Controllers
         public JsonResult TLData(int a, int psmb, int sp, int? t, int? l, int? rs, int? s, string start, string end) {
             var i = Convert.ToDateTime(start, CultureInfo.InvariantCulture);
             var f = Convert.ToDateTime(end, CultureInfo.InvariantCulture);
-            IEnumerable<ExpandoObject> data = new List<ExpandoObject>() { };
+            IEnumerable<ExpandoObject> data = new List<ExpandoObject>();
             //a 1 semilla, 2 larva, 3 reproductor
             var psmbs = new Dictionary<int,int>{
                 {20, 101990},
@@ -672,7 +673,7 @@ namespace BiblioMit.Controllers
             return Json(map);
         }
         [AllowAnonymous]
-        public IActionResult FitoData(int area, string var, string start, string end)
+        public IActionResult FitoData(int psmb, string var, string start, string end)
         {
             var i = Convert.ToDateTime(start, CultureInfo.InvariantCulture);
             var f = Convert.ToDateTime(end, CultureInfo.InvariantCulture);
@@ -680,25 +681,25 @@ namespace BiblioMit.Controllers
                 .Select(offset => new EnsayoFito { FechaMuestreo = i.AddDays(offset) });
             IEnumerable<ExpandoObject> data = new List<ExpandoObject>() { };
             var ensayos = new List<EnsayoFito>();
-            if (area < 100) // Cuenca
+            if (psmb < 100) // Cuenca
             {
                 ensayos = _context.EnsayoFito
-                    .Where(e => e.PSMB.Comuna.CuencaId == area && e.FechaMuestreo >= i && e.FechaMuestreo <= f)
+                    .Where(e => e.PSMB.Comuna.CuencaId == psmb && e.FechaMuestreo >= i && e.FechaMuestreo <= f)
                     .Include(e => e.Fitoplanctons)
                     .ToList();
             }
-            else if (area < 20_000) //Comuna
+            else if (psmb < 20_000) //Comuna
             {
                 ensayos = _context.EnsayoFito
-                        .Where(e => e.PSMB.ComunaId == area && e.FechaMuestreo >= i && e.FechaMuestreo <= f)
+                        .Where(e => e.PSMB.ComunaId == psmb && e.FechaMuestreo >= i && e.FechaMuestreo <= f)
                         .Include(e => e.Fitoplanctons)
                         .ToList();
             }
             else //PSMB * 100
             {
-                var psmb = area / 100;
+                var psmbs = psmb / 100;
                 ensayos = _context.EnsayoFito
-                        .Where(e => e.PSMBId == psmb && e.FechaMuestreo >= i && e.FechaMuestreo <= f)
+                        .Where(e => e.PSMBId == psmbs && e.FechaMuestreo >= i && e.FechaMuestreo <= f)
                         .Include(e => e.Fitoplanctons)
                         .ToList();
             }
@@ -715,7 +716,7 @@ namespace BiblioMit.Controllers
                         expando.date = g.Key.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
                         var cs = g.Where(m => m.Fitoplanctons != null).SelectMany(m => m.Fitoplanctons.Select(p => p.C));
                         ((IDictionary<string, object>)expando)
-                        .Add($"{var}_{area}", cs.Any() ? (double?)Math.Round(cs.Average(), 2) : null);
+                        .Add($"{var}_{psmb}", cs.Any() ? (double?)Math.Round(cs.Average(), 2) : null);
                         return (ExpandoObject)expando;
                     });
                     break;
@@ -731,7 +732,7 @@ namespace BiblioMit.Controllers
                         var cs = g.Where(m => m.Fitoplanctons != null && m.Fitoplanctons.Any(p => p.GroupsId == id))
                         .SelectMany(m => m.Fitoplanctons.Where(p => p.GroupsId == id).Select(p => p.C));
                         ((IDictionary<string, object>)expando)
-                        .Add($"{var}_{area}", cs.Any() ?
+                        .Add($"{var}_{psmb}", cs.Any() ?
                         (double?)Math.Round(cs.Average(), 2) : null);
                         return (ExpandoObject)expando;
                     });
@@ -739,8 +740,12 @@ namespace BiblioMit.Controllers
             }
             return Json(data);
         }
+        //[HttpPost]
         [AllowAnonymous]
-        public IActionResult GraphData(int area, string var, string start, string end)
+        //[ValidateAntiForgeryToken]
+        //[ProducesResponseType(StatusCodes.Status404NotFound)]
+        //[ProducesResponseType(typeof(JsonResult), StatusCodes.Status200OK)]
+        public IActionResult GraphData(int psmb, string var, string start, string end)
         {
             var i = Convert.ToDateTime(start, CultureInfo.InvariantCulture);
             var f = Convert.ToDateTime(end, CultureInfo.InvariantCulture);
@@ -754,23 +759,23 @@ namespace BiblioMit.Controllers
                 { "o2", "Oxigeno" }
             };
             var ensayos = new List<EnsayoFito>();
-            if (area < 100) // Cuenca
+            if (psmb < 100) // Cuenca
             {
                 ensayos = _context.EnsayoFito
-                        .Where(e => e.PSMB.Comuna.CuencaId == area && e.FechaMuestreo >= i && e.FechaMuestreo <= f)
+                        .Where(e => e.PSMB.Comuna.CuencaId == psmb && e.FechaMuestreo >= i && e.FechaMuestreo <= f)
                         .ToList();
             }
-            else if (area < 20_000) //Comuna
+            else if (psmb < 20_000) //Comuna
             {
                 ensayos = _context.EnsayoFito
-                        .Where(e => e.PSMB.ComunaId == area && e.FechaMuestreo >= i && e.FechaMuestreo <= f)
+                        .Where(e => e.PSMB.ComunaId == psmb && e.FechaMuestreo >= i && e.FechaMuestreo <= f)
                         .ToList();
             }
             else //PSMB * 100
             {
-                var psmb = area / 100;
+                var psmbs = psmb / 100;
                 ensayos = _context.EnsayoFito
-                        .Where(e => e.PSMBId == psmb && e.FechaMuestreo >= i && e.FechaMuestreo <= f)
+                        .Where(e => e.PSMBId == psmbs && e.FechaMuestreo >= i && e.FechaMuestreo <= f)
                         .ToList();
             }
 
@@ -783,9 +788,10 @@ namespace BiblioMit.Controllers
                 dynamic expando = new ExpandoObject();
                 expando.date = g.Key.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
                 ((IDictionary<string, object>)expando)
-                .Add($"{var}_{area}", g.Any(m => m[index[var]] != null) ? (double?)Math.Round(g.Average(m => (double?)m[index[var]]).Value, 2) : null);
+                .Add($"{var}_{psmb}", g.Any(m => m[index[var]] != null) ? (double?)Math.Round(g.Average(m => (double?)m[index[var]]).Value, 2) : null);
                 return (ExpandoObject)expando;
             }).ToList();
+            
             return Json(data);
         }
         [AllowAnonymous]

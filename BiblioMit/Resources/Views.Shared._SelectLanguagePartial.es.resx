@@ -117,58 +117,52 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="A Tool of" xml:space="preserve">
-    <value>Herramienta</value>
+  <data name="EN" xml:space="preserve">
+    <value>ES</value>
   </data>
-  <data name="and developed by" xml:space="preserve">
-    <value>y desarrollado por</value>
+  <data name="es" xml:space="preserve">
+    <value>en</value>
   </data>
-  <data name="as part of the regional strategic program of mussels" xml:space="preserve">
-    <value>como parte del programa estratégico regional de mitílidos</value>
+  <data name="gb" xml:space="preserve">
+    <value>cl</value>
   </data>
-  <data name="Electronic Library and Platform for Digital Management of &lt;i&gt;Mytilus chilensis&lt;/i&gt; Resource." xml:space="preserve">
-    <value>Biblioteca Electrónica y Plataforma de Gestión Tecnológica del Recurso &lt;i&gt;Mytilus chilensis&lt;/i&gt;.</value>
+  <data name="Hello" xml:space="preserve">
+    <value>¡Hola</value>
   </data>
-  <data name="financed by" xml:space="preserve">
-    <value>financiada por</value>
+  <data name="Login" xml:space="preserve">
+    <value>Ingreso</value>
   </data>
-  <data name="for" xml:space="preserve">
-    <value>para</value>
+  <data name="Logout" xml:space="preserve">
+    <value>Salir</value>
   </data>
-  <data name="Library" xml:space="preserve">
-    <value>Biblioteca</value>
+  <data name="Register" xml:space="preserve">
+    <value>Registro</value>
   </data>
-  <data name="Map of stakeholders" xml:space="preserve">
-    <value>Mapa de actores</value>
+  <data name="English" xml:space="preserve">
+    <value>Español</value>
   </data>
-  <data name="Objective" xml:space="preserve">
-    <value>Objetivo</value>
+  <data name="Account" xml:space="preserve">
+    <value>Cuenta</value>
   </data>
-  <data name="Producers" xml:space="preserve">
-    <value>Productores</value>
+  <data name="Email" xml:space="preserve">
+    <value>Correo</value>
   </data>
-  <data name="Producers databases of &lt;i&gt;Mytilus chilensis&lt;/i&gt;." xml:space="preserve">
-    <value>Bases de datos de productores de &lt;i&gt;Mytilus chilensis&lt;/i&gt;.</value>
+  <data name="Forgot password?" xml:space="preserve">
+    <value>¿Recuperar contraseña?</value>
   </data>
-  <data name="Publications and written resources databases of &lt;i&gt;Mytilus chilensis&lt;/i&gt;." xml:space="preserve">
-    <value>Base de datos de publicaciones y recursos escritos en &lt;i&gt;Mytilus chilensis&lt;/i&gt;.</value>
+  <data name="Password" xml:space="preserve">
+    <value>Contraseña</value>
   </data>
-  <data name="Quality questionnaire" xml:space="preserve">
-    <value>Cuestionario de Calidad</value>
+  <data name="Remember me" xml:space="preserve">
+    <value>Recordarme</value>
   </data>
-  <data name="Researchers" xml:space="preserve">
-    <value>Investigadores</value>
+  <data name="Sign in" xml:space="preserve">
+    <value>Ingresar</value>
   </data>
-  <data name="Results" xml:space="preserve">
-    <value>Resultados</value>
+  <data name="cl" xml:space="preserve">
+    <value>gb</value>
   </data>
-  <data name="Science and Technology Agenda" xml:space="preserve">
-    <value>Agenda de Ciencia y Tecnología</value>
-  </data>
-  <data name="Tell us what you think!" xml:space="preserve">
-    <value>Déjanos tu opinión</value>
-  </data>
-  <data name="Total number of visits" xml:space="preserve">
-    <value>Visitas totales</value>
+  <data name="Español" xml:space="preserve">
+    <value>English</value>
   </data>
 </root>

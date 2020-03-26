@@ -1,4 +1,4 @@
-﻿using BiblioMit.Resources;
+﻿//using BiblioMit.Resources;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -84,10 +84,11 @@ namespace BiblioMit.Extensions
             {
                 default:
                 case "es":
-                    var rm = new ResourceManager(typeof(EnumResources));
-                    var name = e.GetType().Name + "_" + e;
-                    var resourceDisplayName = rm.GetString(name, CultureInfo.InvariantCulture);
-                    return string.IsNullOrWhiteSpace(resourceDisplayName) ? string.Format(CultureInfo.InvariantCulture, "{0}", e) : resourceDisplayName;
+                    //var rm = new ResourceManager(typeof(EnumResources));
+                    //var name = e.GetType().Name + "_" + e;
+                    //var resourceDisplayName = rm.GetString(name, CultureInfo.InvariantCulture);
+                    //return string.IsNullOrWhiteSpace(resourceDisplayName) ? string.Format(CultureInfo.InvariantCulture, "{0}", e) : resourceDisplayName;
+                    return string.Format(CultureInfo.InvariantCulture, "{0}", e);
             }
         }
         public static string GetAttrGroupName<TEnum>(this TEnum e)

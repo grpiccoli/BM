@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using System.Web
+@using System.Globalization
 @using BiblioMit.Models
 @using BiblioMit.Extensions
 @using BiblioMit.Services
@@ -12,13 +13,14 @@
 @*@addTagHelper *, WebOptimizer.Core*@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, Boxed.AspNetCore.TagHelpers
+@addTagHelper *, BiblioMit
 @inject IViewLocalizer Localizer
 @inject IOptions<RequestLocalizationOptions> LocOptions
 @using Microsoft.AspNetCore.Authorization
 @inject IAuthorizationService AuthorizationService
 @inject UserManager<AppUser> UserManager
 @inject SignInManager<AppUser> SignInManager
-@addTagHelper *, PaulMiami.AspNetCore.Mvc.Recaptcha
+@*@addTagHelper *, PaulMiami.AspNetCore.Mvc.Recaptcha*@
 @using Boxed.AspNetCore.TagHelpers.OpenGraph
 @using Boxed.AspNetCore.TagHelpers.Twitter
 @using Schema.NET

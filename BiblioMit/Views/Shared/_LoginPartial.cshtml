@@ -1,27 +1,7 @@
 ﻿@model LoginViewModel
 
-@{
-    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
-    var cultureItems = LocOptions.Value.SupportedUICultures
-        .Select(c => new SelectListItem { Value = c.Name, Text = c.DisplayName })
-        .ToList();
-}
-<li class="nav-item dropdown">
-    <button class="nav-link dropdown-toggle btn btn-dark" id="lang" role="button" data-toggle="dropdown" aria-haspopup="true"
-            aria-expanded="false">
-        <figure class="text-center">
-            <img class="flag-icon" src="~/images/ico/@(Localizer["gb"]).svg"/>
-            <figcaption class="light-caption">@Localizer["English"]</figcaption>
-        </figure>
-    </button>
-    <div class="dropdown-menu" aria-labelledby="Index">
-        <a class="dropdown-item" asp-controller="Home" asp-action="SetLanguage"
-           asp-route-returnUrl="@Context.Request.Path" method="post" role="form"
-           asp-route-culture="@Localizer["es"].Value">
-            <img class="flag-icon" src="~/images/ico/@(Localizer["cl"]).svg" /> @Localizer["Español"]
-        </a>
-    </div>
-</li>
+<partial name="_SelectLanguagePartial" />
+@*<vc:culture-switcher />*@
 <li class="nav-item dropdown">
     <button class="nav-link dropdown-toggle btn btn-dark" role="button" id="login" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <figure class="text-center">

@@ -36,7 +36,6 @@ namespace BiblioMit.Controllers
             _nodeService = nodeService;
         }
 
-        [AllowAnonymous]
         public IActionResult Manual()
         {
             return Redirect($"{Request.Scheme}://{Request.Host.Value}/MANUAL_DE_USO_BIBLIOMIT/MANUAL_DE_USO_BIBLIOMIT.html");
@@ -127,20 +126,17 @@ namespace BiblioMit.Controllers
             return PartialView("_CustomSearch");
         }
 
-        [AllowAnonymous]
         public IActionResult Index()
         {
             ViewData["Url"] = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
             return View();
         }
-        [AllowAnonymous]
         public IActionResult Forum()
         {
             var model = BuildHomeIndexModel();
             return View(model);
         }
 
-        [AllowAnonymous]
         public IActionResult Results(string searchQuery)
         {
             var posts = _postService.GetFilteredPosts(searchQuery);
@@ -214,7 +210,6 @@ namespace BiblioMit.Controllers
             };
         }
 
-        [AllowAnonymous]
         public IActionResult About()
         {
             ViewData["Message"] = "Acerca de BiblioMit.";
@@ -222,7 +217,6 @@ namespace BiblioMit.Controllers
             return View();
         }
 
-        [AllowAnonymous]
         public IActionResult Contact()
         {
             ViewData["Message"] = "Contáctenos.";
@@ -231,7 +225,6 @@ namespace BiblioMit.Controllers
         }
 
 
-        [AllowAnonymous]
         public IActionResult Privacy()
         {
             return View();
@@ -242,16 +235,25 @@ namespace BiblioMit.Controllers
         {
             return View(new ErrorViewModel { RequestId = System.Diagnostics.Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-
         [HttpPost]
-        public IActionResult SetLanguage(string culture, Uri returnUrl)
+        [ValidateAntiForgeryToken]
+        public IActionResult SetLanguage(string culture, Uri redirectUri)
         {
-            Response.Cookies.Append(
-                CookieRequestCultureProvider.DefaultCookieName,
-                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
-                new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
-            );
-            return LocalRedirect(returnUrl?.ToString());
+            if (!string.IsNullOrWhiteSpace(culture))
+            {
+                Response.Cookies.Append(
+                    CookieRequestCultureProvider.DefaultCookieName,
+                    CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+                    new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
+                );
+            }
+
+            if(redirectUri == null)
+            {
+                redirectUri = new Uri("~/", UriKind.Relative);
+            }
+
+            return LocalRedirect(redirectUri.ToString());
         }
     }
 }

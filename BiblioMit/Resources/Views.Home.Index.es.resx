@@ -117,34 +117,67 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Email" xml:space="preserve">
-    <value>Correo electrónico</value>
+  <data name="A Tool of" xml:space="preserve">
+    <value>Herramienta</value>
   </data>
-  <data name="Forgot your password?" xml:space="preserve">
-    <value>¿Olvidó su contraseña?</value>
+  <data name="and developed by" xml:space="preserve">
+    <value>y desarrollado por</value>
   </data>
-  <data name="Log in" xml:space="preserve">
-    <value>Iniciar Sesión</value>
+  <data name="as part of the regional strategic program of mussels" xml:space="preserve">
+    <value>como parte del programa estratégico regional de mitílidos</value>
   </data>
-  <data name="Login using" xml:space="preserve">
-    <value>Iniciar sesión con</value>
+  <data name="Databases of research groups in" xml:space="preserve">
+    <value>Bases de datos de grupos de investigación en</value>
   </data>
-  <data name="Password" xml:space="preserve">
-    <value>Contraseña</value>
+  <data name="Electronic Library and Platform for Digital Management of &lt;i&gt;Mytilus chilensis&lt;/i&gt; Resource." xml:space="preserve">
+    <value>Biblioteca Electrónica y Plataforma de Gestión Tecnológica del Recurso &lt;i&gt;Mytilus chilensis&lt;/i&gt;.</value>
   </data>
-  <data name="Register as a new user?" xml:space="preserve">
-    <value>¿Registrarse como nuevo usuario?</value>
+  <data name="financed by" xml:space="preserve">
+    <value>financiada por</value>
   </data>
-  <data name="Remember me?" xml:space="preserve">
-    <value>¿Recordarme?</value>
+  <data name="for" xml:space="preserve">
+    <value>para</value>
   </data>
-  <data name="There are no external authentication services configured. Please contact your web administrator." xml:space="preserve">
-    <value>Error en los servicios externos configurados. Por favor contacte al administrador del sitio.</value>
+  <data name="Hundreds of companies related to miticulture" xml:space="preserve">
+    <value>Cientos de empresas relacionadas a la mitilicultura</value>
   </data>
-  <data name="Use a local account to log in." xml:space="preserve">
-    <value>O usa tu cuenta MytiliDB para iniciar sesión.</value>
+  <data name="Library" xml:space="preserve">
+    <value>Biblioteca</value>
   </data>
-  <data name="Use another service to log in." xml:space="preserve">
-    <value>Ingresa automáticamente con:</value>
+  <data name="Map of stakeholders" xml:space="preserve">
+    <value>Mapa de actores</value>
+  </data>
+  <data name="Objective" xml:space="preserve">
+    <value>Objetivo</value>
+  </data>
+  <data name="Place your ad here" xml:space="preserve">
+    <value>Publique su anuncio aquí</value>
+  </data>
+  <data name="Producers" xml:space="preserve">
+    <value>Productores</value>
+  </data>
+  <data name="Producers databases of &lt;i&gt;Mytilus chilensis&lt;/i&gt;." xml:space="preserve">
+    <value>Bases de datos de productores de &lt;i&gt;Mytilus chilensis&lt;/i&gt;.</value>
+  </data>
+  <data name="Publications and written resources databases of &lt;i&gt;Mytilus chilensis&lt;/i&gt;." xml:space="preserve">
+    <value>Base de datos de publicaciones y recursos escritos en &lt;i&gt;Mytilus chilensis&lt;/i&gt;.</value>
+  </data>
+  <data name="Quality questionnaire" xml:space="preserve">
+    <value>Cuestionario de Calidad</value>
+  </data>
+  <data name="Researchers" xml:space="preserve">
+    <value>Investigadores</value>
+  </data>
+  <data name="Results" xml:space="preserve">
+    <value>Resultados</value>
+  </data>
+  <data name="Science and Technology Agenda" xml:space="preserve">
+    <value>Agenda de Ciencia y Tecnología</value>
+  </data>
+  <data name="Tell us what you think!" xml:space="preserve">
+    <value>Déjanos tu opinión</value>
+  </data>
+  <data name="Total number of visits" xml:space="preserve">
+    <value>Visitas totales</value>
   </data>
 </root>

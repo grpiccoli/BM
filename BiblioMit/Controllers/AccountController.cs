@@ -69,7 +69,7 @@ namespace BiblioMit.Controllers
         public async Task<IActionResult> Login(LoginViewModel model, Uri returnUrl = null)
         {
             if (model == null) return NotFound();
-            ViewData["ReturnUrl"] = returnUrl?.AbsoluteUri;
+            ViewData["ReturnUrl"] = returnUrl?.ToString();
             if (ModelState.IsValid)
             {
                 // Require the user to have a confirmed email before they can log on.
@@ -85,11 +85,13 @@ namespace BiblioMit.Controllers
                 }
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, lockoutOnFailure: false).ConfigureAwait(false);
+                var result = await _signInManager
+                    .PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, lockoutOnFailure: false)
+                    .ConfigureAwait(false);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation(_localizer["User logged in."]);
-                    return RedirectToLocal(returnUrl.AbsoluteUri);
+                    return RedirectToLocal(returnUrl.ToString());
                 }
                 if (result.RequiresTwoFactor)
                 {
@@ -401,11 +403,9 @@ namespace BiblioMit.Controllers
                     TwitAuthenticateResponse twitAuthResponse;
                     using (authResponse)
                     {
-                        using (var reader = new StreamReader(authResponse.GetResponseStream()))
-                        {
-                            var objectText = reader.ReadToEnd();
-                            twitAuthResponse = JsonConvert.DeserializeObject<TwitAuthenticateResponse>(objectText);
-                        }
+                        using var reader = new StreamReader(authResponse.GetResponseStream());
+                        var objectText = reader.ReadToEnd();
+                        twitAuthResponse = JsonConvert.DeserializeObject<TwitAuthenticateResponse>(objectText);
                     }
 
                     // Do the avatar
@@ -423,10 +423,8 @@ namespace BiblioMit.Controllers
                     var avatarJson = string.Empty;
                     using (authResponse)
                     {
-                        using (var reader = new StreamReader(timeLineResponse.GetResponseStream()))
-                        {
-                            avatarJson = reader.ReadToEnd();
-                        }
+                        using var reader = new StreamReader(timeLineResponse.GetResponseStream());
+                        avatarJson = reader.ReadToEnd();
                     }
                     
                     externalLogin.ProfileImageUrl = new Uri(info.Principal.FindFirstValue(avatarJson));
@@ -609,20 +607,16 @@ namespace BiblioMit.Controllers
             if (client == null) return null;
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + accessToken);
             client.DefaultRequestHeaders.Add("Accept", "application/json");
-            using (var response = await client.GetAsync(endpoint).ConfigureAwait(false))
+            using var response = await client.GetAsync(endpoint).ConfigureAwait(false);
+            if (response.IsSuccessStatusCode)
             {
-                if (response.IsSuccessStatusCode)
-                {
-                    using (var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
-                    {
-                        byte[] bytes = new byte[stream.Length];
-                        stream.Read(bytes, 0, (int)stream.Length);
-                        return bytes;
-                    }
-                }
-                else
-                    return null;
+                using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                byte[] bytes = new byte[stream.Length];
+                stream.Read(bytes, 0, (int)stream.Length);
+                return bytes;
             }
+            else
+                return null;
         }
     }
     public class TwitAuthenticateResponse

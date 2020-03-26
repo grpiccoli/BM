@@ -38,7 +38,7 @@ namespace BiblioMit.Areas.Identity.Pages.Account
             _logger.LogInformation(_localizer["User logged out."]);
             if (returnUrl != null)
             {
-                return LocalRedirect(returnUrl.AbsoluteUri);
+                return LocalRedirect(returnUrl.ToString());
             }
             else
             {

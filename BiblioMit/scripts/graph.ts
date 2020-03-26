@@ -15,7 +15,7 @@ chart4.scrollbarX.parent = chart4.bottomAxesContainer;
 chart4.scrollbarY = new am4core.Scrollbar();
 chart4.scrollbarY.parent = chart4.leftAxesContainer;
 chart4.language.locale = am4lang_es_ES;
-var dataSource = chart4.dataSource; 
+var dataSource = chart4.dataSource;
 dataSource.url = "/ambiental/graphdata?area=1&var=t&start=" + start + "&end=" + end;
 var dateAxis = chart4.xAxes.push(new am4charts.DateAxis());
 dateAxis.dataFields.category = "date";
@@ -40,7 +40,7 @@ var semaforo = !$("#semaforo").hasClass("d-none");
 function loadData(values: any, event: any, boolpsmb: any) {
     psmb.disable();
     variables.disable();
-    if(semaforo) tl.disable();
+    if (semaforo) tl.disable();
     var temps: any[] = [];
     var requests: any[] = [];
     var tags: any[] = [];
@@ -48,7 +48,7 @@ function loadData(values: any, event: any, boolpsmb: any) {
     //var tag, area tag, var name, area name, group value
     $.each(values, (_i, e) => {
         var x = boolpsmb ? [e.value, event.value, e.label, event.label, e.groupId === 2 ? "fito" : "graph"] :
-            [event.value, e.value, event.label, e.label, event.groupValue === "Fitoplancton" ? "fito": "graph"]; 
+            [event.value, e.value, event.label, e.label, event.groupValue === "Fitoplancton" ? "fito" : "graph"];
         tags.push(x[0] + "_" + x[1]);
         names.push(x[2] + " " + x[3]);
         var d = $.Deferred();
@@ -78,7 +78,7 @@ function loadData(values: any, event: any, boolpsmb: any) {
         chart4.invalidateData();
         psmb.enable();
         variables.enable();
-        if(semaforo) tl.enable();
+        if (semaforo) tl.enable();
     });
 }
 
@@ -125,18 +125,18 @@ psmb.setChoices(async () => await fetch('/ambiental/psmblist')
 //    const items = await fetch('/ambiental/psmblist');
 //    return items.json();
 //});
-    //.ajax(
-    //function (callback) {
-    //    fetch('/ambiental/psmblist')
-    //        .then(function (response) {
-    //            response.json().then(function (data) {
-    //                callback(data, "value", "label", false);
-    //            });
-    //        })
-    //        .catch(function (error) {
-    //            console.error(error);
-    //        });
-    //});
+//.ajax(
+//function (callback) {
+//    fetch('/ambiental/psmblist')
+//        .then(function (response) {
+//            response.json().then(function (data) {
+//                callback(data, "value", "label", false);
+//            });
+//        })
+//        .catch(function (error) {
+//            console.error(error);
+//        });
+//});
 
 //VARIABLE SELECT
 let evariable = document.getElementById('variable');
@@ -226,7 +226,7 @@ etl.addEventListener('addItem', (event: any) => {
                             });
                         });
                     } else {
-                        alert("Talla no seleccionada, seleccione requerimientos y luego análisis");                        
+                        alert("Talla no seleccionada, seleccione requerimientos y luego análisis");
                     }
                     break;
                 case "12":
@@ -249,7 +249,7 @@ etl.addEventListener('addItem', (event: any) => {
                             });
                         });
                     } else {
-                        alert("Larva no seleccionada, seleccione requerimientos y luego análisis");                        
+                        alert("Larva no seleccionada, seleccione requerimientos y luego análisis");
                     }
                     break;
                 case "13":

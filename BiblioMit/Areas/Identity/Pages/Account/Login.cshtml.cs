@@ -17,14 +17,17 @@ namespace BiblioMit.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class LoginModel : PageModel
     {
+        private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
         private readonly IStringLocalizer<LoginModel> _localizer;
         public LoginModel(
+            UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager, 
             ILogger<LoginModel> logger,
             IStringLocalizer<LoginModel> localizer)
         {
+            _userManager = userManager;
             _localizer = localizer;
             _signInManager = signInManager;
             _logger = logger;
@@ -62,18 +65,29 @@ namespace BiblioMit.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnPostAsync(Uri returnUrl = null)
         {
             returnUrl ??= new Uri("~/");
-
+            ViewData["ReturnUrl"] = returnUrl?.ToString();
             if (ModelState.IsValid)
             {
+                // Require the user to have a confirmed email before they can log on.
+                var user = await _userManager.FindByEmailAsync(Input.Email).ConfigureAwait(false);
+                if (user != null)
+                {
+                    if (!await _userManager.IsEmailConfirmedAsync(user).ConfigureAwait(false))
+                    {
+                        ModelState.AddModelError(string.Empty,
+                                      "Debes confirmar tu correo electrónico para poder iniciar sesión.");
+                        return Page();
+                    }
+                }
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager
-                    .PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: true)
+                    .PasswordSignInAsync(user.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: true)
                     .ConfigureAwait(false);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation(_localizer["User logged in."]);
-                    return LocalRedirect(returnUrl.AbsoluteUri);
+                    return LocalRedirect(returnUrl.ToString());
                 }
                 if (result.RequiresTwoFactor)
                 {

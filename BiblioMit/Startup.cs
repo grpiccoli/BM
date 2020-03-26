@@ -22,15 +22,19 @@ using Microsoft.AspNetCore.HttpOverrides;
 using System.IO;
 using AspNetCore.IServiceCollection.AddIUrlHelper;
 using Microsoft.EntityFrameworkCore;
-using WebMarkupMin.AspNetCore2;
-using Microsoft.AspNetCore.CookiePolicy;
-using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Mvc.Razor;
+using System.Threading.Tasks;
+//using Schema.NET;
+//using WebMarkupMin.AspNetCore2;
+//using Microsoft.AspNetCore.CookiePolicy;
+//using System.Diagnostics.CodeAnalysis;
 
 namespace BiblioMit
 {
     public class Startup
     {
         private readonly string _os;
+        private const string defaultCulture = "en";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -104,13 +108,35 @@ namespace BiblioMit
                     o.LogoutPath = new PathString("/logout");
                 });
 
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var supportedCultures = new[]
+                {
+                    new CultureInfo(defaultCulture),
+                    new CultureInfo("es")
+                };
+                options.DefaultRequestCulture = new RequestCulture(culture: defaultCulture, uiCulture: defaultCulture);
+                // Formatting numbers, dates, etc.
+                options.SupportedCultures = supportedCultures;
+                // UI strings that we have localized.
+                options.SupportedUICultures = supportedCultures;
+
+                options.AddInitialRequestCultureProvider(
+                    new CustomRequestCultureProvider(
+                        async context => 
+                        {
+                            return new ProviderCultureResult(defaultCulture);
+                        }));
+            });
+
             //services.AddScoped<ILibs, LibService>();
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Latest)
-                .AddViewLocalization()
+                .AddViewLocalization(
+                LanguageViewLocationExpanderFormat.Suffix)
                 .AddDataAnnotationsLocalization()
                 .AddNewtonsoftJson();
 
@@ -127,22 +153,6 @@ namespace BiblioMit
                 options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect);
 
             services.Configure<AuthMessageSenderOptions>(Configuration);
-
-            services.Configure<RequestLocalizationOptions>(
-                opts =>
-                {
-                    var supportedCultures = new List<CultureInfo>
-                    {
-                        new CultureInfo("es"),
-                        new CultureInfo("en")
-                    };
-
-                    opts.DefaultRequestCulture = new RequestCulture(culture: "es", uiCulture: "es");
-                    // Formatting numbers, dates, etc.
-                    opts.SupportedCultures = supportedCultures;
-                    // UI strings that we have localized.
-                    opts.SupportedUICultures = supportedCultures;
-                });
 
             services.AddAuthorization(options =>
             {
@@ -204,6 +214,12 @@ namespace BiblioMit
                 app.UseHsts();
             }
 
+            var supportedCultures = new[]
+            {
+                new CultureInfo(defaultCulture),
+                new CultureInfo("es"),
+            };
+
             app.UseSitemapMiddleware();
             app.UseCors(o => o.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 
@@ -214,11 +230,13 @@ namespace BiblioMit
             var ch = _os == "Win32NT" ? @"\" : "/";
 
             var di = new DirectoryInfo(Path.Combine(env?.WebRootPath, string.Join(ch, path)));
-            var supportedCultures = di.GetDirectories().Where(x => x.Name != "root").Select(x => new CultureInfo(x.Name)).ToList();
+
             app.UseRequestLocalization(new RequestLocalizationOptions
             {
-                DefaultRequestCulture = new RequestCulture(supportedCultures.FirstOrDefault(x => x.Name == "es")),
+                DefaultRequestCulture = new RequestCulture(defaultCulture),
+                // Formatting numbers, dates, etc.
                 SupportedCultures = supportedCultures,
+                // UI strings that we have localized.
                 SupportedUICultures = supportedCultures
             });
 
@@ -231,10 +249,6 @@ namespace BiblioMit
             app.UseStaticFiles();
 
             app.UseCookiePolicy();
-
-            var options = app?.ApplicationServices
-                .GetService<IOptions<RequestLocalizationOptions>>();
-            app.UseRequestLocalization(options.Value);
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {

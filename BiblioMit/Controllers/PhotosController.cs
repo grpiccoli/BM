@@ -14,7 +14,7 @@ using BiblioMit.Services;
 //using Amazon.S3.Model;
 using BiblioMit.Models.ViewModels;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.Extensions.Configuration;
+//using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.IO;

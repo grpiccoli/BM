@@ -8,17 +8,22 @@
     "inputFiles": [ "styles/samplings.css" ]
   },
   {
-    "outputFileName": "wwwroot/js/graph.min.js",
-    "inputFiles": [
-      "scripts/graph.js",
-      "scripts/tablePopover.js"
-    ]
-  },
-  {
     "outputFileName": "wwwroot/css/graph.min.css",
     "inputFiles": [
       "styles/chart.css",
       "styles/graph.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/graph.min.js",
+    "inputFiles": [
+      "wwwroot/js/graph.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/tablePopover.min.js",
+    "inputFiles": [
+      "scripts/tablePopover.js"
     ]
   },
   {
@@ -31,7 +36,7 @@
   },
   {
     "outputFileName": "wwwroot/js/bibliomit.min.js",
-    "inputFiles": [ "scripts/bibliomit.js" ]
+    "inputFiles": [ "wwwroot/js/bibliomit.js" ]
   },
   {
     "outputFileName": "wwwroot/css/background.min.css",
@@ -91,15 +96,15 @@
   },
   {
     "outputFileName": "wwwroot/js/charts.min.js",
-    "inputFiles": [ "scripts/charts.js" ]
+    "inputFiles": [ "wwwroot/js/charts.js" ]
   },
   {
     "outputFileName": "wwwroot/js/chat.min.js",
-    "inputFiles": [ "scripts/chat.js" ]
+    "inputFiles": [ "wwwroot/js/chat.js" ]
   },
   {
     "outputFileName": "wwwroot/js/dashboard.min.js",
-    "inputFiles": [ "scripts/dashboard.js" ]
+    "inputFiles": [ "wwwroot/js/dashboard.js" ]
   },
   {
     "outputFileName": "wwwroot/css/columnas.min.css",
@@ -110,58 +115,58 @@
   },
   {
     "outputFileName": "wwwroot/js/dinamicTable.min.js",
-    "inputFiles": [ "scripts/dinamicTable.js" ]
+    "inputFiles": [ "wwwroot/js/dinamicTable.js" ]
   },
   {
     "outputFileName": "wwwroot/js/dontSendFormOnEnter.min.js",
-    "inputFiles": [ "scripts/dontSendFormOnEnter.js" ]
+    "inputFiles": [ "wwwroot/js/dontSendFormOnEnter.js" ]
   },
   {
     "outputFileName": "wwwroot/js/dragndrop.min.js",
-    "inputFiles": [ "scripts/dragndrop.js" ]
+    "inputFiles": [ "wwwroot/js/dragndrop.js" ]
   },
   {
     "outputFileName": "wwwroot/js/entry.min.js",
-    "inputFiles": [ "scripts/entry.js" ]
+    "inputFiles": [ "wwwroot/js/entry.js" ]
   },
   {
     "outputFileName": "wwwroot/js/format-phone.min.js",
-    "inputFiles": [ "scripts/format-phone.js" ]
+    "inputFiles": [ "wwwroot/js/format-phone.js" ]
   },
   {
     "outputFileName": "wwwroot/js/get-sii-rut-data.min.js",
-    "inputFiles": [ "scripts/get-sii-rut-data.js" ]
+    "inputFiles": [ "wwwroot/js/get-sii-rut-data.js" ]
   },
   {
     "outputFileName": "wwwroot/js/gmaps-address-autocomplete.min.js",
-    "inputFiles": [ "scripts/gmaps-address-autocomplete.js" ]
+    "inputFiles": [ "wwwroot/js/gmaps-address-autocomplete.js" ]
   },
   {
     "outputFileName": "wwwroot/js/modal-action.min.js",
-    "inputFiles": [ "scripts/modal-action.js" ]
+    "inputFiles": [ "wwwroot/js/modal-action.js" ]
   },
   {
     "outputFileName": "wwwroot/js/parseNumber.min.js",
-    "inputFiles": [ "scripts/parseNumber.js" ]
+    "inputFiles": [ "wwwroot/js/parseNumber.js" ]
   },
   {
     "outputFileName": "wwwroot/js/piechart.min.js",
-    "inputFiles": [ "scripts/piechart.js" ]
+    "inputFiles": [ "wwwroot/js/piechart.js" ]
   },
   {
     "outputFileName": "wwwroot/js/progress.min.js",
-    "inputFiles": [ "scripts/progress.js" ]
+    "inputFiles": [ "wwwroot/js/progress.js" ]
   },
   {
     "outputFileName": "wwwroot/js/sendDisabledSelects.min.js",
-    "inputFiles": [ "scripts/sendDisabledSelects.js" ]
+    "inputFiles": [ "wwwroot/js/sendDisabledSelects.js" ]
   },
   {
     "outputFileName": "wwwroot/js/translate.min.js",
-    "inputFiles": [ "scripts/translate.js" ]
+    "inputFiles": [ "wwwroot/js/translate.js" ]
   },
   {
     "outputFileName": "wwwroot/js/validation.min.js",
-    "inputFiles": [ "scripts/validate-localization.js" ]
+    "inputFiles": [ "wwwroot/js/validate-localization.js" ]
   }
 ]

@@ -10,6 +10,7 @@
     xAxes: any;
     yAxes: any;
     invalidateData(): any;
+    static JSONParser: any;
 }
 
 declare class am4charts {

@@ -1,4 +1,4 @@
-﻿using BiblioMit.Resources;
+﻿//using BiblioMit.Resources;
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -56,10 +56,11 @@ namespace BiblioMit.Services
         {
             if (lang != null && lang.Contains("es", StringComparison.InvariantCultureIgnoreCase))
             {
-                var rm = new ResourceManager(typeof(EnumResources));
-                var name = e?.GetType().Name + "_" + e + "_" + attribute;
-                var resourceDisplayName = rm.GetString(name, CultureInfo.InvariantCulture);
-                return string.IsNullOrWhiteSpace(resourceDisplayName) ? GetAttr(e,attribute) : resourceDisplayName;
+                //var rm = new ResourceManager(typeof(EnumResources));
+                //var name = e?.GetType().Name + "_" + e + "_" + attribute;
+                //var resourceDisplayName = rm.GetString(name, CultureInfo.InvariantCulture);
+                //return string.IsNullOrWhiteSpace(resourceDisplayName) ? GetAttr(e, attribute) : resourceDisplayName;
+                return GetAttr(e,attribute);
             }
             return GetAttr(e,attribute);
         }
@@ -116,10 +117,11 @@ namespace BiblioMit.Services
             }
             if (lang != null && lang.Contains("es", StringComparison.InvariantCulture))
             {
-                var rm = new ResourceManager(typeof(EnumResources));
-                var name = e.GetType().Name + "_" + e;
-                var resourceDisplayName = rm.GetString(name, CultureInfo.InvariantCulture);
-                return string.IsNullOrWhiteSpace(resourceDisplayName) ? string.Format(CultureInfo.InvariantCulture, "{0}", e) : resourceDisplayName;
+                //var rm = new ResourceManager(typeof(EnumResources));
+                //var name = e.GetType().Name + "_" + e;
+                //var resourceDisplayName = rm.GetString(name, CultureInfo.InvariantCulture);
+                //return string.IsNullOrWhiteSpace(resourceDisplayName) ? string.Format(CultureInfo.InvariantCulture, "{0}", e) : resourceDisplayName;
+                return string.Format(CultureInfo.InvariantCulture, "{0}", e);
             }
             else
             {

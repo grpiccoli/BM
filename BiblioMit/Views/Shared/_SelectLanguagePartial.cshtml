@@ -1,0 +1,46 @@
+﻿@using Microsoft.AspNetCore.Builder
+@using Microsoft.AspNetCore.Http.Features
+@using Microsoft.AspNetCore.Localization
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Options
+
+@inject IViewLocalizer Localizer
+@inject IOptions<RequestLocalizationOptions> LocOptions
+
+@{
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+    var cultureItems = LocOptions.Value.SupportedUICultures
+        .Select(c => new SelectListItem { Value = c.Name, Text = c.DisplayName })
+        .ToList();
+    var returnUrl = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}";
+}
+
+@*<div title="@Localizer["Request culture provider:"] @requestCulture?.Provider?.GetType().Name">
+    <form id="selectLanguage" asp-controller="Home"
+            asp-action="SetLanguage" asp-route-returnUrl="@returnUrl"
+            method="post" class="form-horizontal" role="form">
+        <label asp-for="@requestCulture.RequestCulture.UICulture.Name">@Localizer["Language:"]</label>
+        <select name="culture" onchange="this.form.submit();"
+            asp-for="@requestCulture.RequestCulture.UICulture.Name" asp-items="cultureItems">
+        </select>
+    </form>
+</div>*@
+
+<li class="nav-item dropdown">
+    <button class="nav-link dropdown-toggle btn btn-dark" id="lang" role="button" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">
+        <figure class="text-center">
+            <img class="flag-icon" src="~/images/ico/@(Localizer["gb"].Value).svg" />
+            <figcaption class="light-caption">@Localizer["English"]</figcaption>
+        </figure>
+    </button>
+    <div class="dropdown-menu" aria-labelledby="Index" style="cursor:pointer">
+        <form id="selectLanguage" asp-controller="Home" 
+              asp-action="SetLanguage" asp-route-returnUrl="@returnUrl"
+              method="post" role="form" asp-route-culture="@Localizer["es"].Value">
+                <a class="dropdown-item" onclick="$('#selectLanguage').submit();">
+                    <img class="flag-icon" src="~/images/ico/@(Localizer["cl"].Value).svg" /> @Localizer["Español"]
+                </a>
+        </form>
+    </div>
+</li>
